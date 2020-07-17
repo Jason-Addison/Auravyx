@@ -1,0 +1,175 @@
+2006-07-26  Pannes  <sven.panne@aedion.de>
+
+	* configure.ac: Added evil hack for using OpenGL under Cygwin.
+
+2006-05-23  Sven Panne  <sven.panne@aedion.de>
+
+	* examples/openal-info/openal-info.c: Print info about capture
+	devices. Some small stylistic cleanup.
+
+	* tests/altest/altest.c: Whitespace changes after "make indent" only.
+
+2006-05-19  Sven Panne  <sven.panne@aedion.de>
+
+	* configure.ac, demos/panning2d/Makefile.am: The previous GL/GLU/GLUT
+	detection magic was a bit too simple and fragile, so a more full-blown
+	solution from another project (a GLUT binding for Haskell) is used now.
+
+	* admin/autotools/m4/fp_arg_opengl.m4,
+	admin/autotools/m4/fp_check_gl_helper.m4,
+	admin/autotools/m4/fp_check_gl.m4, admin/autotools/m4/fp_check_win32.m4,
+	admin/autotools/m4/fp_check_glu.m4,
+	admin/autotools/m4/fp_check_quartz_opengl.m4,
+	admin/autotools/m4/fp_check_glut.m4, admin/autotools/m4/fp_path_xtra.m4:
+	Added.
+
+2006-05-18  Sven Panne  <sven.panne@aedion.de>
+
+	* configure.ac, demos/panning2d/Makefile.am: Improved GL/GLU/GLUT
+	detection magic a bit.
+
+	* tests/altest/altest.c: Improved platform #ifdefs a bit.
+
+2006-05-17  Sven Panne  <sven.panne@aedion.de>
+
+	* configure.ac, tests/altest/altest.c: Compilation fixes for Linux.
+
+	* admin/autotools/m4/alut_check_func.m4: Added.
+
+	* examples/openal-info/openal-info.c: Warning police.
+
+2006-05-16  Sven Panne  <sven.panne@aedion.de>
+
+	* admin/VisualStudio6/openal_info/openal_info.dsp,
+	admin/VisualStudio6/panning2d/panning2d.dsp: openal-info and panning2d
+	build under Visual Studio 6 now, too.
+
+	* examples/openal-info/openal-info.c: alcIsExtensionPresent in
+	Creative's latest SDK has a bug: It is not case-insensitive, so let's
+	play safe and use upper case only.
+
+	* demos/panning2d/panning2d.c: Only #include config.h if we have it.
+
+2006-05-15  Sven Panne  <sven.panne@aedion.de>
+
+	* tests/altest/altest.c: Fixed NULL vs. 0 confusion. Use more generic
+	#defines, so altest works with both EAX 2.0 and EAX 3.0 headers now.
+
+	* admin/VisualStudio6/altest/altest.dsp,
+	admin/VisualStudio6/contrib.dsw,
+	admin/VisualStudio6/openal_info/openal_info.dsp,
+	admin/VisualStudio6/panning2d/panning2d.dsp: Added support for building
+	with Visual Studio 6. Currently only altest works, the rest of the
+	workspace consists of skeletons only.
+
+	* tests/altest/altest.c: Fixes for compilation with Visual Studio.
+
+2006-05-12  Sven Panne  <sven.panne@aedion.de>
+
+	* Makefile.am: Removed "permission" target, it is not needed anymore.
+
+	* Makefile.am: Update EXTRA_DIST.
+
+	* configure.ac, examples/Makefile.am: Hook openal-info example into
+	build system.
+
+	* examples/openal-info/openal-info.c, examples/openal-info/Makefile.am:
+	Added.
+
+2006-05-11  Sven Panne  <sven.panne@aedion.de>
+
+	* tests/altest/altest.c(FA_EnumerationValue): Distinguish between ALC
+	enums and AL enums.
+
+	* tests/altest/altest.c: Reformatted automatically with GNU indent. In
+	the future, please use "make indent" before commiting (if possible).
+
+	* tests/altest/altest.c(SA_ListenerOrientation): Don't use the ambiguous
+	"foo=-1".
+
+	* tests/altest/altest.c: Hopefully improved header selection for Macs.
+
+2006-05-10  Sven Panne  <sven.panne@aedion.de>
+
+	* tests/altest/Makefile.am: Added a "README" target for generating docs
+	directly from the sources.
+
+	* tests/altest/gendocs.py: Added.
+	
+	* tests/altest/altest.c: Fixed mini-typo in comment.
+	
+	* tests/altest/altest.c: Centralized #if for _kbhit().
+
+	* tests/altest/altest.c(main,I_QueueTest,I_StereoTest): Remove #ifs for
+	ancient OpenAL versions on Linux.
+
+	* tests/altest/altest.c: Remove useless return statements.
+
+	* tests/altest/altest.c: Make the Ogg Vorbis test dynamic.
+
+	* tests/altest/altest.c: Moved filenames into #defines.
+
+	* tests/altest/sounds/README: Added info about footadpcm.wav.
+
+	* tests/altest/sounds/footadpcm.wav: Added.
+
+	* tests/altest/sounds/README: Added.
+
+	* tests/altest/altest.c: Get value of AL_FORMAT_VORBIS_EXT dynamically.
+
+	* tests/altest/altest.c: Unbreak Ogg Vorbis tests.
+
+	* tests/altest/altest.c: Consistently use #if for enabling features.
+
+	* tests/altest/altest.c(I_SetSourceOffsetTest): Don't rely on undefined
+	C semantics.
+	
+	* tests/altest/altest.c(I_QueueTest): Removed unused variable.
+
+	* tests/altest/altest.c(main,FA_StateTransition,SA_StringQueries,
+	SA_ListenerGain,SA_ListenerOrientation,I_CaptureAndPlayTest): Don't mix
+	declarations and code.
+
+	* tests/altest/altest.c: Use ALboolean instead of bool. Compiles again
+	on Linux as a plain C program.
+
+	* tests/altest/altest.c(I_QueueTest): Use arrays instead of new/delete.
+
+	* tests/altest/altest.c: Simplified header inclusion.
+
+	* tests/altest/altest.c: Use C comment syntax, not C++ syntax.
+
+	* tests/altest/altest.c: Start from scratch (i.e. altest.cpp) again to
+	get more meaningful and fine-grained commits. Will not compile for the
+	next few commits, sorry...
+
+2006-02-08  Sven Panne  <sven.panne@aedion.de>
+
+	* tests/altest/altest.c: Warning police.
+
+	* admin/autotools/.indent.pro, configure.ac, demos/Makefile.am: Hooked
+	in a slightly overhauled version of the panning2d demo. The OpenAL and
+	GLUT flags are currently hardwired, which is obviously wrong and only a
+	temporary measure.
+
+	* admin/autotools/m4/alut_c__attribute.m4, demos/panning2d/.cvsignore,
+	demos/panning2d/Makefile.am, demos/panning2d/panning2d.c,
+	demos/panning2d/sounds/boom.wav: Added.
+
+	* tests/altest/altest.c(FA_GetBufferProperties): Emit a warning when
+	alIsBuffer does not return AL_FALSE for AL_NONE.
+
+	* tests/altest/altest.c(FA_EnumerationValue): Test that alcGetEnumValue
+	and alGetEnumValue are really disjunct.
+
+2006-01-20  Sven Panne  <sven.panne@aedion.de>
+
+	* tests/altest/altest.c(SA_ListenerOrientation): Don't use the ambiguous
+	"foo=-1".
+
+	* tests/altest/altest.c(FA_EnumerationValue): Distinguish between ALC
+	enums and AL enums.
+
+	* tests/altest/altest.c(I_SetSourceOffsetTest): Fixed ambiguity.
+
+	* Initial version. Very incomplete, just to get "contrib" started.

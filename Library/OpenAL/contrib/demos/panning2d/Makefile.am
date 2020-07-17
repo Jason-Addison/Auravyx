@@ -1,0 +1,3 @@
+noinst_PROGRAMS = panning2d
+AM_CFLAGS += @GLUT_CFLAGS@
+LIBS += @GLUT_LIBS@
