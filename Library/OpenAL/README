@@ -1,0 +1,38 @@
+This directory contains implementations of OpenAL, a portable audio API,
+and ALUT, its accompanying utility library. Furthermore, there are
+examples, test programs and specifications. Please visit the OpenAL home
+page at http://www.openal.org/ for more documentation.
+
+The directories in detail:
+
+ * alut: Contains the specification of ALUT and the freealut library, its
+   free implementation.
+
+ * contrib: Contains demos, examples and tests for OpenAL and ALUT. Not
+   complete yet, some stuff is still in "demos".
+
+ * demos: This will be moved into "contrib", see above.
+
+ * docs: Contains OpenAL specifications 1.0 and 1.1.
+
+ * include: The official OpenAL headers live here.
+
+ * OpenAL-MacOSX: Apple's implementation of OpenAL for Mac OS X.
+
+ * OpenAL-Sample: Contains the original cross-platform OpenAL sample
+   implementation (SI), based on former Loki efforts.  This implementation
+   is now considered DEPRECATED.  Use OpenAL-Soft instead.
+
+ * OpenAL-Soft: A portable software OpenAL implementation, based on the old
+   Windows code. Designed to replace the SI.
+
+ * OpenAL-Windows: Creative's Windows implementation of OpenAL.
+
+Please check the individual directories for installation instructions.
+
+Credits in alphabetical order: Juan Carlos Arevalo Baeza, Steve Baker,
+Jonathan Blow, Keith Charley, Scott Draeker, John Grantham, Jacob Hawley,
+Garin Hiebert, Carlos Hasan, Nathan Hill, Bill Huey, Mike Jarosch,
+Jean-Marc Jot, Maxim Kizub, John Kraft, Bernd Kreimeier, Ian Ollmann, Rick
+Overman, Sean L. Palmer, Sven Panne, Pierre Phaneuf, Terry Sikes, Joseph
+Valenzuela, Michael Vance, Carlo Vogelsang
