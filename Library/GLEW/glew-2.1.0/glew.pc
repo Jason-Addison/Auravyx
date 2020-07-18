@@ -1,6 +1,6 @@
-prefix=C:/Users/jason/CMakeBuilds/c3e622cf-4e00-4c3c-bbb6-bb29aa26e68f/install/x64-Debug (default)
+prefix=C:/Game/Library/GLEW/glew-2.1.0/build/cmake/out/install/x64-Debug (default)
 exec_prefix=${prefix}
-libdir=C:/Users/jason/CMakeBuilds/c3e622cf-4e00-4c3c-bbb6-bb29aa26e68f/install/x64-Debug (default)/lib
+libdir=C:/Game/Library/GLEW/glew-2.1.0/build/cmake/out/install/x64-Debug (default)/lib
 includedir=${prefix}/include
 
 Name: glew

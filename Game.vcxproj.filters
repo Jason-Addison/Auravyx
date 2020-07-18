@@ -162,12 +162,6 @@
     <ClCompile Include="Source\Server\ClientManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Mouse.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Utilities\Settings.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -204,9 +198,6 @@
     <ClCompile Include="Source\World\VoxelShader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Voxel.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Utilities\RandomNoise.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -235,6 +226,15 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\Server\Chat.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\Mouse.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\World\Voxel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Utilities\Source.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

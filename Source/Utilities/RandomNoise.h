@@ -3,7 +3,7 @@
 class RandomNoise
 {
 public:
-
+	//Test
 	unsigned long long seed;
 	std::mt19937_64 random;
 	RandomNoise();

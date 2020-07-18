@@ -1,0 +1,12 @@
+prefix=C:/Game/Library/OpenAL/OpenAL-Sample/out/install/x64-Debug (default)
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: OpenAL
+Description:  OpenAL is a cross-platform 3D audio API.
+Requires: 
+Version: 1.1.0
+Libs: -L${libdir} -lopenal 
+Cflags: -I${includedir}
+
