@@ -17,6 +17,7 @@ T - Chat/Commands
 
 R - Wireframe
 
+-/+ - Time back/forward
 
 
 F1 - Screenshot (saves to [exe dir]/Screenshots
