@@ -8,7 +8,6 @@ Voxel::Voxel()
     flipY = false;
     flipZ = false;
     count = 0;
-	smoothCount = 0;
 }
  
  
