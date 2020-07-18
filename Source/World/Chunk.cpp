@@ -770,10 +770,19 @@ void Chunk::generateTerrain(std::shared_ptr<ChunkHeight> heights)
 				if (y + this->y * CHUNK_SIZE < height)
 				{
 					this->density[x + BASE_SIZE * (y + BASE_SIZE * z)] = 11;
+					if (y + this->y * CHUNK_SIZE < 7)
+					{
+						this->density[x + BASE_SIZE * (y + BASE_SIZE * z)] = 6;
+					}
+					if (y + this->y * CHUNK_SIZE < -10)
+					{
+						this->density[x + BASE_SIZE * (y + BASE_SIZE * z)] = 8;
+					}
 					if (y + this->y * CHUNK_SIZE < 0)
 					{
 						this->density[x + BASE_SIZE * (y + BASE_SIZE * z)] = 4;
 					}
+					
 					else if (y + this->y * CHUNK_SIZE > 170)
 					{
 						this->density[x + BASE_SIZE * (y + BASE_SIZE * z)] = 12;

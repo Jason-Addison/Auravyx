@@ -3,25 +3,27 @@
 class RandomNoise
 {
 public:
-	//Test
-	unsigned long long seed;
-	std::mt19937_64 random;
 	RandomNoise();
 	RandomNoise(int seed);
 	~RandomNoise();
 
 	void setSeed(int seed);
 
-	float costerp(float a, float b, float blend);
+	double costerp(double a, double b, double blend);
 
-	float createNoise(int x, int y, int z);
+	double createNoise(int x, int y, int z);
 
-	float noise(float x, float y, float z, int octaves, float roughness);
+	double noise(double x, double y, double z, int octaves, double roughness);
 
-	float noise(float x, float y, float z);
+	double noise(double x, double y, double z);
 
-	float getSmoothNoise(int x, int y, int z);
+	double getSmoothNoise(int x, int y, int z);
 
-	float getInterpolatedNoise(float x, float y, float z);
+	double getInterpolatedNoise(double x, double y, double z);
+
+private:
+
+	unsigned long long seed;
+	std::mt19937_64 random;
 };
 

@@ -24,9 +24,10 @@ void ChunkHeight::generate(int xC, int zC)
 	{
 		for (int z = 0; z < 128; z++)
 		{
-			heightmap[x * 128 + z] = (int)(n.noise(((double)x + (double)this->x * (double)128) * 0.002 + 100, 0, ((double)z + (double)this->z * (double)128) * 0.001 + 100, 0, 0) * 1400
-				+ (int) (n.noise(((double)x + (double)this->x * (double)128) * 0.02 + 100, 0, ((double)z + (double)this->z * (double)128) * 0.02 + 100, 0, 0) * 140 +
-				n.noise(((double)x + (double)this->x * (double)128) * 0.2 + 100, 0, ((double)z + (double)this->z * (double)128) * 0.2 + 100, 0, 0) * 10 - 30)) - 1024 + 460;
+			heightmap[x * 128 + z] = (int)
+				((n.noise(((double)x + (double)this->x * (double)128) * 0.001 + 100.0, 0, ((double)z + (double)this->z * (double)128) * 0.001 + 100.0, 0, 0) * 1400.0
+				+ (n.noise(((double)x + (double)this->x * (double)128) * 0.02 + 100.0, 0, ((double)z + (double)this->z * (double)128) * 0.02 + 100.0, 0, 0) * 140.0 +
+				n.noise(((double)x + (double)this->x * (double)128) * 0.2 + 100.0, 0, ((double)z + (double)this->z * (double)128) * 0.2 + 100.0, 0, 0) * 10.0 - 30.0)) - 1024.0 + 460.0);
 		}
 	}
 }
