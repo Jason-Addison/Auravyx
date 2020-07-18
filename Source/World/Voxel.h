@@ -10,9 +10,7 @@ public:
 
 	Vec3f average = Vec3f(0, 0, 0);
 	Vec3f smoothAverage = Vec3f(0, 0, 0);
-	float smoothCount;
 	float count;
-	//Vec3f normal;
 	Vec3f fn = Vec3f(0, 0, 0);
 	bool flipX = false;
 	bool flipY = false;
@@ -26,16 +24,10 @@ public:
 
 	std::vector<short> totalMaterial;
 	std::vector<short> totalMaterialCounter;
-	//bool ignoreY = false;
-
-	//char type = -1;
-	//char id;
 
 	float x = 0;
 	float y = 0;
 	float z = 0;
-
-	//bool bottom = false;
 
 	Vec3f getAverage();
 
