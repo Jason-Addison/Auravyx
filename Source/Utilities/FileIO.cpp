@@ -47,7 +47,6 @@ std::vector<std::string> FileIO::listDirectory(std::string directory)
 		std::ostringstream oss;
 		oss << absolute(p.path()).string();
 		items.emplace_back(oss.str());
-		std::cout << oss.str() << "\n";
 	}
 	return items;
 }
