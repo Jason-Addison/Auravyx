@@ -1,6 +1,6 @@
 #pragma once
 #include "GL\glew.h"
-#include <string>
+#include "xstring"    // for string
 class Texture
 {
 public:

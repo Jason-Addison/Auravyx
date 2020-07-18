@@ -17,12 +17,12 @@ Packet::~Packet()
 
 void Packet::receive(int length, char* data)
 {
-	printf("%i\nMONKAS", length);
+	printf("%i\nerror", length);
 }
 
 void Packet::read(int length, char* data)
 {
-	printf("%i\nMONKAS2", length);
+	printf("%i\nerror", length);
 }
 
 void Packet::send()

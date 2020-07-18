@@ -2,17 +2,9 @@
 #include "SoundManager.h"
 #include "al.h"
 #include "alc.h"
-#include <string>
-#include <windows.h>
 #include <iostream>
-#include "WAVE.h"
-#include "Sound.h"
 #include "Log.h"
-#include "AL/alut.h"
 #include "efx.h"
-#include "efx-creative.h"
-#include "EFX-Util.h"
-#include "Log.h"
 #include <vector>
 SoundManager::SoundManager()
 {

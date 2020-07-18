@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "Vec4f.h"
-#include "M.h"
 
 Vec4f::Vec4f(float x, float y, float z, float w)
 {

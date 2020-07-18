@@ -1,11 +1,7 @@
 #include "stdafx.h"
 #include "FontLoader.h"
-#include "FontChar.h"
-#include "GFX.h"
 #include "Assets.h"
-#include "Font.h"
 #include "FileIO.h"
-#include <Resource.h>
 
 FontLoader::FontLoader()
 {

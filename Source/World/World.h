@@ -11,8 +11,6 @@ public:
 	World();
 	~World();
 
-	//static std::shared_ptr<World> world;
-
 	std::vector<std::shared_ptr<Chunk>> overworld;
 
 	std::vector<std::shared_ptr<ChunkHeight>> overworldHeightmap;
@@ -20,8 +18,6 @@ public:
 	std::atomic_int unloadLock = false;
 
 	Model tMesh;
-
-	//std::unordered_map<std::tuple<int, int, int>> overworldIndex;
 
 	void generate();
 

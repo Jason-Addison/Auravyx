@@ -1,7 +1,10 @@
 #include "stdafx.h"
 #include "Util.h"
-#include "WindowManager.h"
-
+#include <iostream>
+#include <ShObjIdl_core.h>
+#include <sstream>
+#include <filesystem>
+#include <fstream>
 static HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
 
 void Util::logNNL(int colour, std::string text)

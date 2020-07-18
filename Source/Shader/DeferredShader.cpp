@@ -1,7 +1,5 @@
 #include "stdafx.h"
 #include "DeferredShader.h"
-#include <iostream>
-#include "Matrix4f.h"
 
 DeferredShader::DeferredShader()
 {

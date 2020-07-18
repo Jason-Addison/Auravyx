@@ -1,22 +1,10 @@
 ﻿
 #include "pch.h"
 #include "ServerManager.h"
-#include "stdafx.h"
-#include <chrono>
-#include <cstdlib>
 
-#include <iostream>
-#include "Player.h"
-#include <Vector>
-#include <map>
-#include <memory>
 #include <thread>
 #include "Server.h"
-#include <atomic>
-#include <time.h>
-#include <sstream>
 #include "Log.h"
-#include <time.h>
 #include <ctime>
 //#include "PacketChunk.h"
 #include "LogType.h"

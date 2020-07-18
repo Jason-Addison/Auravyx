@@ -1,17 +1,14 @@
 #include "Chat.h"
 #include "Controller.h"
-#include "GL/glew.h"
-#include "GLFW/glfw3.h"
 #include "WindowManager.h"
-#include <stdio.h>
 #include <Log.h>
 #include "GFX.h"
 #include "Clipboard.hpp"
-#include "Util.h"
 #include <ChunkIO.h>
 #include "SOIL/SOIL.h"
 #include <Resource.h>
 #include <iomanip>
+#include <iostream>
 Chat::Chat()
 {
 }

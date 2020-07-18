@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "DropdownMenu.h"
-#include <string>
 
 DropdownMenu::DropdownMenu()
 {

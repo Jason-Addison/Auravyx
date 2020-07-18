@@ -1,8 +1,6 @@
 #include "stdafx.h"
 #include "Button.h"
 #include "GFX.h"
-#include "Controller.h"
-//#include "Theme.h"
 Button::Button()
 {
 }

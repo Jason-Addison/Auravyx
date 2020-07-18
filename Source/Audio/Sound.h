@@ -1,8 +1,8 @@
 #pragma once
 #include "al.h"
-#include "alc.h"
 #include "WAVE.h"
 #include <memory>
+
 
 class Sound
 {

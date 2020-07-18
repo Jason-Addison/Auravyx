@@ -1,5 +1,4 @@
 #include "Voxel.h"
-#include <iostream>
 Voxel::Voxel()
 {
     fn = Vec3f(0, 0, 0);

@@ -1,11 +1,5 @@
 #include <Windows.h>
-#include "stdafx.h"
 #include "Model.h"
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
-//#pragma comment(lib, "C:\\Users\\Owner\\Downloads\\glew-2.1.0-win32 (1)\\glew-2.1.0\\lib\\Release\\Win32\\glew32.lib")
-#include "Util.h"
-#include <vector>
 #include "Model.h"
 #include <iostream>
 GLuint vao;

@@ -1,9 +1,7 @@
 #include "pch.h"
-#include "stdafx.h"
 #include "Player.h"
 #include "Server.h"
 #include "Log.h"
-#include <sstream>
 #include "LogType.h"
 Player::Player()
 {

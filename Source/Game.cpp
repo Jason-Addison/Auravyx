@@ -134,8 +134,6 @@ void chunkLoading(int xC, int yC, int zC)
 
 	int z = 0;
 	ChunkIO cio;
-	float height = -6128;
-
 	double start = glfwGetTime();
 	for (int x = 0; x < size / 2; x++)
 	{
@@ -143,7 +141,6 @@ void chunkLoading(int xC, int yC, int zC)
 		{
 			for (int a = 0; a < 4; a++)
 			{
-					
 				if (GFX::CAM.cX != xC || 0 != yC || GFX::CAM.cZ != zC)
 				{
 					//std::cout << GFX::CAM.cX << "  " << GFX::CAM.cY << "\n";
@@ -268,46 +265,7 @@ void startChunkLoader()
 		////////FOLLOW PLAYER/////////////////////////chunkLoading(cam.cX, 0, cam.cZ);
 		chunkLoading(0, 0, 0);
 	}
-	while (false)
-	{
-		if (glfwGetMouseButton(WindowManager::window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
-		{
-			//w.cuboid(GFX::CAM.x, GFX::CAM.y, GFX::CAM.z, 1, 1, 1, 1);
-			w.setVoxel(GFX::CAM.x, GFX::CAM.y, GFX::CAM.z, 1, 1);
-			//std::cout << GFX::CAM.x << " " << GFX::CAM.y << " " << GFX::CAM.z << "\n";
-			//w.sphere(GFX::CAM.x, GFX::CAM.y, GFX::CAM.z, 10, 1);
-			std::shared_ptr<Chunk> c = w.getChunk(GFX::CAM.cX, GFX::CAM.cY, GFX::CAM.cZ);
-			if (c != nullptr)
-			{
-				float x = GFX::CAM.x * 2 - GFX::CAM.cX * 32 + 2;
-				float y = GFX::CAM.y * 2 - GFX::CAM.cY * 32 - 2;
-				float z = GFX::CAM.z * 2 - GFX::CAM.cZ * 32 + 2;
-
-				c->sphere(x, y, z, 10, 1);
-
-				c->generate();
-				c->chunkUpdate = true;
-			}
-		}
-		else if (glfwGetMouseButton(WindowManager::window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS)
-		{
-			std::shared_ptr<Chunk> c = w.getChunk(GFX::CAM.cX, GFX::CAM.cY, GFX::CAM.cZ);
-
-			if (c != nullptr)
-			{
-				float x = GFX::CAM.x * 2 - GFX::CAM.cX * 32 + 2;
-				float y = GFX::CAM.y * 2 - GFX::CAM.cY * 32 - 2;
-				float z = GFX::CAM.z * 2 - GFX::CAM.cZ * 32 + 2;
-
-				c->sphere(x, y, z, 8, -5);
-
-				c->generate();
-				//c->chunkUpdate = true;
-			}
-		}
-	}
 }
-std::string s;
 ServerManager iserver;
 std::thread chunkLoader;
 
@@ -337,11 +295,11 @@ void updater()
 			Controller::update();
 			if (Controller::isKeyDown(GLFW_KEY_ENTER))
 			{
-				s = s.substr(0, s.size() - 1);
-				if (s.size() != 0)
+				//s = s.substr(0, s.size() - 1);
+				//if (s.size() != 0)
 				{
-					c.send(4, s);
-					s.clear();
+				//	c.send(4, s);
+				//	s.clear();
 				}
 			}
 			
@@ -375,9 +333,6 @@ int frameCount = 0;
 double deltaRender = 0;
 void loop()
 {
-	//World::world->generate();
-	float pos = 0;
-	
 	double lastTimeFPS = -1;
 	double thisTimeFPS = 0;
 
@@ -393,7 +348,6 @@ void loop()
 		}
 	}
 	
-	
 	std::thread updater(updater);
 	Profiler p;
 	p.init();
@@ -405,7 +359,6 @@ void loop()
 	float fpsCounter = 0;
 	float lastFpsCounter = 0;
 	int time;
-	float test = 0;
 	std::shared_ptr<Chunk> chunkToModel = nullptr;
 	double lastTimeFPSOld = 0;
 	Sound s;
@@ -641,13 +594,9 @@ int main(int argc, char* argv[])
 	Shaders::lineShader->init();
 	asyncLoader.join();
 	WindowManager::hideMouse();
-	double nn = glfwGetTime();
 	Packet::loadPackets();
 
-	GFX::drawString("", 100, 100, 50, 1, 0, 0, 1);
-
 	w.create();
-	GFX::drawString("", 100, 100, 50, 1, 0, 0, 1);
 	loop();
 	glfwTerminate();
 	return 0;

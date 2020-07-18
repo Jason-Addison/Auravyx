@@ -1,13 +1,5 @@
 #include "stdafx.h"
 #include "WindowManager.h"
-#include <Windows.h>
-//#define GLFW_EXPOSE_NATIVE_X11
-//#define GLFW_EXPOSE_NATIVE_GLX
-#include <GLFW/glfw3.h>
-#include <GLFW/glfw3native.h>
-#include <iomanip>
-#include <string>
-#include <SOIL\SOIL.h>
 #include "Controller.h"
 WindowManager::WindowManager()
 {

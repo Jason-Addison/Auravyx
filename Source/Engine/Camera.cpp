@@ -1,11 +1,7 @@
 #include "Camera.h"
-#include "WindowManager.h"
 #include "Controller.h"
-#include "GLFW/glfw3.h"
 #include "Clock.h"
-#include "Controller.h"
 #include "M.h"
-#include "Chunk.h"
 #include "Chat.h"
 #include "Profiler.h"
 Camera::Camera()
