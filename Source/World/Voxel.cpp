@@ -1,4 +1,5 @@
 #include "Voxel.h"
+
 Voxel::Voxel()
 {
     fn = Vec3f(0, 0, 0);
@@ -9,7 +10,6 @@ Voxel::Voxel()
     flipZ = false;
     count = 0;
 }
- 
  
 Voxel::~Voxel()
 {
