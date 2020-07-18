@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "OBJMaterial.h"
 
-
 OBJMaterial::OBJMaterial()
 {
 	this->shine = 0.4;
