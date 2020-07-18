@@ -1,6 +1,5 @@
 #include "SkyShader.h"
 #include "Assets.h"
-#include <GFX.h>
 
 
 SkyShader::SkyShader()

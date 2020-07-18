@@ -1,11 +1,6 @@
 #include "stdafx.h"
 #include "Assets.h"
-#include "Model.h"
-#include <memory>
-#include "Util.h"
 #include "Log.h"
-#include <stdexcept>
-#include "Font.h"
 
 Assets::Assets()
 {

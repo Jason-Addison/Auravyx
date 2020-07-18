@@ -443,9 +443,6 @@
     <ClInclude Include="Source\Shader\ShadowMap.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="SVD.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Source\World\ChunkIO.h">
       <Filter>Header Files</Filter>
     </ClInclude>

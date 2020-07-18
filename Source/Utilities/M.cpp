@@ -1,10 +1,6 @@
 #include "stdafx.h"
 #include "M.h"
-#include "Vec3f.h"
-#include "Matrix4f.h"
 #include <random>
-#include <stdlib.h>
-#include <iostream>
 M::M()
 {
 }

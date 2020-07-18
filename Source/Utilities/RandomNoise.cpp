@@ -1,7 +1,5 @@
 #include "stdafx.h"
 #include "RandomNoise.h"
-#include <math.h>
-#include <iostream>
 
 #define PI 3.1415956
 

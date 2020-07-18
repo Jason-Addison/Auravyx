@@ -2,20 +2,12 @@
 #include "World.h"
 #include "Chunk.h"
 #include "GFX.h"
-#include "ClientManager.h"
-#include <iostream>
-#include "Packet.h"
-#include "PacketTileChange.h"
-#include <ShadowMap.h>
-#include <WindowManager.h>
-#include <Controller.h>
-#include <Shaders.h>
-#include <M.h>
-#include "WindowManager.h"
-#include <stdio.h>
-#include <Assets.h>
-#include <Clock.h>
 #include "Profiler.h"
+#include "WindowManager.h"
+#include <Clock.h>
+#include <Controller.h>
+#include <M.h>
+#include <Shaders.h>
 FBO fbo;
 
 std::vector<std::string> fboStrings;
@@ -37,20 +29,9 @@ World::~World()
 {
 }
 
-int size = 32;
 void World::generate()
 {
-	for (int y = 0; y < size; y++)
-	{
-		for (int x = 0; x < size; x++)
-		{
-			std::shared_ptr<Chunk> c(new Chunk());
-			//c->x = x - size / 2;
-			//c->y = y - size / 2;
-			//c->generate();
-			//overworld.emplace_back(c);
-		}
-	}
+
 }
 
 void World::update()
@@ -72,7 +53,6 @@ void World::create()
 	fbo = FBO(WindowManager::width, WindowManager::height);
 	shadowMap = ShadowMap(2048 * 2, 2048 * 2);
 }
-double thisTimeW = 0;
 void World::render(Camera* cam, Matrix4f* projectionMatrix)
 {
 	fbo.unbind();
@@ -82,8 +62,6 @@ void World::render(Camera* cam, Matrix4f* projectionMatrix)
 	glClearColor(1, 1, 1, 1);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	static float m = -40;
-	static float e = 0;
-	thisTimeW = glfwGetTime();
 	
 	m = fmod((double)(getOverworldTime() % getOverworldDayCycle()) * 0.0015, 360);
 	

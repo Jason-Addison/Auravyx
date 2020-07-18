@@ -2,18 +2,10 @@
 #pragma comment(lib, "rpcrt4.lib")
 #include <string>
 #include <vector>
-#include <iostream>
-#include <string>
-#include <iostream>
-#include <io.h>
-#include <Windows.h>
-#include <sstream>
-#include <fstream>
-#include <filesystem>
-#include <vector>
-#include <sys/stat.h>
-#include <shobjidl.h>
-#include <atlstr.h>
+#include "shtypes.h"    // for COMDLG_FILTERSPEC
+#include "xstring"      // for string
+#include <minwindef.h>  // for LPCWSTR
+#include <stddef.h>     // for size_t
 
 #define FOLDER 0
 

@@ -1,7 +1,7 @@
 #pragma once
 #include "Vec3f.h"
-#include <map>
 #include <vector>
+
 class Voxel
 {
 public:

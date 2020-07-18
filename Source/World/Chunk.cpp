@@ -1,15 +1,9 @@
 #include "stdafx.h"
 #include "Chunk.h"
-#include "Shaders.h"
-#include "World.h"
 #include <iostream>
 #include "M.h"
 #include <chrono>
-#include "Clock.h"
-#include <random>
 #include "RandomNoise.h"
-#include <Assets.h>
-#include "GFX.h"
 Chunk::Chunk()
 {
 	zeroNeighbours();

@@ -3,8 +3,6 @@
 #include "M.h"
 #include "Shaders.h"
 #include "WindowManager.h"
-#include "FontChar.h"
-#include "Font.h"
 #include "Assets.h"
 #include "Clock.h"
 

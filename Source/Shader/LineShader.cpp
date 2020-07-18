@@ -1,6 +1,4 @@
 #include "LineShader.h"
-#include "Assets.h"
-#include <GFX.h>
 #include "Chunk.h"
 
 

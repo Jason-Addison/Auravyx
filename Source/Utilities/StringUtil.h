@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include "xstring"  // for string
 class StringUtil
 {
 public:

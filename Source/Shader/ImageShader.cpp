@@ -1,8 +1,5 @@
 #include "stdafx.h"
 #include "ImageShader.h"
-#include <iostream>
-#include "Shader.h"
-#include "Matrix4f.h"
 
 ImageShader::ImageShader()
 {

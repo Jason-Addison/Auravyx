@@ -1,12 +1,8 @@
 #include "stdafx.h"
 #include "FileIO.h"
 #include <filesystem>
-#include <iostream>
 #include "FileIO.h"
-#include <Windows.h>
 #include "StringUtil.h"
-#include <sstream>
-#include "Log.h"
 #define FOLDER 0
 FileIO::FileIO()
 {

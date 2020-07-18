@@ -1,7 +1,5 @@
 #include "stdafx.h"
 #include "Font.h"
-#include "Util.h"
-#include "FontChar.h"
 
 Font::Font()
 {

@@ -1,10 +1,7 @@
 #include "stdafx.h"
 #include "WAVE.h"
 #include <windows.h>
-#include <string>
-#include <iostream>
 #include "Log.h"
-#include "FileIO.h"
 WAVE::WAVE(const char* path)
 {
 	load(path);

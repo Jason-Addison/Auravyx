@@ -170,7 +170,6 @@
     <ClInclude Include="Source\World\Voxel.h" />
     <ClInclude Include="Source\World\VoxelShader.h" />
     <ClInclude Include="Source\World\World.h" />
-    <ClInclude Include="SVD.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Game.rc" />

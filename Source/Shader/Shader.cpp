@@ -1,14 +1,9 @@
 #include "stdafx.h"
 #include "Shader.h"
-#include <iostream>
-#include <map>
 #include "Util.h"
 #include "Log.h"
-#include <GLFW/glfw3.h>
-#include <vector>
-#include "Matrix4f.h"
-#include <exception>
 #include "Resource.h"
+#include <iostream>
 Shader::Shader()
 {
 

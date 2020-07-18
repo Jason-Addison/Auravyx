@@ -1,6 +1,8 @@
 #pragma once
 #include "Button.h"
-#include <string>
+#include "functional"   // for _Func_impl_no_alloc<>::_Mybase, function
+#include "type_traits"  // for move
+#include "xstring"      // for string
 class TextBox : public Button
 {
 public:

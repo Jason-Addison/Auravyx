@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "Sound.h"
 #include "efx.h"
-#include <memory>
 
 Sound::Sound()
 {

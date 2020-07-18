@@ -1,6 +1,5 @@
 #pragma once
 #include "Settings.h"
-#include <exception>
 #include <iostream>
 Settings::Settings()
 {

@@ -1,11 +1,6 @@
 #include "stdafx.h"
 #include "Controller.h"
-#include <gl\glew.h>
-#include <GLFW\glfw3.h>
 #include "WindowManager.h"
-#include <unordered_map>
-#include "Util.h"
-#include <string>
 
 Controller::Controller()
 {

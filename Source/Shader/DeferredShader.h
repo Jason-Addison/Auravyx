@@ -1,6 +1,5 @@
 #pragma once
 #include "Shader.h"
-//#include "PointLight.h"
 #include <vector>
 
 class DeferredShader : public Shader
