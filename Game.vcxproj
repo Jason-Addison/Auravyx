@@ -19,7 +19,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Mouse.cpp" />
     <ClCompile Include="ServerHost\Client.cpp" />
     <ClCompile Include="ServerHost\Packet.cpp" />
     <ClCompile Include="ServerHost\PacketMsg.cpp" />
@@ -28,7 +27,6 @@
     <ClCompile Include="ServerHost\Player.cpp" />
     <ClCompile Include="ServerHost\Server.cpp" />
     <ClCompile Include="ServerHost\ServerManager.cpp" />
-    <ClCompile Include="Source.cpp" />
     <ClCompile Include="Source\Audio\Sound.cpp" />
     <ClCompile Include="Source\Audio\SoundManager.cpp" />
     <ClCompile Include="Source\Audio\WAVE.cpp" />
@@ -41,6 +39,7 @@
     <ClCompile Include="Source\Engine\FBO.cpp" />
     <ClCompile Include="Source\Engine\GameManager.cpp" />
     <ClCompile Include="Source\Engine\Model.cpp" />
+    <ClCompile Include="Source\Engine\Mouse.cpp" />
     <ClCompile Include="Source\Engine\OBJMaterial.cpp" />
     <ClCompile Include="Source\Engine\Texture.cpp" />
     <ClCompile Include="Source\Engine\WindowManager.cpp" />
@@ -82,6 +81,7 @@
     <ClCompile Include="Source\Utilities\RandomNoise.cpp" />
     <ClCompile Include="Source\Utilities\Resource.cpp" />
     <ClCompile Include="Source\Utilities\Settings.cpp" />
+    <ClCompile Include="Source\Utilities\Source.cpp" />
     <ClCompile Include="Source\Utilities\StringUtil.cpp" />
     <ClCompile Include="Source\Utilities\Util.cpp" />
     <ClCompile Include="Source\Utilities\Vec3f.cpp" />
@@ -89,9 +89,9 @@
     <ClCompile Include="Source\World\Chunk.cpp" />
     <ClCompile Include="Source\World\ChunkHeight.cpp" />
     <ClCompile Include="Source\World\ChunkIO.cpp" />
+    <ClCompile Include="Source\World\Voxel.cpp" />
     <ClCompile Include="Source\World\VoxelShader.cpp" />
     <ClCompile Include="Source\World\World.cpp" />
-    <ClCompile Include="Voxel.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Mouse.h" />
