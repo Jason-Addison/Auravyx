@@ -153,73 +153,30 @@ void chunkLoading(int xC, int yC, int zC)
 				{
 					cX = z;
 					cZ = z - x;
-				//	cY = y;
 				}
 				else if (a == 1)
 				{
 					cX = -z;
 					cZ = -(z - x);
-				//	cY = y;
 				}
 				else if (a == 2)
 				{
 					cX = -z;
 					cZ = z - x;
-				//	cY = y;
 				}
 				else if (a == 3)
 				{
 					cX = z;
 					cZ = -(z - x);
-				//	cY = y;
 				}
 				//std::shared_ptr<ChunkHeight> ch = w.getChunkHeightmap(cX, cZ);
 				//if (ch == nullptr)
 				{
-					//ch = std::shared_ptr<ChunkHeight>(new ChunkHeight());
-					//ch->generate(cX, cZ);
+				//	ch = std::shared_ptr<ChunkHeight>(new ChunkHeight());
+				//	ch->generate(cX, cZ);
 				}
 				for (int y = -2; y < 4; y++)
-					//int y = 0;
 				{
-					if (!lock && !w.unloadLock)
-					{
-						/*if (glfwGetMouseButton(WindowManager::window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
-						{
-							//w.cuboid(GFX::CAM.x, GFX::CAM.y, GFX::CAM.z, 1, 1, 1, 1);
-							w.setVoxel(GFX::CAM.x, GFX::CAM.y, GFX::CAM.z, 1, 1);
-							//std::cout << GFX::CAM.x << " " << GFX::CAM.y << " " << GFX::CAM.z << "\n";
-							//w.sphere(GFX::CAM.x, GFX::CAM.y, GFX::CAM.z, 10, 1);
-							std::shared_ptr<Chunk> c = w.getChunk(GFX::CAM.cX, GFX::CAM.cY, GFX::CAM.cZ);
-							if (c != nullptr)
-							{
-								float x = GFX::CAM.x * 2 - GFX::CAM.cX * 32 + 2;
-								float y = GFX::CAM.y * 2 - GFX::CAM.cY * 32 - 2;
-								float z = GFX::CAM.z * 2 - GFX::CAM.cZ * 32 + 2;
-
-								c->sphere(x, y, z, 10, 1);
-
-								c->generate();
-								c->chunkUpdate = true;
-							}
-						}
-						else if (glfwGetMouseButton(WindowManager::window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS)
-						{
-							std::shared_ptr<Chunk> c = w.getChunk(GFX::CAM.cX, GFX::CAM.cY, GFX::CAM.cZ);
-
-							if (c != nullptr)
-							{
-								float x = GFX::CAM.x * 2 - GFX::CAM.cX * 32 + 2;
-								float y = GFX::CAM.y * 2 - GFX::CAM.cY * 32 - 2;
-								float z = GFX::CAM.z * 2 - GFX::CAM.cZ * 32 + 2;
-
-								c->sphere(x, y, z, 8, -5);
-
-								c->generate();
-								c->chunkUpdate = true;
-							}
-						}*/
-					}
 					if (!lock && !w.unloadLock)
 					{
 						cY = y;
