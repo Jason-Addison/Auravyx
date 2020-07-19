@@ -3,15 +3,16 @@
 
 OBJMaterial::OBJMaterial()
 {
-	this->shine = 0.4;
+	this->shine = 0.4f;
 	this->damper = 7;
+	this->length = 1;
 }
 
 OBJMaterial::OBJMaterial(Texture texture, int length)
 {
 	this->texture = texture;
 	this->length = length * 3;
-	this->shine = 0.01;
+	this->shine = 0.01f;
 	this->damper = 1;
 }
 

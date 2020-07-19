@@ -11,7 +11,7 @@ FontLoader::FontLoader()
 FontLoader::~FontLoader()
 {
 }
-FontChar loadCharacter(char character, int x, int y, int width, int height, int xOff, int yOff, int xAdv, int resolution)
+FontChar loadCharacter(char character, float x, float y, float width, float height, float xOff, float yOff, float xAdv, float resolution)
 {
 	float fontSize = -1;
 	float texCoords[] = {x, y, x, y + height, x + width, y, x + width, y + height, x, y + height, x + width, y};
@@ -24,7 +24,7 @@ FontChar loadCharacter(char character, int x, int y, int width, int height, int 
 	//Util::log(std::vector<float>(texCoords, texCoords + sizeof texCoords / sizeof texCoords[0]).at(1));
 	Model model = Model::load2DModel(std::vector<float>(verts, verts + sizeof verts / sizeof verts[0]), std::vector<float>(texCoords, texCoords + sizeof texCoords / sizeof texCoords[0]));
 			
-	FontChar fontCharacter(xAdv, xOff, yOff, width, height, model.vao);
+	FontChar fontCharacter((int) xAdv, (int) xOff, (int) yOff, (int) width, (int) height, model.vao);
 	return fontCharacter;
 }
 
@@ -56,11 +56,12 @@ void FontLoader::loadFont(std::string file)
 			int asciiCharacter = std::stoi(ASCIIID);
 			int height = std::stoi(heightString);
 			FontChar character = loadCharacter(asciiCharacter,
-				std::stoi(xString),
-				std::stoi(yString),
-				std::stoi(widthString),
-				height,
-				std::stoi(xOffString), std::stoi(yOffString), std::stoi(xAdvString), texture->getHeight());
+				(float) std::stoi(xString),
+				(float) std::stoi(yString),
+				(float) std::stoi(widthString),
+				(float) height,
+				(float) std::stoi(xOffString), (float) std::stoi(yOffString), 
+				(float) std::stoi(xAdvString), (float) texture->getHeight());
 			characters.at(asciiCharacter) = character;
 			if (height > largestValue)
 			{
@@ -68,7 +69,7 @@ void FontLoader::loadFont(std::string file)
 			}
 		}
 	}
-	Font bitmapFont(*texture.get(), texture->getHeight(), largestValue, size, characters, 0, 0, 1, 1);
+	Font bitmapFont(*texture.get(), texture->getHeight(), (float) largestValue, (float)	size, characters, 0.0f, 0.0f, 1.0f, 1.0f);
 	Assets::addFont(fontName, bitmapFont);
 }
 

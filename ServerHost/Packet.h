@@ -10,7 +10,7 @@ public:
 	~Packet();
 
 	static std::vector<std::shared_ptr<Packet>> packets;
-	static enum Type
+	enum Type
 	{
 		CONNECTION,
 		MESSAGE,

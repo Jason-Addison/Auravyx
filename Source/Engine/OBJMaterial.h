@@ -9,8 +9,8 @@ public:
 
 	Texture texture;
 	int length;
-	float shine = 0.4;
-	float damper = 7;
+	float shine;
+	float damper;
 
 	Texture getTexture();
 
