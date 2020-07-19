@@ -1,5 +1,8 @@
 #pragma once
 #include "World.h"
+#include "State.h"
+#include <memory>
+#include "GameState.h"
 class GameManager
 {
 public:
@@ -8,10 +11,12 @@ public:
 
 	static World world;
 
-	static void loadChunk(int length, char* data);
+	static std::shared_ptr<State> getCurrentState();
 
-	static void setTile(int x, int y, int z, int pos, int id);
+	static void setCurrentState(std::shared_ptr<State> s);
 
-	//static void sendTile(int x, int y, int z, int pos, int id);
+private:
+
+	static std::shared_ptr<State> currentState;
 };
 

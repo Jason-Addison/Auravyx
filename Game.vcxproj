@@ -38,9 +38,11 @@
     <ClCompile Include="Source\Engine\Entity.cpp" />
     <ClCompile Include="Source\Engine\FBO.cpp" />
     <ClCompile Include="Source\Engine\GameManager.cpp" />
+    <ClCompile Include="Source\Engine\GameState.cpp" />
     <ClCompile Include="Source\Engine\Model.cpp" />
     <ClCompile Include="Source\Engine\Mouse.cpp" />
     <ClCompile Include="Source\Engine\OBJMaterial.cpp" />
+    <ClCompile Include="Source\Engine\State.cpp" />
     <ClCompile Include="Source\Engine\Texture.cpp" />
     <ClCompile Include="Source\Engine\WindowManager.cpp" />
     <ClCompile Include="Source\Game.cpp" />
@@ -59,6 +61,7 @@
     <ClCompile Include="Source\GUI\ScrollBar.cpp" />
     <ClCompile Include="Source\GUI\TextBox.cpp" />
     <ClCompile Include="Source\pch.cpp" />
+    <ClCompile Include="Source\Physics\PhysicsObject.cpp" />
     <ClCompile Include="Source\Server\Chat.cpp" />
     <ClCompile Include="Source\Server\ClientManager.cpp" />
     <ClCompile Include="Source\Shader\LineShader.cpp" />
@@ -117,9 +120,11 @@
     <ClInclude Include="Source\Engine\Entity.h" />
     <ClInclude Include="Source\Engine\FBO.h" />
     <ClInclude Include="Source\Engine\GameManager.h" />
+    <ClInclude Include="Source\Engine\GameState.h" />
     <ClInclude Include="Source\Engine\Model.h" />
     <ClInclude Include="Source\Engine\Mouse.h" />
     <ClInclude Include="Source\Engine\OBJMaterial.h" />
+    <ClInclude Include="Source\Engine\State.h" />
     <ClInclude Include="Source\Engine\Texture.h" />
     <ClInclude Include="Source\Engine\WindowManager.h" />
     <ClInclude Include="Source\Graphics\Font.h" />
@@ -137,6 +142,7 @@
     <ClInclude Include="Source\GUI\ScrollBar.h" />
     <ClInclude Include="Source\GUI\TextBox.h" />
     <ClInclude Include="Source\pch.h" />
+    <ClInclude Include="Source\Physics\PhysicsObject.h" />
     <ClInclude Include="Source\Server\ClientManager.h" />
     <ClInclude Include="Source\Server\HostChunk.h" />
     <ClInclude Include="Source\Shader\LineShader.h" />

@@ -56,9 +56,9 @@ void FBO::create()
 
 	glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texture, 0);
 	GLenum renderBuffers[8];
-	addBuffer(0, GL_RGBA);
-	addBuffer(1, GL_RGBA);
-	addBuffer(2, GL_RGBA);
+	addBuffer(0, GL_RGB);
+	addBuffer(1, GL_RGB);
+	addBuffer(2, GL_RGB);
 	addBuffer(3, GL_RGB);
 	addBuffer(4, GL_RGBA32F);
 	addBuffer(5, GL_RGB);

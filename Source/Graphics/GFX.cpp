@@ -19,7 +19,7 @@ Model GFX::quad = Model();
 
 GLuint GFX::tileMap = 0;
 
-int GFX::viewDistance = 16;
+int GFX::viewDistance = 8;
 int GFX::mipmapBias = -1;
 int GFX::terrainTextureResolution = -1;
 int GFX::UNLIMITED_FPS = -1;
