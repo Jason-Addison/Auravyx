@@ -130,9 +130,9 @@ float Chunk::relativeDensity(int x, int y, int z)
 	x -= 1;
 	y -= 1;
 	z -= 1;
-	int cX = floor((float)x / (float)Chunk::CHUNK_SIZE);
-	int cY = floor((float)y / (float)Chunk::CHUNK_SIZE);
-	int cZ = floor((float)z / (float)Chunk::CHUNK_SIZE);
+	int cX = (int) floor((float)x / (float)Chunk::CHUNK_SIZE);
+	int cY = (int) floor((float)y / (float)Chunk::CHUNK_SIZE);
+	int cZ = (int) floor((float)z / (float)Chunk::CHUNK_SIZE);
 	int rX = x - (cX * CHUNK_SIZE);
 	int rY = y - (cY * CHUNK_SIZE);
 	int rZ = z - (cZ * CHUNK_SIZE);
@@ -237,12 +237,12 @@ int Chunk::scan(int x, int y, int z, int axis, int axisA, int axisB, float &dens
 		if ((fdA == 0 && fdB) != 0)
 		{
 			material = fdB;
-			return fdB;
+			return (int) fdB;
 		}
 		if (fdA != 0 && fdB == 0)
 		{
 			material = fdA;
-			return fdA;
+			return (int) fdA;
 		}
 	}
 	return 0;
@@ -268,11 +268,11 @@ void Chunk::refresh()
 }
 void Chunk::sphere(float xP, float yP, float zP, float radius, float power)
 {
-	for (int x = floor(-radius / 2); x < ceil(radius / 2); x++)
+	for (int x = (int) floor(-radius / 2); x < (int) ceil(radius / 2); x++)
 	{
-		for (int z = floor(-radius / 2); z < ceil(radius / 2); z++)
+		for (int z = (int) floor(-radius / 2); z < (int) ceil(radius / 2); z++)
 		{
-			for (int y = floor(-radius / 2); y < ceil(radius / 2); y++)
+			for (int y = (int) floor(-radius / 2); y < (int) ceil(radius / 2); y++)
 			{
 				int nX = x + xP;
 				int nY = y + yP;
@@ -756,7 +756,7 @@ void Chunk::generateTerrain(std::shared_ptr<ChunkHeight> heights)
 		for (int z = 0; z < BASE_SIZE; z++)
 		{
 			float density = 0;
-			float height = heights->getHeight(x, z);
+			float height = (int) heights->getHeight(x, z);
 			for (int y = 0; y < BASE_SIZE; y++)
 			{
 				this->density[x + BASE_SIZE * (y + BASE_SIZE * z)] = 0;

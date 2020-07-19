@@ -14,7 +14,7 @@ float tX, tY;
 
 bool nnx, nny;
 
-int prevX =999999999, prevY = 9999999999;
+int prevX =9999999, prevY = 9999999;
 void send(int x, int y, int id)
 {
 	

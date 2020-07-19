@@ -16,7 +16,7 @@ Camera::Camera()
 Camera::~Camera()
 {
 }
-float pp = 0;
+double pp = 0;
 
 bool f3Lock = false;
 bool f5Lock = false;
@@ -80,8 +80,8 @@ void Camera::getPlayerInput()
 		xVel *= speedMultiplier;
 		yVel *= speedMultiplier;
 		zVel *= speedMultiplier;
-		xRot += (float)Controller::getMouseDY() * (float) 0.3;
-		yRot += (float)Controller::getMouseDX() * (float)0.3;
+		xRot += (double)Controller::getMouseDY() * (double) 0.3;
+		yRot += (double)Controller::getMouseDX() * (double)0.3;
 	}
 
 
@@ -127,7 +127,7 @@ void Camera::getPlayerInput()
 	
 	//std::cout << (double) x << " " << y << " " << xOff << " " << yOff << "\n";m
 }
-void Camera::set(float x, float y, float z, float xRot, float yRot, float zRot)
+void Camera::set(double x, double y, double z, double xRot, double yRot, double zRot)
 {
 	this->x = x;
 	this->y = y;
@@ -138,32 +138,32 @@ void Camera::set(float x, float y, float z, float xRot, float yRot, float zRot)
 	this->zRot = zRot;
 }
 
-float Camera::getXRot()
+double Camera::getXRot()
 {
 	return xRot;
 }
 
-float Camera::getYRot()
+double Camera::getYRot()
 {
 	return yRot;
 }
 
-float Camera::getZRot()
+double Camera::getZRot()
 {
 	return zRot;
 }
 
-float Camera::getX()
+double Camera::getX()
 {
 	return x;
 }
 
-float Camera::getY()
+double Camera::getY()
 {
 	return y;
 }
 
-float Camera::getZ()
+double Camera::getZ()
 {
 	return z;
 }
@@ -176,7 +176,7 @@ Matrix4f Camera::getViewMatrix()
 	return matrix;
 }
 
-void Camera::setSpeedMultiplier(float x)
+void Camera::setSpeedMultiplier(double x)
 {
 	this->speedMultiplier = x;
 }

@@ -224,7 +224,7 @@ void Chat::render()
 	
 	int toRemove = 0;
 	float thisTime = glfwGetTime();
-	for (int i = chatLog.size() - 1; i >= 0; i--)
+	for (int i = (int) chatLog.size() - 1; i >= 0; i--)
 	{
 		GFX::drawStringBG(chatLog.at(i), 5, WindowManager::height - 65 - (chatLog.size() - i) * 30, 30, 1, 1, 1, 1, 0, -2, 0, 0, 0, 0, 0, 0.3);
 	}

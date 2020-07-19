@@ -32,7 +32,7 @@ int StringUtil::endsWith(std::string string, std::string end)
 {
 	bool flag = true;
 	int j = 0;
-	for (int i = string.length() - end.length(); i < string.length(); i++)
+	for (int i = string.length() - end.length(); i < (int) string.length(); i++)
 	{
 		if (string.at(i) != end.at(j))
 		{
