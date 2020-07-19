@@ -11,7 +11,7 @@ GLManager::~GLManager()
 }
 
 WindowManager GLManager::window;
-
+double GLManager::visibleFPS;
 void glfwErrorCallback(int error, const char* description)
 {
 	std::string errorCodeString;
@@ -47,4 +47,14 @@ void GLManager::start()
 WindowManager GLManager::getWindowManager()
 {
 	return window;
+}
+
+void GLManager::setFPS(double fps)
+{
+	visibleFPS = fps;
+}
+
+double GLManager::getFPS()
+{
+	return visibleFPS;
 }

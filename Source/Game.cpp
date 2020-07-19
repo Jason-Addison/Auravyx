@@ -74,7 +74,6 @@ void loop()
 	std::thread updater(updater);
 
 	double deltaRender = 0;
-	float fpsCounter = 0;
 	float lastFpsCounter = 0;
 	int time;
 
@@ -91,6 +90,7 @@ void loop()
 			GLManager::getWindowManager().update();
 			gameManager.getCurrentState()->render();
 			lastTimeFPS = thisTimeFPS;
+			GLManager::setFPS(roundf((float)(1.0 / (deltaRender))));
 		}
 		else
 		{
