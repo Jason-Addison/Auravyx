@@ -8,8 +8,8 @@ public:
 	static bool showAdvancedDebugInfo;
 	static bool showChunkMetrics;
 
-	void init();
+	static void init();
 
-	double getCurrentProcessCPU();
+	static double getCurrentProcessCPU();
 };
 
