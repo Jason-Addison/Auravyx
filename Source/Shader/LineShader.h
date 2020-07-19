@@ -14,13 +14,17 @@ public:
 
 	Model model;
 
+	Model point;
+
 	void loadProjectionMatrix(Matrix4f matrix);
 
 	void loadOffset(float x, float y, float z);
 
 	void loadCamera(Matrix4f matrix);
 
-	void render(FBO f);
+	void render();
+
+	void renderPoint(float x, float y, float z, Matrix4f projectionMatrix);
 
 	void init();
 

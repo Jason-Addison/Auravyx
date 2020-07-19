@@ -10,9 +10,15 @@ public:
 
 	static WindowManager getWindowManager();
 
+	static void setFPS(double fps);
+
+	static double getFPS();
+
 private: 
 
 	static WindowManager window;
+
+	static double visibleFPS;
 
 };
 

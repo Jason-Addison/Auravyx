@@ -1,5 +1,6 @@
 #include "LineShader.h"
 #include "Chunk.h"
+#include <GFX.h>
 
 
 void addColour(std::vector<float> &colours, float r, float g, float b, float a)
@@ -58,7 +59,6 @@ LineShader::LineShader()
 	shader = "3DLine";
 }
 
-
 LineShader::~LineShader()
 {
 }
@@ -78,21 +78,35 @@ void LineShader::loadCamera(Matrix4f matrix)
 	loadMatrix4f(viewMatrix, matrix);
 }
 
-void LineShader::render(FBO fbo)
+void LineShader::render()
 {
-	//glDisable(GL_DEPTH_TEST);
-	//glDisable(GL_CULL_FACE);
-	//glCullFace(GL_BACK);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
 	glBindVertexArray(model.getVAO());
 	glEnableVertexArrayAttrib(model.getVAO(), 0);
 	glEnableVertexArrayAttrib(model.getVAO(), 1);
+	glLineWidth(2);
 	glDrawArrays(GL_LINES, 0, model.getCount());
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
 }
 
+void LineShader::renderPoint(float x, float y, float z, Matrix4f projectionMatrix)
+{
+	start();
+	loadCamera(GFX::CAM.getViewMatrix());
+	loadProjectionMatrix(projectionMatrix);
+	loadOffset(x / 128, y / 128, z / 128);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+	glBindVertexArray(point.getVAO());
+	glEnableVertexArrayAttrib(point.getVAO(), 0);
+	glEnableVertexArrayAttrib(point.getVAO(), 1);
+	glPointSize(20);
+	glDrawArrays(GL_POINTS, 0, point.getCount());
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_CULL_FACE);
+}
 
 void addSegments(std::vector<float>& vertices, std::vector<float>& colours, float r, float g, float b, float a, int segments)
 {
@@ -133,9 +147,6 @@ void addSegments(std::vector<float>& vertices, std::vector<float>& colours, floa
 
 		addVertex(vertices, colours, 0 * Chunk::CHUNK_SIZE, 0 * Chunk::CHUNK_SIZE, i * segments, 2);
 		addVertex(vertices, colours, 0 * Chunk::CHUNK_SIZE, 1 * Chunk::CHUNK_SIZE, i * segments, 2);
-
-
-
 	}
 }
 
@@ -150,6 +161,29 @@ void LineShader::init()
 	addSegments(vertices, colours, 1, 0, 0, 1, 2);
 
 	model = Model::load3DLineModel(vertices, colours);
+
+	std::vector<float> pVertices;
+	std::vector<float> pColours;
+
+	pVertices.emplace_back(0);
+	pVertices.emplace_back(0);
+	pVertices.emplace_back(0);
+
+	pVertices.emplace_back(0);
+	pVertices.emplace_back(0.0001);
+	pVertices.emplace_back(0);
+
+	pColours.emplace_back(1);
+	pColours.emplace_back(0);
+	pColours.emplace_back(0);
+	pColours.emplace_back(0);
+
+	pColours.emplace_back(1);
+	pColours.emplace_back(0);
+	pColours.emplace_back(0);
+	pColours.emplace_back(0);
+
+	point = Model::load3DLineModel(pVertices, pColours);
 }
 
 void LineShader::loadAllUniformLocations()

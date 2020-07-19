@@ -18,6 +18,8 @@
 #include <Profiler.h>
 #include <Settings.h>
 #include <Assets.h>
+#include <iostream>
+#include <GLManager.h>
 GameState::GameState()
 {
 }
@@ -241,9 +243,9 @@ void GameState::render()
 	now = glfwGetTime();
 	if (now > last + 0.5)
 	{
-		fpsCounter = roundf((float)(1.0 / (now - last)));
-		last = glfwGetTime();
 		lastFpsCounter = fpsCounter;
+		fpsCounter = GLManager::getFPS();
+		last = glfwGetTime();
 		cpuUsageA = cpuUsageB;
 		cpuUsageB = Profiler::getCurrentProcessCPU();
 	}

@@ -94,8 +94,9 @@ void World::render(Camera* cam, Matrix4f* projectionMatrix)
 		Shaders::lineShader->loadCamera(cam->getViewMatrix());
 		Shaders::lineShader->loadProjectionMatrix(*projectionMatrix);
 		Shaders::lineShader->loadOffset(GFX::CAM.cX, GFX::CAM.cY, GFX::CAM.cZ);
-		Shaders::lineShader->render(fbo);
+		Shaders::lineShader->render();
 	}
+	Shaders::lineShader->stop();
 
 	Shaders::voxelShader->start();
 	Shaders::voxelShader->loadProjectionMatrix(*projectionMatrix); // *projectionMatrix);
