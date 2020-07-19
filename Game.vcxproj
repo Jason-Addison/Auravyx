@@ -39,6 +39,7 @@
     <ClCompile Include="Source\Engine\FBO.cpp" />
     <ClCompile Include="Source\Engine\GameManager.cpp" />
     <ClCompile Include="Source\Engine\GameState.cpp" />
+    <ClCompile Include="Source\Engine\GLManager.cpp" />
     <ClCompile Include="Source\Engine\Model.cpp" />
     <ClCompile Include="Source\Engine\Mouse.cpp" />
     <ClCompile Include="Source\Engine\OBJMaterial.cpp" />
@@ -121,6 +122,7 @@
     <ClInclude Include="Source\Engine\FBO.h" />
     <ClInclude Include="Source\Engine\GameManager.h" />
     <ClInclude Include="Source\Engine\GameState.h" />
+    <ClInclude Include="Source\Engine\GLManager.h" />
     <ClInclude Include="Source\Engine\Model.h" />
     <ClInclude Include="Source\Engine\Mouse.h" />
     <ClInclude Include="Source\Engine\OBJMaterial.h" />

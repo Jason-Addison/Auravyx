@@ -17,6 +17,7 @@
 #include <Psapi.h>
 #include <Profiler.h>
 #include <Settings.h>
+#include <Assets.h>
 GameState::GameState()
 {
 }
@@ -215,28 +216,15 @@ void world()
 	w.render(&GFX::CAM, &m4);
 	Camera cam = GFX::CAM;
 }
-float pitch = 1;
-float amt = 0.001;
 double cpuUsageA = 0;
 double cpuUsageB = 1;
-Sound s;
 double now;
 double last;
 double fpsCounter = 0;
 double lastFpsCounter = 0;
-Profiler p;
+
 void GameState::render()
 {
-	if (Controller::isKeyDown(GLFW_KEY_1))
-	{
-		pitch -= amt;
-		s.setPitch(pitch);
-	}
-	if (Controller::isKeyDown(GLFW_KEY_2))
-	{
-		pitch += amt;
-		s.setPitch(pitch);
-	}
 	if (lock)
 	{
 		chunkToModel = std::shared_ptr<Chunk>(new Chunk(*nextChunk));
@@ -257,7 +245,7 @@ void GameState::render()
 		last = glfwGetTime();
 		lastFpsCounter = fpsCounter;
 		cpuUsageA = cpuUsageB;
-		cpuUsageB = p.getCurrentProcessCPU();
+		cpuUsageB = Profiler::getCurrentProcessCPU();
 	}
 	
 	for (auto c : w.overworld)
@@ -390,6 +378,8 @@ void serverStart()
 bool hostServer = false;
 void GameState::start()
 {
+	//Sound s;
+	//s.play(Assets::getAudio("song"));
 	hostServer = false;// Settings::getBool("host");
 	
 	if (hostServer)
