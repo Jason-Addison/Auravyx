@@ -11,7 +11,11 @@ PacketMsg::~PacketMsg()
 {
 }
 
-void Packet::receive(char* data, int len)
+void PacketMsg::sendMessage(std::string msg)
+{
+}
+
+void PacketMsg::receive(char* data)
 {
 
 }

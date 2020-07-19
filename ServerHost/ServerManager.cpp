@@ -58,7 +58,6 @@ std::string ServerManager::getTime(std::string format)
 
 void ServerManager::updateServer()
 {
-	Server::players.size();
 	std::string title = SERVER_NAME + std::string(" | Port : ");
 	title.append(std::to_string(PORT));
 	title.append(" | Player Count : ");
