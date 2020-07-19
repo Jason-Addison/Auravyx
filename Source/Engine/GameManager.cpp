@@ -1,7 +1,9 @@
 #include "GameManager.h"
 #include "M.h"
-
 World GameManager::world;
+
+std::shared_ptr<State> GameManager::currentState;
+
 GameManager::GameManager()
 {
 }
@@ -11,12 +13,12 @@ GameManager::~GameManager()
 {
 }
 
-void GameManager::loadChunk(int length, char* data)
+std::shared_ptr<State> GameManager::getCurrentState()
 {
-	
+	return currentState;
 }
 
-void GameManager::setTile(int x, int y, int z, int pos, int id)
+void GameManager::setCurrentState(std::shared_ptr<State> s)
 {
-
+	currentState = s;
 }

@@ -31,7 +31,7 @@ void PacketTileChange::read(int length, char* data)
 		Server::sendToAll(p);
 
 		//std::cout << x << " " << y << " " << id;
-		GameManager::setTile(x, y, z, pos, id);
+		//GameManager::setTile(x, y, z, pos, id);
 	}
 }
 
