@@ -16,25 +16,25 @@ public:
 
 	void getPlayerInput();
 
-	float xRot = 0, yRot = 0, zRot = 0;
+	double xRot = 0, yRot = 0, zRot = 0;
 
-	void set(float x, float y, float z, float xRot, float yRot, float zRot);
+	void set(double x, double y, double z, double xRot, double yRot, double zRot);
 
-	float getXRot();
+	double getXRot();
 
-	float getYRot();
+	double getYRot();
 
-	float getZRot();
+	double getZRot();
 
-	float getX();
+	double getX();
 
-	float getY();
+	double getY();
 
-	float getZ();
+	double getZ();
 
 	Matrix4f getViewMatrix();
 
-	void setSpeedMultiplier(float x);
+	void setSpeedMultiplier(double x);
 
 	void setFOV(double fov);
 };

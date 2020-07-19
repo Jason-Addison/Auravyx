@@ -39,7 +39,7 @@ void GLManager::start()
 	GLenum err = glewInit();
 	if (err != GLEW_OK)
 	{
-		Log::out("OpenGL", "GLEW Error : '" + std::to_string((long) glewGetErrorString(err)) + "'", RED);
+		Log::out("OpenGL", "GLEW Error : '" + std::to_string((GLubyte) glewGetErrorString(err)) + "'", RED);
 		system("PAUSE");
 	}
 }

@@ -299,17 +299,17 @@ void GameState::render()
 	curFPS = (int)roundf(((fpsCounter + lastFpsCounter) / 2));
 	fps = std::to_string(curFPS);
 	fps += std::string(" (" + fpsCap + ")");
-	GFX::drawStringBG("fps : " + fps, 0, dim * (di++), 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3);
-	GFX::drawStringBGC("authenticated", 0, 0, 30, WindowManager::getWidth(), 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3);
-	GFX::drawStringBG("x : " + Util::removeDecimal(GFX::CAM.x, 3), 0, dim * (di++), 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3);
-	GFX::drawStringBG("y : " + Util::removeDecimal(GFX::CAM.y, 3), 0, dim * (di++), 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3);
-	GFX::drawStringBG("z : " + Util::removeDecimal(GFX::CAM.z, 3), 0, dim * (di++), 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3);
+	GFX::drawStringBG("fps : " + fps, 0, dim * (di++), 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3f);
+	GFX::drawStringBGC("authenticated", 0, 0, 30, WindowManager::getWidth(), 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3f);
+	GFX::drawStringBG("x : " + Util::removeDecimal(GFX::CAM.x, 3), 0, dim * (di++), 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3f);
+	GFX::drawStringBG("y : " + Util::removeDecimal(GFX::CAM.y, 3), 0, dim * (di++), 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3f);
+	GFX::drawStringBG("z : " + Util::removeDecimal(GFX::CAM.z, 3), 0, dim * (di++), 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3f);
 	GFX::drawStringBG("c : " + std::to_string(GFX::CAM.cX) + " / " + std::to_string(GFX::CAM.cY) + " / " +
-		std::to_string(GFX::CAM.cZ), 0, dim * (di++), 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3);
+		std::to_string(GFX::CAM.cZ), 0, dim * (di++), 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3f);
 
 	float velocity = sqrt(pow(GFX::CAM.xVel, 2) + pow(GFX::CAM.yVel, 2) + pow(GFX::CAM.zVel, 2));
 	velocity *= 60;
-	GFX::drawStringBG("v : " + Util::removeDecimal(velocity, 1) + " m/s", 0, dim * (di++), 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3);
+	GFX::drawStringBG("v : " + Util::removeDecimal(velocity, 1) + " m/s", 0, dim * (di++), 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3f);
 	SIZE_T physMemUsedByMe = pmc.WorkingSetSize;
 	DWORDLONG totalPhysMem = memInfo.ullTotalPhys;
 	int renderableChunk = 0;

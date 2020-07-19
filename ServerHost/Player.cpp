@@ -89,7 +89,7 @@ void Player::updateConnection()
 	int bytesIn = 3;// recvfrom(out, buf, 1024, 0, (sockaddr*)& address, sizeof(address));
 	std::wstringstream wss;
 	//wss << bytesIn;
-	int l = strlen(buf);
+	size_t l = strlen(buf);
 	if (l != 0)
 	{
 	//printf("LOL");

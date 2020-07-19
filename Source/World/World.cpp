@@ -78,7 +78,7 @@ void World::render(Camera* cam, Matrix4f* projectionMatrix)
 	Camera altCam = *cam;
 	altCam.x = 0; altCam.y = 0; altCam.z = 0;
 
-	float p = 0.0174532925;
+	double p = 0.0174532925;
 
 	Shaders::skyShader->loadCamera(altCam.getViewMatrix());
 	Shaders::skyShader->loadSun(-cos(m * p), sin(m * p), 0);
@@ -213,7 +213,7 @@ void World::render(Camera* cam, Matrix4f* projectionMatrix)
 	Shaders::deferredShader->loadSunDirection(cos(M::toRadians(m)), -sin(M::toRadians(m)), 0);
 	Shaders::deferredShader->loadCamera(cam->x, cam->y, cam->z, GFX::viewDistance * 100, cam->getViewMatrix());
 	
-	float lightFactor = (1 - 1) * 0.9 + 0.1;
+	double lightFactor = (1 - 1) * 0.9 + 0.1;
 	   
 	double step = (double)(getOverworldTime() % getOverworldDayCycle()) / (double)getOverworldDayCycle();
 	double brightness = sin((double)(getOverworldTime() % getOverworldDayCycle()) / (double)getOverworldDayCycle() * 3.14 * 6);
@@ -246,7 +246,7 @@ void World::render(Camera* cam, Matrix4f* projectionMatrix)
 
 
 	int width = WindowManager::width / 6;
-	int height = width * ((float) WindowManager::height / (float) WindowManager::width);
+	int height = (int) (width * ((float) WindowManager::height / (float) WindowManager::width));
 	
 	if (Profiler::showAdvancedDebugInfo)
 	{

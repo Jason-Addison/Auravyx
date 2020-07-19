@@ -35,10 +35,10 @@ struct preloadModel
 struct preloadTexture
 {
 	std::string name;
-	unsigned char* tex;
-	unsigned int width;
-	unsigned int height;
-	unsigned int channel;
+	unsigned char* tex = 0;
+	unsigned int width = 0;
+	unsigned int height = 0;
+	unsigned int channel = 0;
 };
 
 struct loadingMessage
@@ -111,7 +111,7 @@ bool Resource::loadAllResources()
 		if (terrainTexturesLoaded)
 		{
 			int width = 1024, height = 1024;
-			GLsizei count = preloadedTerrainTextures.size();
+			GLsizei count = (GLsizei) preloadedTerrainTextures.size();
 			int i = 0;
 			GLuint texture3D;
 			glGenTextures(1, &texture3D);
@@ -136,7 +136,7 @@ bool Resource::loadAllResources()
 				//glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 				glGenerateMipmap(GL_TEXTURE_2D_ARRAY);
 				glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-				glTexParameterf(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_LOD_BIAS, GFX::mipmapBias);
+				glTexParameterf(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_LOD_BIAS, (GLfloat) GFX::mipmapBias);
 				i++;
 				SOIL_free_image_data(pt.tex);
 			}
@@ -237,20 +237,20 @@ void Resource::loadAllAsyncAssets()
 	loadTerrainTextures();
 	Log::out("Loader", "Finish", YELLOW);
 }
-float last = 0;
-float now = 0;
+double lastP = 0;
+double nowP = 0;
 double progress = 0;
 void Resource::renderProgress()
 {
-	last = now;
-	now = glfwGetTime();
-	GFX::fillRect(0, 0, WindowManager::getWidth(), WindowManager::getHeight() / 4, 1, 1, 1, 1);
+	lastP = nowP;
+	nowP = glfwGetTime();
+	GFX::fillRect(0, 0, (float) WindowManager::getWidth(), (float) WindowManager::getHeight() / 4, 1, 1, 1, 1);
 	//progress = now - last;
-	progress -= (now - last) * 3;
-	float a = sin((progress) * 3.14);
-	float b = sin((progress + 0.5) * 3.14);
-	float c = sin((progress + 1) * 3.14);
-	float d = sin((progress + 1.5) * 3.14);
+	progress -= (nowP - lastP) * (double) 3;
+	float a = (float) sin((progress) * 3.14);
+	float b = (float) sin((progress + 0.5) * 3.14);
+	float c = (float) sin((progress + 1) * 3.14);
+	float d = (float) sin((progress + 1.5) * 3.14);
 
 	float squareSize = 10;
 	float spacingSize = 5;
@@ -268,8 +268,8 @@ void Resource::renderProgress()
 	GFX::fillRect(WindowManager::getWidth() - loadingX - squareSize * 2 - spacingSize, loadingY + squareSize + spacingSize, squareSize, squareSize, 1, 1, 1, c);
 	GFX::fillRect(WindowManager::getWidth() - loadingX - squareSize * 2 - spacingSize + squareSize + spacingSize, loadingY + squareSize + spacingSize, squareSize, squareSize, 1, 1, 1, d);
 
-	GFX::drawStringC(whatIsLoadingPrimary, 0, WindowManager::getHeight() - 45, 30, WindowManager::getWidth(), 1, 1, 1, 1);
-	GFX::drawStringC(whatIsLoadingSecondary, 0, WindowManager::getHeight() - 20, 25, WindowManager::getWidth(), 1, 1, 1, 1);
+	GFX::drawStringC(whatIsLoadingPrimary, 0, (float)WindowManager::getHeight() - 45, 30, (float) WindowManager::getWidth(), 1, 1, 1, 1);
+	GFX::drawStringC(whatIsLoadingSecondary, 0, (float)WindowManager::getHeight() - 20, 25, (float)WindowManager::getWidth(), 1, 1, 1, 1);
 
 	if (loadingMessages.size() > 0)
 	{
@@ -277,7 +277,7 @@ void Resource::renderProgress()
 		for (int i = 0; i < loadingMessages.at(0).messageLines.size(); i++)
 		{
 			GFX::drawString(loadingMessages.at(0).messageLines.at(i), 5, 
-				WindowManager::getHeight() / 4 + 0 + l++ * 15, 25,
+				WindowManager::getHeight() / 4 + (float) (l++) * 15, 25,
 				loadingMessages.at(0).messageLinesColours.at(i).x,
 				loadingMessages.at(0).messageLinesColours.at(i).y, loadingMessages.at(0).messageLinesColours.at(i).z, 1);
 		}
@@ -287,7 +287,7 @@ void Resource::renderProgress()
 			remainingTime = 0;
 		}
 		GFX::drawString("Message ends in " + Util::removeDecimal(remainingTime, 1) + "s", 5,
-			loadingMessages.at(0).sourceLines.size() * 15 + WindowManager::getHeight() / 4 + l++ * 15, 25,
+			loadingMessages.at(0).sourceLines.size() * 15 + WindowManager::getHeight() / 4 + (float) (l++) * 15, 25,
 			1, 1, 1, 1);
 	}
 }
@@ -326,7 +326,7 @@ void Resource::loadBootAssets()
 int Resource::loadTexture(std::string dir)
 {
 	unsigned int tex = SOIL_load_OGL_texture(dir.c_str(), SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_INVERT_Y);
-	int width, height;
+	int width = 0, height = 0;
 	
 	
 	return tex;
@@ -395,24 +395,20 @@ void Resource::loadAllModels()
 		
 		for (int i : indicesV)
 		{
-			verticesOut.emplace_back(vertices.at((i - 1) * 3 + 0));
-			verticesOut.emplace_back(vertices.at((i - 1) * 3 + 1));
-			verticesOut.emplace_back(vertices.at((i - 1) * 3 + 2));
+			verticesOut.emplace_back(vertices.at((size_t) (((size_t) i - 1) * 3 + 0)));
+			verticesOut.emplace_back(vertices.at((size_t) (((size_t) i - 1) * 3 + 1)));
+			verticesOut.emplace_back(vertices.at((size_t) (((size_t) i - 1) * 3 + 2)));
 		}
 		for (int i : indicesN)
 		{
-			normalsOut.emplace_back(normals.at((i - 1) * 3 + 0));
-			normalsOut.emplace_back(normals.at((i - 1) * 3 + 1));
-			normalsOut.emplace_back(normals.at((i - 1) * 3 + 2));
+			normalsOut.emplace_back(normals.at((size_t) (((size_t) i - 1) * 3 + 0)));
+			normalsOut.emplace_back(normals.at((size_t) (((size_t) i - 1) * 3 + 1)));
+			normalsOut.emplace_back(normals.at((size_t) (((size_t) i - 1) * 3 + 2)));
 		}
 		for (int i : indicesUV)
 		{
-			uvOut.emplace_back(uv.at((i - 1) * 2 + 0));
-			uvOut.emplace_back(uv.at((i - 1) * 2 + 1));
-		}
-		for (int i = 0; i < verticesOut.size(); i++)
-		{
-			//std::cout << verticesOut.at(i) << "\n";
+			uvOut.emplace_back(uv.at((size_t) (((size_t) i - 1) * 2 + 0)));
+			uvOut.emplace_back(uv.at((size_t) (((size_t) i - 1) * 2 + 1)));
 		}
 		std::string fileName = FileIO::getFileName(model);
 		if (printEachAssetLoad)
@@ -473,7 +469,6 @@ std::map<std::string, std::string> Resource::loadShaders(std::string dir)
 	std::string extVert = "vert";
 	std::string extFrag = "frag";
 	std::vector<std::string> vertexShaders = FileIO::listDirectory(GAME_DIR, extVert);
-	//std::vector<std::string> vertexShaders = FileIO::listDirectory(GAME_DIR + "Source\\Shaders\\", extVert);
 	std::map<std::string, std::string> shaders;
 	Log::out("OpenGL", "Loading vertex shaders...", LBLUE);
 	for (auto & i : vertexShaders)
