@@ -44,6 +44,14 @@ Commands
 
 /noclip           Toggles terrain/object collision
 
+Connecting to a server
+---------------
+
+All sessions opperate on a server, even singleplayer, this allows you to play via lan or host on a server. If you want to host a seperate game from a server, run ServerHost.exe. This will give you a complete server operating experience, allowing you to view connected players and ping as well as a log of chat and commands.
+
+To disable self hosting, change the line in Settings.txt "host=true" to "host=false" and the IP to the server's IP.
+
+Port 54000 should work on most computers. If port binding fails, try another (make sure to change settings.txt and server's port)
 
 Gallery
 ---------
@@ -58,4 +66,6 @@ Gallery
 
 
 ![Image](https://imgur.com/uXEN1i6.jpg)
+
+![Image](https://imgur.com/2poeBib.jpg)
 
