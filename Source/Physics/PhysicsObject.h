@@ -1,4 +1,6 @@
 #pragma once
+#include <memory>
+#include <vector>
 /*
 	Physics Object - Base class for any physics objects
 	
@@ -8,14 +10,56 @@
 */
 class PhysicsObject
 {
+public:
+
 	PhysicsObject();
 	~PhysicsObject();
 
 
 	void getBoundsAABB(double& x, double& y, double& z);
 
+	bool checkCollision(PhysicsObject* object);
+
+	void setPosition(double x, double y, double z);
+
+	void addImpulse(double x, double y, double z);
+
+	double getX();
+
+	double getY();
+
+	double getZ();
+
+	double getXVelocity();
+
+	double getYVelocity();
+
+	double getZVelocity();
+
+	void setXVelocity(double vel);
+
+	void setYVelocity(double vel);
+
+	void setZVelocity(double vel);
+
+	void update();
+
 protected:
 
+	struct Impulse
+	{
+		double xi, yi, zi;
+		Impulse(double x, double y, double z)
+		{
+			xi = x;
+			yi = y;
+			zi = z;
+		}
+	};
+
+	std::vector<struct Impulse> impulses;
+
+	int type = 0;
 	/*
 		x / y / z : Position of a physics object globally
 
@@ -31,8 +75,6 @@ protected:
 	*/
 	double x = 0, y = 0, z = 0;
 
-	double xScale = 1, yScale = 1, zScale = 1;
-
 	double xBounds = 1, yBounds = 1, zBounds = 1;
 
 	double xVelocity = 0, yVelocity = 0, zVelocity = 0;
@@ -42,5 +84,19 @@ protected:
 	double xAngularVelocity = 0, yAngularVelocity = 0, zAngularVelocity = 0;
 
 	virtual void updateAABB();
+
+	virtual bool sphereCollision(PhysicsObject* sphere);
+
+	virtual bool prismCollision(PhysicsObject* prism);
+
+	virtual bool trianglesCollision(PhysicsObject* triangles);
+
+	enum Type
+	{
+		OBJECT,
+		PRISM,
+		SPHERE,
+		TRIANGLES
+	};
 };
 

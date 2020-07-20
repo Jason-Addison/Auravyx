@@ -18,6 +18,7 @@ ShadowShader* Shaders::shadowShader = new ShadowShader();
 DeferredShader* Shaders::deferredShader = new DeferredShader();
 SkyShader* Shaders::skyShader = new SkyShader();
 LineShader* Shaders::lineShader = new LineShader();
+ModelShader* Shaders::modelShader = new ModelShader();
 void Shaders::init(std::map<std::string, std::string> shaders)
 {
 	voxelShader->createShader(shaders);
@@ -25,6 +26,7 @@ void Shaders::init(std::map<std::string, std::string> shaders)
 	deferredShader->createShader(shaders);
 	skyShader->createShader(shaders);
 	lineShader->createShader(shaders);
+	modelShader->createShader(shaders);
 }
 
 void Shaders::initBootShaders(std::map<std::string, std::string> shaders)

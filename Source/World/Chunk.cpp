@@ -105,7 +105,7 @@ bool Chunk::isValid(Voxel* vert)
 void Chunk::addVertex(Vec3f pos, std::vector<float>* vec, float x, float y, float z)
 {
 	vec->emplace_back((pos.x * lod + CHUNK_SIZE * x) * 1);
-	vec->emplace_back((pos.y * lod + CHUNK_SIZE * y) * 1);
+	vec->emplace_back((pos.y * lod + CHUNK_SIZE * y) * 1 - 0.5f);
 	vec->emplace_back((pos.z * lod + CHUNK_SIZE * z) * 1);
 }
 
@@ -757,6 +757,10 @@ void Chunk::generateTerrain(std::shared_ptr<ChunkHeight> heights)
 		{
 			float density = 0;
 			float height = (int) heights->getHeight(x, z);
+			if (height < -1)
+			{
+				height = -1;
+			}
 			for (int y = 0; y < BASE_SIZE; y++)
 			{
 				this->density[x + BASE_SIZE * (y + BASE_SIZE * z)] = 0;
@@ -764,6 +768,7 @@ void Chunk::generateTerrain(std::shared_ptr<ChunkHeight> heights)
 				if (y + this->y * CHUNK_SIZE < height)
 				{
 					this->density[x + BASE_SIZE * (y + BASE_SIZE * z)] = 11;
+					
 					if (y + this->y * CHUNK_SIZE < 7)
 					{
 						this->density[x + BASE_SIZE * (y + BASE_SIZE * z)] = 6;
@@ -781,6 +786,10 @@ void Chunk::generateTerrain(std::shared_ptr<ChunkHeight> heights)
 					{
 						this->density[x + BASE_SIZE * (y + BASE_SIZE * z)] = 12;
 					}
+					if (y + this->y * CHUNK_SIZE <= -1)
+					{
+						this->density[x + BASE_SIZE * (y + BASE_SIZE * z)] = 13;
+					}
 				}
 				if (y + this->y * CHUNK_SIZE < height - 1)
 				{
@@ -795,11 +804,11 @@ void Chunk::generateTerrain(std::shared_ptr<ChunkHeight> heights)
 				{
 					zz = 250;
 				}
-				if (M::distance(Vec3f(x + this->x * CHUNK_SIZE, y + this->y * CHUNK_SIZE, z + this->z * CHUNK_SIZE), Vec3f(0, zz, zz)) < 9)
+				if (M::distance(Vec3f(x + this->x * CHUNK_SIZE, y + this->y * CHUNK_SIZE, z + this->z * CHUNK_SIZE), Vec3f(70, zz, zz)) < 9)
 				{
 					this->density[x + BASE_SIZE * (y + BASE_SIZE * z)] = 5;
 				}
-				if (M::distance(Vec3f(x + this->x * CHUNK_SIZE, y + this->y * CHUNK_SIZE, z + this->z * CHUNK_SIZE), Vec3f(15, (z + this->z * CHUNK_SIZE) / 3, z + this->z * CHUNK_SIZE)) < 7)
+				if (M::distance(Vec3f(x + this->x * CHUNK_SIZE, y + this->y * CHUNK_SIZE, z + this->z * CHUNK_SIZE), Vec3f(60, (z + this->z * CHUNK_SIZE) / 3, z + this->z * CHUNK_SIZE)) < 7)
 				{
 					this->density[x + BASE_SIZE * (y + BASE_SIZE * z)] = 0;
 				}

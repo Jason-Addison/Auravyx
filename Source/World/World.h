@@ -49,6 +49,8 @@ public:
 
 	long long int getOverworldDayCycle();
 
+	void test();
+
 private:
 
 	long long int overworldDayCycle = 240000;

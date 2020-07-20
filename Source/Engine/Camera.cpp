@@ -47,7 +47,7 @@ void Camera::getPlayerInput()
 		}
 		if (Controller::isKeyDown(GLFW_KEY_E))
 		{
-			speed = 50;
+			speed *= 10;
 		}
 		if (Controller::isKeyDown(GLFW_KEY_W))
 		{
@@ -84,34 +84,13 @@ void Camera::getPlayerInput()
 		yRot += (double)Controller::getMouseDX() * (double)0.3;
 	}
 
-
-	speedMultiplier;
 	x += xVel;
 	y += yVel;
 	z += zVel;
-	if (x < 0)
-	{
-		//cX -= 1;
-		//x = 16 + x;
-	}
-	if (y < 0)
-	{
-		//cY -= 1;
-		//y = 16 + y;
-	}
-	//int xOff = x / (16);
-	//int yOff = y / (16);
-	//cX += xOff;
-	//cY += yOff;
-	//if (xOff != 0 || yOff != 0)
-	{
-		//std::cout << xOff << " " << yOff << "\n";
-	}
 
 	cX = floor((x * 1) / Chunk::CHUNK_SIZE);
 	cY = floor((y * 1) / Chunk::CHUNK_SIZE);
 	cZ = floor((z * 1) / Chunk::CHUNK_SIZE);
-	//std::cout << Controller::getMous() << "\n";
 
 	if (xRot > 90)
 	{
@@ -122,10 +101,6 @@ void Camera::getPlayerInput()
 		xRot = -90;
 	}
 	speed = 4;
-	//x = fmod(x, 16);
-	//y = fmod(y, 16);
-	
-	//std::cout << (double) x << " " << y << " " << xOff << " " << yOff << "\n";m
 }
 void Camera::set(double x, double y, double z, double xRot, double yRot, double zRot)
 {

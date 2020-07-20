@@ -6,6 +6,8 @@
 #include "ShadowMap.h"
 //#include "Game.h"
 #include <iostream>
+#include <GFX.h>
+#include <Assets.h>
 ShadowShader::ShadowShader()
 {
 	shader = "Shadow";
