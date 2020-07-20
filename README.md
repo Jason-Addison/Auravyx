@@ -65,5 +65,5 @@ Gallery
 
 ![Image](https://imgur.com/uXEN1i6.jpg)
 
-![Image](https://imgur.com/eFd8WjR.jpg)
+![Image](https://imgur.com/2poeBib.jpg)
 
