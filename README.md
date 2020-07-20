@@ -51,6 +51,8 @@ All sessions opperate on a server, even singleplayer, this allows you to play vi
 
 To disable self hosting, change the line in Settings.txt "host=true" to "host=false" and the IP to the server's IP.
 
+Port 54000 should work on most computers. If port binding fails, try another (make sure to change settings.txt and server's port)
+
 Gallery
 ---------
 
