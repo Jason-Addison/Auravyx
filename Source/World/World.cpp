@@ -8,10 +8,17 @@
 #include <Controller.h>
 #include <M.h>
 #include <Shaders.h>
+#include <Assets.h>
+#include <PhysicsSphere.h>
+#include <PhysicsWorld.h>
+#include <iostream>
 FBO fbo;
 
 std::vector<std::string> fboStrings;
 
+std::shared_ptr<PhysicsSphere>s1(new PhysicsSphere());
+std::shared_ptr<PhysicsSphere>s2(new PhysicsSphere());
+PhysicsWorld physicsWorld;
 World::World()
 {
 	fboStrings.emplace_back("albedo");
@@ -46,6 +53,8 @@ void World::update()
 		overworldTime -= Clock::get(speed);
 	}
 	overworldTime += 1;
+	physicsWorld.update();
+	std::cout << s1->getY() << "\n";
 }
 ShadowMap shadowMap;
 void World::create()
@@ -53,6 +62,7 @@ void World::create()
 	fbo = FBO(WindowManager::width, WindowManager::height);
 	shadowMap = ShadowMap(2048 * 2, 2048 * 2);
 }
+
 void World::render(Camera* cam, Matrix4f* projectionMatrix)
 {
 	fbo.unbind();
@@ -200,6 +210,18 @@ void World::render(Camera* cam, Matrix4f* projectionMatrix)
 		}
 	}
 	Shaders::voxelShader->stop();
+	//s1.setPosition(GFX::CAM.x, GFX::CAM.y - 5, GFX::CAM.z);
+	
+	GFX::renderModel(s1->getX(), s1->getY(), s1->getZ(), 1, 1, 1, 0, 0, 0, Assets::getModel("sky").get(), &GFX::CAM, projectionMatrix, Assets::getTexture("light_blue").get());
+	if (s1->checkCollision(s2.get()))
+	{
+		//GFX::renderModel(0, 0, 0, 1, 1, 1, 0, 0, 0, Assets::getModel("sky").get(), &GFX::CAM, projectionMatrix, Assets::getTexture("yellow").get());
+	}
+	else
+	{
+		//GFX::renderModel(0, 0, 0, 1, 1, 1, 0, 0, 0, Assets::getModel("sky").get(), &GFX::CAM, projectionMatrix, Assets::getTexture("light_blue").get());
+	}
+
 	fbo.unbind();
 	glDisable(GL_CULL_FACE);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -348,6 +370,13 @@ long long int World::getOverworldTime()
 long long int World::getOverworldDayCycle()
 {
 	return this->overworldDayCycle;
+}
+
+void World::test()
+{
+	physicsWorld.addObject(s1);
+	s1->addImpulse(0, 1, 0);
+	physicsWorld.addObject(s2);
 }
 
 void World::sphere(float xP, float yP, float zP, float radius, float power)

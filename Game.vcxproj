@@ -62,12 +62,19 @@
     <ClCompile Include="Source\GUI\ScrollBar.cpp" />
     <ClCompile Include="Source\GUI\TextBox.cpp" />
     <ClCompile Include="Source\pch.cpp" />
+    <ClCompile Include="Source\Physics\Physics.cpp" />
+    <ClCompile Include="Source\Physics\PhysicsAABB.cpp" />
     <ClCompile Include="Source\Physics\PhysicsObject.cpp" />
+    <ClCompile Include="Source\Physics\PhysicsPrism.cpp" />
+    <ClCompile Include="Source\Physics\PhysicsSphere.cpp" />
+    <ClCompile Include="Source\Physics\PhysicsTriangles.cpp" />
+    <ClCompile Include="Source\Physics\PhysicsWorld.cpp" />
     <ClCompile Include="Source\Server\Chat.cpp" />
     <ClCompile Include="Source\Server\ClientManager.cpp" />
     <ClCompile Include="Source\Shader\LineShader.cpp" />
     <ClCompile Include="Source\Shader\DeferredShader.cpp" />
     <ClCompile Include="Source\Shader\ImageShader.cpp" />
+    <ClCompile Include="Source\Shader\ModelShader.cpp" />
     <ClCompile Include="Source\Shader\RectShader.cpp" />
     <ClCompile Include="Source\Shader\Shader.cpp" />
     <ClCompile Include="Source\Shader\Shaders.cpp" />
@@ -144,12 +151,19 @@
     <ClInclude Include="Source\GUI\ScrollBar.h" />
     <ClInclude Include="Source\GUI\TextBox.h" />
     <ClInclude Include="Source\pch.h" />
+    <ClInclude Include="Source\Physics\Physics.h" />
+    <ClInclude Include="Source\Physics\PhysicsAABB.h" />
     <ClInclude Include="Source\Physics\PhysicsObject.h" />
+    <ClInclude Include="Source\Physics\PhysicsPrism.h" />
+    <ClInclude Include="Source\Physics\PhysicsSphere.h" />
+    <ClInclude Include="Source\Physics\PhysicsTriangles.h" />
+    <ClInclude Include="Source\Physics\PhysicsWorld.h" />
     <ClInclude Include="Source\Server\ClientManager.h" />
     <ClInclude Include="Source\Server\HostChunk.h" />
     <ClInclude Include="Source\Shader\LineShader.h" />
     <ClInclude Include="Source\Shader\DeferredShader.h" />
     <ClInclude Include="Source\Shader\ImageShader.h" />
+    <ClInclude Include="Source\Shader\ModelShader.h" />
     <ClInclude Include="Source\Shader\RectShader.h" />
     <ClInclude Include="Source\Shader\Shader.h" />
     <ClInclude Include="Source\Shader\Shaders.h" />
@@ -197,6 +211,8 @@
     <None Include="x64\Release\Shaders\Regular\3DLine.vert" />
     <None Include="x64\Release\Shaders\Regular\Deferred.frag" />
     <None Include="x64\Release\Shaders\Regular\Deferred.vert" />
+    <None Include="x64\Release\Shaders\Regular\Model.frag" />
+    <None Include="x64\Release\Shaders\Regular\Model.vert" />
     <None Include="x64\Release\Shaders\Regular\shader1.vert" />
     <None Include="x64\Release\Shaders\Regular\Shadow.frag" />
     <None Include="x64\Release\Shaders\Regular\Shadow.vert" />
@@ -314,7 +330,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Game\ServerHost;C:\Game\Source\Server;C:\Game\Source\World\Debris;C:\Game\Source\World\Tiles;C:\Game\Source\Graphics;C:\Game\Source\Audio;C:\Game\Source\Engine;C:\Game\Source\GUI;C:\Game\Source\Shader;C:\Game\Source\Utilities;C:\Game\Source\World;C:\Game\Source;C:\Game\Library\SOIL\soil-master\include;C:\Game\Library\GLFW\glfw-3.2.1\include;C:\Game\Library\OpenAL 1.1 SDK\include;C:\Game\Library\OpenAL\alut\include;C:\Game\Library\GLEW\glew-2.1.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Game\Source\Physics;C:\Game\ServerHost;C:\Game\Source\Server;C:\Game\Source\World\Debris;C:\Game\Source\World\Tiles;C:\Game\Source\Graphics;C:\Game\Source\Audio;C:\Game\Source\Engine;C:\Game\Source\GUI;C:\Game\Source\Shader;C:\Game\Source\Utilities;C:\Game\Source\World;C:\Game\Source;C:\Game\Library\SOIL\soil-master\include;C:\Game\Library\GLFW\glfw-3.2.1\include;C:\Game\Library\OpenAL 1.1 SDK\include;C:\Game\Library\OpenAL\alut\include;C:\Game\Library\GLEW\glew-2.1.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <CompileAs>CompileAsCpp</CompileAs>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
@@ -338,7 +354,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Game\ServerHost;C:\Game\Source\Server;C:\Game\Source\World\Debris;C:\Game\Source\World\Tiles;C:\Game\Source\Graphics;C:\Game\Source\Audio;C:\Game\Source\Engine;C:\Game\Source\GUI;C:\Game\Source\Shader;C:\Game\Source\Utilities;C:\Game\Source\World;C:\Game\Source;C:\Game\Library\SOIL\soil-master\include;C:\Game\Library\GLFW\glfw-3.2.1\include;C:\Game\Library\OpenAL 1.1 SDK\include;C:\Game\Library\OpenAL\alut\include;C:\Game\Library\GLEW\glew-2.1.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Game\Source\Physics;C:\Game\ServerHost;C:\Game\Source\Server;C:\Game\Source\World\Debris;C:\Game\Source\World\Tiles;C:\Game\Source\Graphics;C:\Game\Source\Audio;C:\Game\Source\Engine;C:\Game\Source\GUI;C:\Game\Source\Shader;C:\Game\Source\Utilities;C:\Game\Source\World;C:\Game\Source;C:\Game\Library\SOIL\soil-master\include;C:\Game\Library\GLFW\glfw-3.2.1\include;C:\Game\Library\OpenAL 1.1 SDK\include;C:\Game\Library\OpenAL\alut\include;C:\Game\Library\GLEW\glew-2.1.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <CompileAs>CompileAsCpp</CompileAs>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>

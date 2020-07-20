@@ -20,6 +20,9 @@
 #include <Assets.h>
 #include <iostream>
 #include <GLManager.h>
+#include <Physics.h>
+#include <PhysicsSphere.h>
+#include <PhysicsWorld.h>
 GameState::GameState()
 {
 }
@@ -185,6 +188,7 @@ void chunkLoading(int xC, int yC, int zC)
 void GameState::update()
 {
 	Controller::update();
+	//std::cout << s1.checkCollision(&s2) << "\n";
 	if (Controller::isKeyDown(GLFW_KEY_ENTER))
 	{
 		//s = s.substr(0, s.size() - 1);
@@ -197,11 +201,12 @@ void GameState::update()
 
 	if (Controller::isKeyDown(GLFW_KEY_Q))
 	{
-		PacketMsg::sendMessage("hello!!!");
+		//PacketMsg::sendMessage("hello!!!");
 	}
 	
 	GFX::CAM.getPlayerInput();
 	w.update();
+	
 	///////////c.update();
 }
 
@@ -216,6 +221,7 @@ void world()
 	m4.createProjectionMatrix(WindowManager::width, WindowManager::height, GFX::viewDistance * 1000, 0.1, fov);
 
 	w.render(&GFX::CAM, &m4);
+	
 	Camera cam = GFX::CAM;
 }
 double cpuUsageA = 0;
@@ -279,6 +285,7 @@ void GameState::render()
 	auto finish = std::chrono::high_resolution_clock::now();
 
 	world();
+
 	chat.w = &w;
 
 
@@ -378,8 +385,14 @@ void serverStart()
 	iserver.start();
 }
 bool hostServer = false;
+void physicsCallback(std::string s)
+{
+	std::cout << s;
+}
 void GameState::start()
 {
+	Physics::addCallback(physicsCallback);
+	
 	//Sound s;
 	//s.play(Assets::getAudio("song"));
 	hostServer = false;// Settings::getBool("host");
@@ -394,6 +407,7 @@ void GameState::start()
 	}
 	chunkLoader = std::thread(startChunkLoader);
 	w.create();
+	w.test();
 }
 
 void GameState::stop()

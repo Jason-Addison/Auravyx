@@ -64,6 +64,9 @@ public:
 
 	static float stringWidth(std::string string, float size);
 
+	static void renderModel(float x, float y, float z, float xScale, float yScale,
+		float zScale, float xRot, float yRot, float zRot, Model* m, Camera *c, Matrix4f *projection, Texture *tex);
+
 	static void init();
 
 	//static void enableScissor(int x, int y, int width, int height);

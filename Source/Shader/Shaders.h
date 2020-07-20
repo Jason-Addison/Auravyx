@@ -8,6 +8,7 @@
 #include "ShadowShader.h"
 #include "SkyShader.h"
 #include "LineShader.h"
+#include "ModelShader.h"
 class Shaders
 {
 public:
@@ -20,6 +21,7 @@ public:
 	static DeferredShader* deferredShader;
 	static SkyShader* skyShader;
 	static LineShader* lineShader;
+	static ModelShader* modelShader;
 	Shaders();
 	~Shaders();
 

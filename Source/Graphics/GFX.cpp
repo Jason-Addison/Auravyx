@@ -19,7 +19,7 @@ Model GFX::quad = Model();
 
 GLuint GFX::tileMap = 0;
 
-int GFX::viewDistance = 8;
+int GFX::viewDistance = 6;
 int GFX::mipmapBias = -1;
 int GFX::terrainTextureResolution = -1;
 int GFX::UNLIMITED_FPS = -1;
@@ -169,6 +169,35 @@ float GFX::stringWidth(std::string string, float size)
 	}
 	return totalX;
 	return -1 + ((x) / WindowManager::width * 2) + ((totalX) / WindowManager::width * 2);
+}
+
+void GFX::renderModel(float x, float y, float z, float xScale, float yScale, 
+	float zScale, float xRot, float yRot, float zRot, Model* m, Camera* c, Matrix4f* projection, Texture *tex)
+{
+	Shaders::modelShader->start();
+	Shaders::modelShader->loadCamera(c->getViewMatrix());
+	Shaders::modelShader->loadProjectionMatrix(*projection);
+	Matrix4f t = M::createTransformationMatrix(x, y, z, xScale, yScale, zScale, xRot, yRot, zRot);
+	Shaders::modelShader->loadTransformationMatrix(t);
+	glEnable(GL_DEPTH_TEST);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	glDisable(GL_CULL_FACE);
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, tex->texture);
+	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+	glBindVertexArray(m->getVAO());
+	glEnableVertexArrayAttrib(m->getVAO(), 0);
+	glEnableVertexArrayAttrib(m->getVAO(), 1);
+	glEnableVertexArrayAttrib(m->getVAO(), 2);
+	glDrawArrays(GL_TRIANGLES, 0, m->getCount());
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_CULL_FACE);
+	Shaders::modelShader->stop();
 }
 
 void GFX::fillRect(float x, float y, float width, float height, float xScale, float yScale, float r, float g, float b, float a)
