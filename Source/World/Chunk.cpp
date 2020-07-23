@@ -130,19 +130,22 @@ float Chunk::relativeDensity(int x, int y, int z)
 	x -= 1;
 	y -= 1;
 	z -= 1;
-	int cX = (int) floor((float)x / (float)Chunk::CHUNK_SIZE);
-	int cY = (int) floor((float)y / (float)Chunk::CHUNK_SIZE);
-	int cZ = (int) floor((float)z / (float)Chunk::CHUNK_SIZE);
-	int rX = x - (cX * CHUNK_SIZE);
-	int rY = y - (cY * CHUNK_SIZE);
-	int rZ = z - (cZ * CHUNK_SIZE);
+	int cX = x >> 7;
+	int cY = y >> 7;
+	int cZ = z >> 7;
 
 	if (cX == 0 && cY == 0 && cZ == 0)
 	{
+		int rX = x - (cX << 7);
+		int rY = y - (cY << 7);
+		int rZ = z - (cZ << 7);
 		return getDensity(rX, rY, rZ);
 	}
 	if (neighbours[cX + 1][cY + 1][cZ + 1] != nullptr && !neighbours[cX + 1][cY + 1][cZ + 1]->emptyChunk)
 	{
+		int rX = x - (cX << 7);
+		int rY = y - (cY << 7);
+		int rZ = z - (cZ << 7);
 		return neighbours[cX + 1][cY + 1][cZ + 1]->getDensity(rX, rY, rZ);
 	}
 	return -1;
@@ -742,7 +745,6 @@ std::vector<std::vector<float>> Chunk::generate()
 	meta.emplace_back((double)std::chrono::duration_cast<std::chrono::nanoseconds>(finish - start).count());
 	this->chunkInfo.emplace_back(meta);
 	loaded = true;
-	
 	return data;
 }
 float lx = 0;
