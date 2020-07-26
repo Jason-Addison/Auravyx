@@ -5,6 +5,8 @@ Current version has a few things disabled (chunk streaming, force noclip, multip
 
 Most up-to-date version: Alpha-1.0.0 Release
 
+How to play: Extract Alpha-1.0.0.zip an run the .exe, if this fails make sure anti-virus are ignoring it (Windows Defender may try to auto-delete)
+
 ->Since chunk streaming is disabled, I included a small (2gb) world, which loads on startup. There are some snowy mountains in the distance, a tunnel at spawn and a brick pillar coming out of the ground.
 
 Visit my site if you want to chat: www.jasonaddison.dev
