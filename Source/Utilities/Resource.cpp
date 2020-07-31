@@ -213,7 +213,7 @@ void Resource::loadTextureSilent(std::string texture)
 	Texture t(tex, width, height);
 	std::string textureName = FileIO::getFileName(texture);
 	t.name = textureName.substr(0, textureName.length() - 4);
-	Assets::addTexture(textureName.substr(0, textureName.length() - 4), t);
+	Assets::addTexture(t.name, t);
 }
 SoundManager soundManager;
 

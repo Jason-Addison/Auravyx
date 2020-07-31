@@ -14,6 +14,7 @@
 #include <GameManager.h>
 #include <GLManager.h>
 #include <wtypes.h>
+#include <Controller.h>
 double UPS = 60;
 double thisFrame = 0;
 double nextFrame = 0;
@@ -147,6 +148,8 @@ int main(int argc, char* argv[])
 	Shaders::lineShader->init();
 	asyncLoader.join();
 	WindowManager::hideMouse();
+
+	Controller::resetMouse();
 
 	loop();
 

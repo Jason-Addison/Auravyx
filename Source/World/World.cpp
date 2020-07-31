@@ -278,6 +278,7 @@ void World::render(Camera* cam, Matrix4f* projectionMatrix)
 			GFX::drawStringBG(fboStrings.at(i), i * width, WindowManager::height - height, 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3);
 		}
 		GFX::drawImage(width * 5, 0, width, height, shadowMap.depthTexture);
+		GFX::drawImage(width * 5, height, width, height, Assets::getTexture("font_plain")->texture);
 		GFX::drawStringBG("shadow", width * 5, WindowManager::height - height, 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3);
 	}
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);

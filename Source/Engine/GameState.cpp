@@ -23,6 +23,7 @@
 #include <Physics.h>
 #include <PhysicsSphere.h>
 #include <PhysicsWorld.h>
+#include <mutex>
 GameState::GameState()
 {
 }
@@ -175,12 +176,13 @@ void chunkLoading(int xC, int yC, int zC)
 	}
 	return;
 }
-
+std::mutex chunkGuard;
+std::atomic_int chunkGenerationSize = 0;
 void chunkMeshGeneration()
 {
 	while (true)
 	{
-		int temp = w.overworld.size();
+		int temp = chunkGenerationSize;
 		
 		for (int i = 0; i < temp; i++)
 		{
@@ -188,13 +190,21 @@ void chunkMeshGeneration()
 			{
 				return;
 			}
-			auto c = w.overworld.at(i);
-			
-			if (c && !c->loaded && c->neighboursLoaded())
+			try
 			{
-				c->generate();
-				c->loaded = true;
-				c->chunkUpdate = true;
+				std::lock_guard<std::mutex> guard(chunkGuard);
+				auto c = w.overworld.at(i);
+
+				if (c && !c->loaded && c->neighboursLoaded())
+				{
+					c->generate();
+					c->loaded = true;
+					c->chunkUpdate = true;
+				}
+			}
+			catch (const std::exception& e)
+			{
+				std::cout << "Crash! " << e.what() << "\n";
 			}
 		}
 	}
@@ -257,6 +267,7 @@ void GameState::render()
 	{
 		w.addChunk(std::shared_ptr<Chunk>(new Chunk(*nextChunk)));
 		nextChunk.reset();
+		chunkGenerationSize = w.overworld.size();
 		lock = false;
 	}
 	if (w.unloadLock)
