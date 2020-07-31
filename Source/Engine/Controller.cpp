@@ -172,6 +172,13 @@ void Controller::keyboardInput(int key, int scancode, int action, int mods)
 		}
 	}
 }
+void Controller::resetMouse()
+{
+	x = 0;
+	y = 0;
+	dX = 0;
+	dY = 0;
+}
 void in(GLFWwindow* window, unsigned int codepoint)
 {
 	//std::cout << (char) codepoint;

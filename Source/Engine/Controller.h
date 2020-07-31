@@ -74,5 +74,7 @@ public:
 
 	static void keyboardInput(int key, int scancode, int action, int mods);
 
+	static void resetMouse();
+
 };
 
