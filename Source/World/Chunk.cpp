@@ -214,7 +214,7 @@ int offZ = 0;
 float fdA = 0;
 float fdB = 0;
 
-int Chunk::scan(int x, int y, int z, int axis, int axisA, int axisB, float &density, int &material)
+int Chunk::scan(int x, int y, int z, int axis, int axisA, int axisB, int &material)
 {
 	offX = (axis == 0);
 	offY = (axis == 1);
@@ -263,7 +263,7 @@ void Chunk::refresh()
 		//std::cout << chunkInfo.size() << "\n";
 		mesh = Model::load3DModel(chunkInfo.at(0), chunkInfo.at(1), chunkInfo.at(2), chunkInfo.at(3), chunkInfo.at(4), allMaterials);
 		ready = true;
-		loaded = false;
+		//loaded = false;
 		chunkInfo = std::vector<std::vector<float>>();
 		allMaterials = std::vector<unsigned int>();
 	}
@@ -394,145 +394,143 @@ std::vector<std::vector<float>> Chunk::generate()
 	v = voxels;
 
 	std::vector<char> axis;
-	int yyy = 0;
-	int xn = 0;
-	int zn = 0;
-	int yn = 0;
-	bool swag = rand() % 15 == 0;
 	
 	Vec3f edge;
-	float rX;
-	float rY;
-	float rZ;
-	int material = 0;
-	for (int x = 0; x < s; x++)
+	float interp = 0;
+
+	float xx = 0;
+	float yy = 0;
+	float zz = 0;
+
+	for (int i = 0; i < s * s * s; i++)
 	{
-		for (int y = 0; y < s; y++)
+		int x = i % s;
+		int y = (i / s) % s;
+		int z = i / s / s;
+		float rX = x - 1;
+		float rY = y - 1;
+		float rZ = z - 1;
+		at(x, y, z)->x = rX;
+		at(x, y, z)->y = rY;
+		at(x, y, z)->z = rZ;
+		if (scan(x, y, z, 0, rY, rZ, material) > 0)
 		{
-			for (int z = 0; z < s; z++)
+			interp = calcDensity(rX, rY, rZ, rX + 1, rY, rZ);
+			xx = rX + interp;
+			yy = rY;
+			zz = rZ;
+			at(x, y - 1, z - 1)->addAverage(xx, yy, zz);
+			at(x, y, z - 1)->addAverage(xx, yy, zz);
+			at(x, y - 1, z)->addAverage(xx, yy, zz);
+			at(x, y, z)->addAverage(xx, yy, zz);
+
+			at(x, y - 1, z - 1)->addMaterial(material);
+			at(x, y, z - 1)->addMaterial(material);
+			at(x, y - 1, z)->addMaterial(material);
+			at(x, y, z)->addMaterial(material);
+
+			axis.emplace_back(0);
+
+			if (relativeDensity(rX, rY, rZ) == 0)
 			{
-				rX = x - 1;
-				rY = y - 1;
-				rZ = z - 1;
-				at(x, y, z)->x = rX;
-				at(x, y, z)->y = rY;
-				at(x, y, z)->z = rZ;
-				float density = 0.5;
-				if (scan(x, y, z, 0, rY, rZ, density, material) > 0)
-				{
-					float interp = calcDensity(rX, rY, rZ, rX + 1, rY, rZ);
-					edge = Vec3f(rX+ interp, rY, rZ);
-					at(x, y - 1, z - 1)->addAverage(edge);
-					at(x, y, z - 1)->addAverage(edge);
-					at(x, y - 1, z)->addAverage(edge);
-					at(x, y, z)->addAverage(edge);
+				at(x, y, z)->flipX = true;
+			}
 
-					at(x, y - 1, z - 1)->addMaterial(material);
-					at(x, y, z - 1)->addMaterial(material);
-					at(x, y - 1, z)->addMaterial(material);
-					at(x, y, z)->addMaterial(material);
+			if (at(x, y, z)->flipX)
+			{
+				flips.emplace_back(0);
+				edges.emplace_back(at(x, y, z));
+				edges.emplace_back(at(x, y, z - 1));
+				edges.emplace_back(at(x, y - 1, z));
+				edges.emplace_back(at(x, y - 1, z - 1));
+			}
+			else
+			{
+				flips.emplace_back(1);
+				edges.emplace_back(at(x, y - 1, z - 1));
+				edges.emplace_back(at(x, y, z - 1));
+				edges.emplace_back(at(x, y - 1, z));
+				edges.emplace_back(at(x, y, z));
+			}
+		}
+		if (scan(x, y, z, 1, rX, rZ, material) > 0)
+		{
+			interp = calcDensity(rX, rY, rZ, rX, rY + 1, rZ);
+			xx = rX;
+			yy = rY + interp;
+			zz = rZ;
+			at(x - 1, y, z - 1)->addAverage(xx, yy, zz);
+			at(x, y, z - 1)->addAverage(xx, yy, zz);
+			at(x - 1, y, z)->addAverage(xx, yy, zz);
+			at(x, y, z)->addAverage(xx, yy, zz);
 
-					axis.emplace_back(0);
+			at(x - 1, y, z - 1)->addMaterial(material);
+			at(x, y, z - 1)->addMaterial(material);
+			at(x - 1, y, z)->addMaterial(material);
+			at(x, y, z)->addMaterial(material);
 
-					if (relativeDensity(rX, rY, rZ) == 0)
-					{
-						at(x, y, z)->flipX = true;
-					}
+			axis.emplace_back(1);
 
-					if (at(x, y, z)->flipX)
-					{
-						flips.emplace_back(0);
-						edges.emplace_back(at(x, y, z));
-						edges.emplace_back(at(x, y, z - 1));
-						edges.emplace_back(at(x, y - 1, z));
-						edges.emplace_back(at(x, y - 1, z - 1));
-					}
-					else
-					{
-						flips.emplace_back(1);
-						edges.emplace_back(at(x, y - 1, z - 1));
-						edges.emplace_back(at(x, y, z - 1));
-						edges.emplace_back(at(x, y - 1, z));
-						edges.emplace_back(at(x, y, z));
-					}
-				}
-				if (scan(x, y, z, 1, rX, rZ, density, material) > 0)
-				{
-					float interp = calcDensity(rX, rY, rZ, rX, rY + 1, rZ);
-					edge = Vec3f(rX, rY + interp, rZ);
-					at(x - 1, y, z - 1)->addAverage(edge);
-					at(x, y, z - 1)->addAverage(edge);
-					at(x - 1, y, z)->addAverage(edge);
-					at(x, y, z)->addAverage(edge);
+			if (relativeDensity(rX, rY, rZ) != 0)
+			{
+				at(x, y, z)->flipY = true;
+			}
 
-					at(x - 1, y, z - 1)->addMaterial(material);
-					at(x, y, z - 1)->addMaterial(material);
-					at(x - 1, y, z)->addMaterial(material);
-					at(x, y, z)->addMaterial(material);
+			if (at(x, y, z)->flipY)
+			{
+				flips.emplace_back(2);
+				edges.emplace_back(at(x, y, z));
+				edges.emplace_back(at(x, y, z - 1));
+				edges.emplace_back(at(x - 1, y, z));
+				edges.emplace_back(at(x - 1, y, z - 1));
+			}
+			else
+			{
+				flips.emplace_back(3);
+				edges.emplace_back(at(x - 1, y, z - 1));
+				edges.emplace_back(at(x, y, z - 1));
+				edges.emplace_back(at(x - 1, y, z));
+				edges.emplace_back(at(x, y, z));
+			}
+		}
+		if (scan(x, y, z, 2, rX, rY, material) > 0)
+		{
+			interp = calcDensity(rX, rY, rZ, rX, rY, rZ + 1);
+			xx = rX;
+			yy = rY;
+			zz = rZ + interp;
+			at(x - 1, y - 1, z)->addAverage(xx, yy, zz);
+			at(x - 1, y, z)->addAverage(xx, yy, zz);
+			at(x, y - 1, z)->addAverage(xx, yy, zz);
+			at(x, y, z)->addAverage(xx, yy, zz);
 
-					axis.emplace_back(1);
+			at(x - 1, y - 1, z)->addMaterial(material);
+			at(x - 1, y, z)->addMaterial(material);
+			at(x, y - 1, z)->addMaterial(material);
+			at(x, y, z)->addMaterial(material);
 
-					if (relativeDensity(rX, rY, rZ) != 0)
-					{
-						at(x, y, z)->flipY = true;
-					}
+			axis.emplace_back(2);
 
-					if (at(x, y, z)->flipY)
-					{
-						flips.emplace_back(2);
-						edges.emplace_back(at(x, y, z));
-						edges.emplace_back(at(x, y, z - 1));
-						edges.emplace_back(at(x - 1, y, z));
-						edges.emplace_back(at(x - 1, y, z - 1));
-					}
-					else
-					{
-						flips.emplace_back(3);
-						edges.emplace_back(at(x - 1, y, z - 1));
-						edges.emplace_back(at(x, y, z - 1));
-						edges.emplace_back(at(x - 1, y, z));
-						edges.emplace_back(at(x, y, z));
-					}
-				}
-				if (scan(x, y, z, 2, rX, rY, density, material) > 0)
-				{
-					float interp = calcDensity(rX, rY, rZ, rX, rY, rZ + 1);
-					edge = Vec3f(rX, rY, rZ + interp);
-					at(x - 1, y - 1, z)->addAverage(edge);
-					at(x - 1, y, z)->addAverage(edge);
-					at(x, y - 1, z)->addAverage(edge);
-					at(x, y, z)->addAverage(edge);
+			if (relativeDensity(rX, rY, rZ) != 0)
+			{
+				at(x, y, z)->flipZ = true;
+			}
 
-					at(x - 1, y - 1, z)->addMaterial(material);
-					at(x - 1, y, z)->addMaterial(material);
-					at(x, y - 1, z)->addMaterial(material);
-					at(x, y, z)->addMaterial(material);
-
-					axis.emplace_back(2);
-
-					if (relativeDensity(rX, rY, rZ) != 0)
-					{
-						at(x, y, z)->flipZ = true;
-					}
-
-					if (at(x, y, z)->flipZ)
-					{
-						flips.emplace_back(4);
-						edges.emplace_back(at(x, y, z));
-						edges.emplace_back(at(x - 1, y, z));
-						edges.emplace_back(at(x, y - 1, z));
-						edges.emplace_back(at(x - 1, y - 1, z));
-					}
-					else
-					{
-						flips.emplace_back(5);
-						edges.emplace_back(at(x - 1, y - 1, z));
-						edges.emplace_back(at(x - 1, y, z));
-						edges.emplace_back(at(x, y - 1, z));
-						edges.emplace_back(at(x, y, z));
-					}
-						
-				}
+			if (at(x, y, z)->flipZ)
+			{
+				flips.emplace_back(4);
+				edges.emplace_back(at(x, y, z));
+				edges.emplace_back(at(x - 1, y, z));
+				edges.emplace_back(at(x, y - 1, z));
+				edges.emplace_back(at(x - 1, y - 1, z));
+			}
+			else
+			{
+				flips.emplace_back(5);
+				edges.emplace_back(at(x - 1, y - 1, z));
+				edges.emplace_back(at(x - 1, y, z));
+				edges.emplace_back(at(x, y - 1, z));
+				edges.emplace_back(at(x, y, z));
 			}
 		}
 	}
@@ -747,8 +745,6 @@ std::vector<std::vector<float>> Chunk::generate()
 	loaded = true;
 	return data;
 }
-float lx = 0;
-float lz = 0;
 void Chunk::generateTerrain(std::shared_ptr<ChunkHeight> heights)
 {
 	bool air = false;

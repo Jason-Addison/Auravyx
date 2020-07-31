@@ -2,7 +2,7 @@
 #include "al.h"
 #include "WAVE.h"
 #include <memory>
-
+#include <unordered_set>
 
 class Sound
 {
@@ -41,5 +41,20 @@ public:
 	ALfloat getTime();
 
 	void setTime(ALfloat time);
+
+	void destroy();
+
+	static void destroyAllSounds()
+	{
+		for (auto s : sounds)
+		{
+			alDeleteSources(1, &s);
+		}
+		sounds.clear();
+	}
+
+private:
+
+	static std::unordered_set<ALuint> sounds;
 };
 

@@ -55,7 +55,6 @@ void Model::destroy()
 {
 	glDeleteBuffers(attributes.size(), &attributes.front());
 	glDeleteVertexArrays(1, &vao);
-	
 }
 
 void Model::setTexture(int index, Texture texture)

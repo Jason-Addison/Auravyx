@@ -30,11 +30,11 @@ Vec3f Voxel::getAverage()
     return this->average;
 }
  
-void Voxel::addAverage(Vec3f avg)
+void Voxel::addAverage(float x, float y, float z)
 {
-    average.x += avg.x;
-    average.y += avg.y;
-    average.z += avg.z;
+    average.x += x;
+    average.y += y;
+    average.z += z;
     count++;
 }
 

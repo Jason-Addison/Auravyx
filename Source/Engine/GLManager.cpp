@@ -2,6 +2,7 @@
 #include <GL/glew.h>
 #include "GLFW/glfw3.h"
 #include "Log.h"
+#include <iostream>
 GLManager::GLManager()
 {
 }
@@ -42,6 +43,10 @@ void GLManager::start()
 		Log::out("OpenGL", "GLEW Error : '" + std::to_string((GLubyte) glewGetErrorString(err)) + "'", RED);
 		system("PAUSE");
 	}
+	std::string glVersion = (char*)glGetString(GL_VERSION);
+	std::string glVendor = (char*)glGetString(GL_VENDOR);
+	std::string glRenderer = (char*)glGetString(GL_RENDERER);
+	Log::out("OpenGL", "Version: " + glVersion + ", Vendor: " + glVendor + ", GPU: " + glRenderer, LBLUE);
 }
 
 WindowManager GLManager::getWindowManager()

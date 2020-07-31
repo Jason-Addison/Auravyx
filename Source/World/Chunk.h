@@ -46,7 +46,7 @@ public:
 
 	float calcDensity(int x, int y, int z, int xX, int yY, int zZ);
 
-	int scan(int x, int y, int z, int axis, int axisA, int axisB, float &density, int &material);
+	int scan(int x, int y, int z, int axis, int axisA, int axisB, int &material);
 		
 	void destroy();
 

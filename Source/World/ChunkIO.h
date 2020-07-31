@@ -7,9 +7,11 @@ public:
 	ChunkIO();
 	~ChunkIO();
 
-	void saveChunk(std::shared_ptr<Chunk> chunk);
+	void saveArea();
 
-	std::shared_ptr<Chunk> readChunk(int x, int y, int z);
+	void saveChunk(std::shared_ptr<Chunk> chunk, std::string name);
+
+	std::shared_ptr<Chunk> readChunk(int x, int y, int z, std::string name);
 
 private:
 

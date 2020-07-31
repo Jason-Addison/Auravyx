@@ -124,17 +124,19 @@ bool Resource::loadAllResources()
 			glPixelStorei(GL_UNPACK_ROW_LENGTH, width);
 			glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
-			//glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 			glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 			glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, GL_REPEAT);
 			glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, GL_REPEAT);
 			glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGBA8, width, height, count, 0, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, NULL);
 			for (auto pt : preloadedTerrainTextures)
 			{
 				glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, i, width, height, 1, GL_RGBA, GL_UNSIGNED_BYTE, pt.tex);
-				//glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-				//glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 				glGenerateMipmap(GL_TEXTURE_2D_ARRAY);
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+				glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 				glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 				glTexParameterf(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_LOD_BIAS, (GLfloat) GFX::mipmapBias);
 				i++;
@@ -198,7 +200,6 @@ void Resource::loadAllTextures()
 			std::cout << "ERORR";
 		}
 	}
-	std::cout << "\n";
 	texturesLoaded = true;
 }
 
@@ -214,28 +215,26 @@ void Resource::loadTextureSilent(std::string texture)
 	t.name = textureName.substr(0, textureName.length() - 4);
 	Assets::addTexture(textureName.substr(0, textureName.length() - 4), t);
 }
+SoundManager soundManager;
 
 void Resource::loadAllAsyncAssets()
 {
-	Log::out("Loader", "Start", YELLOW);
-	Log::out("Loader", "Loading settings", YELLOW);
+	preloadShaders = loadShaders("\\Shaders\\Regular");
+	shadersLoaded = true;
+	soundManager.start();
+	Log::out("Loader", "Loading settings...", YELLOW);
 	Settings::settings = FileIO::readConfig(Resource::DIR + "\\settings.txt");
-	Log::out("Loader", "Loading controller", YELLOW);
+	Log::out("Loader", "Loading controller...", YELLOW);
 	Controller::init();
-	Log::out("Loader", "Loading textures", YELLOW);
-	SoundManager m;
-	m.start();
+	Log::out("Loader", "Loading textures...", YELLOW);
 	loadAllAudio();
 	//Sound s;
 	//s.play(Assets::getAudio("song"));
 	//s.setPitch(1.1);
-	preloadShaders = loadShaders("\\Shaders\\Regular");
-	shadersLoaded = true;
 	//Server::loadPackets();
 	loadAllModels();
 	loadAllTextures();
 	loadTerrainTextures();
-	Log::out("Loader", "Finish", YELLOW);
 }
 double lastP = 0;
 double nowP = 0;
@@ -310,6 +309,18 @@ void Resource::printLoadingMessage(std::vector<std::string> lines, double delay,
 	lm.start = glfwGetTime();
 	
 	loadingMessages.emplace_back(lm);
+}
+void Resource::cleanupResources()
+{
+	Log::out("Cleanup", "Cleaning up audio...", LIGHT_GRAY);
+	soundManager.stop();
+	Assets::deleteAudio();
+	Log::out("Cleanup", "Cleaning up textures...", LIGHT_GRAY);
+	Assets::deleteTextures();
+	Log::out("Cleanup", "Cleaning up fonts...", LIGHT_GRAY);
+	Assets::deleteFonts();
+	Log::out("Cleanup", "Cleaning up models...", LIGHT_GRAY);
+	Assets::deleteModels();
 }
 void Resource::loadBootAssets()
 {
@@ -427,7 +438,6 @@ void Resource::loadAllModels()
 
 		preloadedModels.emplace_back(pm);
 	}
-	std::cout << "\n";
 	modelsLoaded = true;
 }
 
@@ -450,7 +460,6 @@ void Resource::loadAllAudio()
 
 		whatIsLoadingSecondary = audioName;
 	}
-	std::cout << "\n";
 }
 
 std::map<std::string, std::string> Resource::loadShaders(std::string dir)
@@ -458,7 +467,6 @@ std::map<std::string, std::string> Resource::loadShaders(std::string dir)
 	whatIsLoadingPrimary = "Loading shaders";
 	int pass = 0;
 	int fail = 0;
-	std::cout << "\n";
 	if (logShaders)
 	{
 		Log::out("OpenGL", "--- Loading all shaders ---", LBLUE);
@@ -483,7 +491,6 @@ std::map<std::string, std::string> Resource::loadShaders(std::string dir)
 		shaders.emplace(shaderName, FileIO::readTextFile(path));
 		pass++;
 	}
-	std::cout << "\n";
 	std::vector<std::string> fragmentShaders = FileIO::listDirectory(GAME_DIR, extFrag);
 	Log::out("OpenGL", "Loading fragment shaders...", LBLUE);
 	for (auto & i : fragmentShaders)
@@ -498,7 +505,6 @@ std::map<std::string, std::string> Resource::loadShaders(std::string dir)
 		shaders.emplace(shaderName, FileIO::readTextFile(path));
 		pass++;
 	}
-	std::cout << "\n";
 	return shaders;
 }
 

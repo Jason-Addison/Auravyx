@@ -19,8 +19,8 @@ Model GFX::quad = Model();
 
 GLuint GFX::tileMap = 0;
 
-int GFX::viewDistance = 6;
-int GFX::mipmapBias = -1;
+int GFX::viewDistance = 8;
+int GFX::mipmapBias = 0;
 int GFX::terrainTextureResolution = -1;
 int GFX::UNLIMITED_FPS = -1;
 double GFX::brightness = 0.13;
@@ -179,6 +179,7 @@ void GFX::renderModel(float x, float y, float z, float xScale, float yScale,
 	Shaders::modelShader->loadProjectionMatrix(*projection);
 	Matrix4f t = M::createTransformationMatrix(x, y, z, xScale, yScale, zScale, xRot, yRot, zRot);
 	Shaders::modelShader->loadTransformationMatrix(t);
+	Shaders::modelShader->loadCamera(c->x, c->y, c->z, GFX::viewDistance * 128);
 	glEnable(GL_DEPTH_TEST);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glDisable(GL_CULL_FACE);

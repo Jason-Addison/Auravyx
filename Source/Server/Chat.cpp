@@ -276,7 +276,7 @@ void Chat::command(std::string cmd)
 		ChunkIO io;
 		for (auto c : w->overworld)
 		{
-			io.saveChunk(c);
+			io.saveChunk(c, "myworld");
 		}
 		Log::out("Command", "Save complete.", RED);
 	}

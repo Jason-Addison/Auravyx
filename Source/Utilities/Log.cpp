@@ -34,6 +34,7 @@ void Log::out(std::string msg, int colour)
 	{
 		SetConsoleTextAttribute(console, colour);
 		std::cout << msg << std::endl;
+		SetConsoleTextAttribute(console, WHITE);
 	}
 	else
 	{
@@ -49,6 +50,7 @@ void Log::outNNL(std::string msg, int colour)
 {
 	SetConsoleTextAttribute(console, colour);
 	std::cout << msg;
+	SetConsoleTextAttribute(console, WHITE);
 }
 void Log::out(std::string src, std::string msg)
 {

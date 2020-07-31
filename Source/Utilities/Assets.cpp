@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "Assets.h"
 #include "Log.h"
-
+#include "GFX.h"
 Assets::Assets()
 {
 }
@@ -74,6 +74,44 @@ std::shared_ptr<WAVE> Assets::getAudio(std::string name)
 		Log::out("Asset Fetch", "Audio '" + name + "' was not found!", RED, RED);
 	}
 	return NULL;
+}
+
+void Assets::deleteAllAssets()
+{
+	
+}
+
+void Assets::deleteAudio()
+{
+	for (auto a : audio)
+	{
+		a.second->destroy();
+	}
+}
+
+void Assets::deleteTextures()
+{
+	for (auto t : textures)
+	{
+		t.second->destroy();
+	}
+	glDeleteTextures(1, &GFX::terrainMaterials);
+}
+
+void Assets::deleteFonts()
+{
+	for (auto f : fonts)
+	{
+		f.second->texture.destroy();
+	}
+}
+
+void Assets::deleteModels()
+{
+	for (auto m : models)
+	{
+		m.second->destroy();
+	}
 }
 
 std::shared_ptr<Model> Assets::getModel(std::string name)

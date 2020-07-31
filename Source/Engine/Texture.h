@@ -18,5 +18,7 @@ public:
 	int getWidth();
 
 	int getHeight();
+
+	void destroy();
 };
 

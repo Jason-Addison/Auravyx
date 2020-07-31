@@ -54,7 +54,6 @@ void World::update()
 	}
 	overworldTime += 1;
 	physicsWorld.update();
-	std::cout << s1->getY() << "\n";
 }
 ShadowMap shadowMap;
 void World::create()
@@ -111,7 +110,7 @@ void World::render(Camera* cam, Matrix4f* projectionMatrix)
 	Shaders::voxelShader->start();
 	Shaders::voxelShader->loadProjectionMatrix(*projectionMatrix); // *projectionMatrix);
 	Shaders::voxelShader->loadCamera(cam->getViewMatrix());
-	Shaders::voxelShader->loadCamera(cam->x, cam->y, cam->z, GFX::viewDistance * 100);
+	Shaders::voxelShader->loadCamera(cam->x, cam->y, cam->z, GFX::viewDistance * 128);
 
 	std::vector<int> toRemove;
 	int distance;
@@ -207,6 +206,7 @@ void World::render(Camera* cam, Matrix4f* projectionMatrix)
 		if (c != nullptr && c->ready)
 		{
 			c->render(GFX::CAM, *projectionMatrix);
+			//GFX::renderModel(c->x * 128, c->y * 128, c->z * 128, 10, 10, 10, 0, 0, 0, Assets::getModel("sky").get(), &GFX::CAM, projectionMatrix, Assets::getTexture("light_blue").get());
 		}
 	}
 	Shaders::voxelShader->stop();
@@ -233,8 +233,7 @@ void World::render(Camera* cam, Matrix4f* projectionMatrix)
 	//Shaders::deferredShader->loadPointLights(lights);
 	//float amt = sin(M::toRadians(-45));
 	Shaders::deferredShader->loadSunDirection(cos(M::toRadians(m)), -sin(M::toRadians(m)), 0);
-	Shaders::deferredShader->loadCamera(cam->x, cam->y, cam->z, GFX::viewDistance * 100, cam->getViewMatrix());
-	
+	Shaders::deferredShader->loadCamera(cam->x, cam->y, cam->z, GFX::viewDistance * 128, cam->getViewMatrix());
 	double lightFactor = (1 - 1) * 0.9 + 0.1;
 	   
 	double step = (double)(getOverworldTime() % getOverworldDayCycle()) / (double)getOverworldDayCycle();
@@ -376,6 +375,8 @@ void World::test()
 {
 	physicsWorld.addObject(s1);
 	s1->addImpulse(0, 1, 0);
+	s1->setPosition(100, 0, 100);
+	s2->setPosition(100, 0, 100);
 	physicsWorld.addObject(s2);
 }
 

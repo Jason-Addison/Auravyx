@@ -27,9 +27,9 @@ public:
 
 	static void clearPreloadedResources();
 
-	
-
 	static void printLoadingMessage(std::vector<std::string> lines, double delay, std::vector<Vec3f> colours);
+
+	static void cleanupResources();
 
 private:
 

@@ -31,7 +31,7 @@ public:
 
 	Vec3f getAverage();
 
-	void addAverage(Vec3f avg);
+	void addAverage(float x, float y, float z);
 
 	void addMaterial(int m);
 
