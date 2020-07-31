@@ -34,5 +34,15 @@ public:
 	static std::shared_ptr<Font> getFont(std::string name);
 
 	static std::shared_ptr<WAVE> getAudio(std::string name);
+
+	static void deleteAllAssets();
+
+	static void deleteAudio();
+
+	static void deleteTextures();
+
+	static void deleteFonts();
+
+	static void deleteModels();
 };
 

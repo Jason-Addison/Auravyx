@@ -6,6 +6,8 @@
 #include "Log.h"
 #include "efx.h"
 #include <vector>
+#include "Assets.h"
+#include <Sound.h>
 SoundManager::SoundManager()
 {
 }
@@ -41,14 +43,7 @@ const ALCchar* list_audio_devices(const ALCchar *devices)
 		Log::out("OpenAL", std::to_string(listedDevices.size()) + " devices detected, if device is missing, make sure it is enabled.", GREEN);
 		for (auto d : listedDevices)
 		{
-			if (d.length() > 20)
-			{
-				std::cout << "         - " << d.substr(20, d.length()) << "\n";
-			}
-			else
-			{
-				std::cout << "         - " << d << "\n";
-			}
+			std::cout << "         - " << d << "\n";
 		}
 	}
 	else
@@ -66,12 +61,12 @@ void SoundManager::start()
 	{
 		std::cout << "No enumeration extension\n";
 	}
-	//SET TO NAME TO ENABLE
 	device = alcOpenDevice(NULL);
 
 	if (!device)
 	{
 		std::cout << "[OpenAL] Error with device [" << alGetError() << "]\n";
+		system("pause");
 	}
 
 	context = alcCreateContext(device, NULL);
@@ -94,5 +89,12 @@ void SoundManager::start()
 }
 
 void SoundManager::stop()
-{
+{	
+	Sound::destroyAllSounds();
+	Assets::deleteAudio();
+
+	device = alcGetContextsDevice(context);
+	alcMakeContextCurrent(NULL);
+	alcDestroyContext(context);
+	alcCloseDevice(device);
 }

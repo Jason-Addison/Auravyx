@@ -12,6 +12,8 @@ public:
 	WAVE(const char* path);
 	~WAVE();
 
+	void destroy();
+
 private:
 
 	void load(const char * path);

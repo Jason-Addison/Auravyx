@@ -29,4 +29,11 @@ void ModelShader::loadAllUniformLocations()
 	projectionMatrix = getUniformLocation("projectionMatrix");
 	transformationMatrix = getUniformLocation("transformationMatrix");
 	viewMatrix = getUniformLocation("viewMatrix");
+	cameraPosition = getUniformLocation("cameraPosition");
+	farPlane = getUniformLocation("farPlane");
+}
+void ModelShader::loadCamera(float x, float y, float z, float farPlane)
+{
+	loadVec3f(cameraPosition, x, y, z);
+	loadFloat(this->farPlane, farPlane);
 }

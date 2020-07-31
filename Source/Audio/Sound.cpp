@@ -12,6 +12,8 @@ Sound::~Sound()
 {
 }
 
+std::unordered_set<ALuint> Sound::sounds;
+
 void Sound::create()
 {
 	alGenSources((ALuint)1, &source);
@@ -22,6 +24,8 @@ void Sound::create()
 	alSource3f(source, AL_VELOCITY, 0, 0, 0);
 	alSourcei(source, AL_LOOPING, AL_TRUE);
 	alSourcei(source, AL_AIR_ABSORPTION_FACTOR, 100);
+
+	sounds.insert(source);
 }
 
 void Sound::play(WAVE wave)
@@ -32,8 +36,11 @@ void Sound::play(WAVE wave)
 
 void Sound::play(std::shared_ptr<WAVE> wave)
 {
-	alSourcei(source, AL_BUFFER, wave->buffer);
-	alSourcePlay(source);
+	if (wave)
+	{
+		alSourcei(source, AL_BUFFER, wave->buffer);
+		alSourcePlay(source);
+	}
 }
 
 void Sound::stop()
@@ -82,4 +89,10 @@ ALfloat Sound::getTime()
 void Sound::setTime(ALfloat time)
 {
 	alSourcef(source, AL_SEC_OFFSET, time);
+}
+
+void Sound::destroy()
+{
+	sounds.erase(source);
+	alDeleteSources(1, &source);
 }

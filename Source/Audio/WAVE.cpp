@@ -12,6 +12,11 @@ WAVE::~WAVE()
 {
 }
 
+void WAVE::destroy()
+{
+	alDeleteBuffers(1, &buffer);
+}
+
 void WAVE::load(const char * path)
 {
 	alGenBuffers((ALuint)1, &buffer);

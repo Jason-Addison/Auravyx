@@ -31,3 +31,8 @@ int Texture::getHeight()
 {
 	return height;
 }
+
+void Texture::destroy()
+{
+	glDeleteTextures(1, &texture);
+}

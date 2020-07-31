@@ -13,6 +13,7 @@
 #include <iostream>
 #include <GameManager.h>
 #include <GLManager.h>
+#include <wtypes.h>
 double UPS = 60;
 double thisFrame = 0;
 double nextFrame = 0;
@@ -99,8 +100,8 @@ void loop()
 			std::this_thread::sleep_for(std::chrono::milliseconds(time));
 		}
 	}
-	
 	end = true;
+	
 	gameManager.getCurrentState()->stop();
 	updater.join();
 }
@@ -114,18 +115,12 @@ int main(int argc, char* argv[])
 {
 	Resource::DIR = std::string(argv[0]) + "\\..";
 	Log::out("Game", "Loading...    UPS : " + std::to_string(UPS) + "  FPS : " + std::to_string(GFX::FPS), GREEN);
-	
+	//FILE* chunkOutput = fopen("C:\\Game\\e.txt", "rb");
 	GLManager::start();
 
 	Resource::loadBootAssets();
 	
 	GFX::init();
-
-	std::string glVersion = (char*)glGetString(GL_VERSION);
-	std::string glVendor = (char*)glGetString(GL_VENDOR);
-	std::string glRenderer = (char*)glGetString(GL_RENDERER);
-	Log::out("[OpenGL]", "Version: " + glVersion + ", Vendor: " + glVendor + ", GPU: " + glRenderer, LBLUE);
-	std::cout << "\n";
 	
 	std::thread asyncLoader(loadAssetsAsync);
 
@@ -154,6 +149,16 @@ int main(int argc, char* argv[])
 	WindowManager::hideMouse();
 
 	loop();
+
+	Resource::cleanupResources();
 	glfwTerminate();
 	return 0;
 }
+#ifdef _WIN32
+int APIENTRY WinMain(HINSTANCE hInstance,
+	HINSTANCE hPrevInstance,
+	LPSTR lpCmdLine, int nCmdShow)
+{
+	return main(__argc, __argv);
+}
+#endif

@@ -5,6 +5,14 @@
       <Configuration>Debug</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
+    <ProjectConfiguration Include="Release (Verbose)|Win32">
+      <Configuration>Release (Verbose)</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release (Verbose)|x64">
+      <Configuration>Release (Verbose)</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
     <ProjectConfiguration Include="Release|Win32">
       <Configuration>Release</Configuration>
       <Platform>Win32</Platform>
@@ -242,6 +250,13 @@
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release (Verbose)|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
@@ -249,6 +264,13 @@
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release (Verbose)|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v142</PlatformToolset>
@@ -266,10 +288,16 @@
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release (Verbose)|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release (Verbose)|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
@@ -282,7 +310,13 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release (Verbose)|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release (Verbose)|x64'">
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -330,7 +364,31 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Game\Source\Physics;C:\Game\ServerHost;C:\Game\Source\Server;C:\Game\Source\World\Debris;C:\Game\Source\World\Tiles;C:\Game\Source\Graphics;C:\Game\Source\Audio;C:\Game\Source\Engine;C:\Game\Source\GUI;C:\Game\Source\Shader;C:\Game\Source\Utilities;C:\Game\Source\World;C:\Game\Source;C:\Game\Library\SOIL\soil-master\include;C:\Game\Library\GLFW\glfw-3.2.1\include;C:\Game\Library\OpenAL 1.1 SDK\include;C:\Game\Library\OpenAL\alut\include;C:\Game\Library\GLEW\glew-2.1.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Game\Source\Physics;C:\Game\ServerHost;C:\Game\Source\Server;C:\Game\Source\World\Debris;C:\Game\Source\World\Tiles;C:\Game\Source\Graphics;C:\Game\Source\Audio;C:\Game\Source\Engine;C:\Game\Source\GUI;C:\Game\Source\Shader;C:\Game\Source\Utilities;C:\Game\Source\World;C:\Game\Source;C:\Game\Library\SOIL\soil-master\include;C:\Game\Library\GLFW\glfw-3.2.1\include;C:\Game\Library\OpenAL\OpenAL-Soft\include\AL;C:\Game\Library\OpenAL\alut\include;C:\Game\Library\GLEW\glew-2.1.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>C:\Game\Library\OpenAL 1.1 SDK\libs\Win64;C:\Game\Library\GLEW\glew-2.1.0\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>OpenAL32.lib;ALut.lib;glew32.lib;opengl32.lib;glfw3.lib;SOIL.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release (Verbose)|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>C:\Game\Source\Physics;C:\Game\ServerHost;C:\Game\Source\Server;C:\Game\Source\World\Debris;C:\Game\Source\World\Tiles;C:\Game\Source\Graphics;C:\Game\Source\Audio;C:\Game\Source\Engine;C:\Game\Source\GUI;C:\Game\Source\Shader;C:\Game\Source\Utilities;C:\Game\Source\World;C:\Game\Source;C:\Game\Library\SOIL\soil-master\include;C:\Game\Library\GLFW\glfw-3.2.1\include;C:\Game\Library\OpenAL\OpenAL-Soft\include\AL;C:\Game\Library\OpenAL\alut\include;C:\Game\Library\GLEW\glew-2.1.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <CompileAs>CompileAsCpp</CompileAs>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
@@ -354,7 +412,31 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Game\Source\Physics;C:\Game\ServerHost;C:\Game\Source\Server;C:\Game\Source\World\Debris;C:\Game\Source\World\Tiles;C:\Game\Source\Graphics;C:\Game\Source\Audio;C:\Game\Source\Engine;C:\Game\Source\GUI;C:\Game\Source\Shader;C:\Game\Source\Utilities;C:\Game\Source\World;C:\Game\Source;C:\Game\Library\SOIL\soil-master\include;C:\Game\Library\GLFW\glfw-3.2.1\include;C:\Game\Library\OpenAL 1.1 SDK\include;C:\Game\Library\OpenAL\alut\include;C:\Game\Library\GLEW\glew-2.1.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Game\Source\Physics;C:\Game\ServerHost;C:\Game\Source\Server;C:\Game\Source\World\Debris;C:\Game\Source\World\Tiles;C:\Game\Source\Graphics;C:\Game\Source\Audio;C:\Game\Source\Engine;C:\Game\Source\GUI;C:\Game\Source\Shader;C:\Game\Source\Utilities;C:\Game\Source\World;C:\Game\Source;C:\Game\Library\SOIL\soil-master\include;C:\Game\Library\GLFW\glfw-3.2.1\include;C:\Game\Library\OpenAL\OpenAL-Soft\include\AL;C:\Game\Library\OpenAL\alut\include;C:\Game\Library\GLEW\glew-2.1.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>C:\Game\Library\OpenAL 1.1 SDK\libs\Win64;C:\Game\Library\GLEW\glew-2.1.0\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>OpenAL32.lib;ALut.lib;glew32.lib;opengl32.lib;glfw3.lib;SOIL.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release (Verbose)|x64'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>C:\Game\Source\Physics;C:\Game\ServerHost;C:\Game\Source\Server;C:\Game\Source\World\Debris;C:\Game\Source\World\Tiles;C:\Game\Source\Graphics;C:\Game\Source\Audio;C:\Game\Source\Engine;C:\Game\Source\GUI;C:\Game\Source\Shader;C:\Game\Source\Utilities;C:\Game\Source\World;C:\Game\Source;C:\Game\Library\SOIL\soil-master\include;C:\Game\Library\GLFW\glfw-3.2.1\include;C:\Game\Library\OpenAL\OpenAL-Soft\include\AL;C:\Game\Library\OpenAL\alut\include;C:\Game\Library\GLEW\glew-2.1.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <CompileAs>CompileAsCpp</CompileAs>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>

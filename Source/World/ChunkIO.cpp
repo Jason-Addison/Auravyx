@@ -1,6 +1,8 @@
 #include "ChunkIO.h"
 #include "Resource.h"
 #include "Log.h"
+#include <iostream>
+#include <filesystem>
 ChunkIO::ChunkIO()
 {
 }
@@ -10,12 +12,41 @@ ChunkIO::~ChunkIO()
 {
 
 }
-
 bool verboseChunkIO = false;
 
-void ChunkIO::saveChunk(std::shared_ptr<Chunk> chunk)
+void ChunkIO::saveArea()
 {
-	std::string dir = Resource::DIR + "\\Saves\\World\\c" +
+	
+	std::string dir = Resource::DIR + "\\Saves\\m.txt";
+
+	FILE* chunkOutput = fopen(dir.c_str(), "rb+");
+	if (!chunkOutput)
+	{
+		Log::out("ChunkIO", "Chunk error : " + std::string(strerror(errno)), RED, RED);
+	}
+	unsigned char chunkCount = 0;
+	fwrite(&chunkCount, 1, 1, chunkOutput);
+	unsigned char noChunk = 255;
+	int x = 3;
+	int y = 3;
+	int z = 3;
+	for (int i = 0; i < 64; i++)
+	{
+		fwrite(&noChunk, 1, 1, chunkOutput);
+	}
+	char c = x + 4 * (y * 4 + z);
+	fseek(chunkOutput, c + 1, SEEK_SET);
+	fwrite(&c, 1, 1, chunkOutput);
+
+	//std::cout << (c / 16) << " " << (c % 16) << "\n";
+
+	fclose(chunkOutput);
+}
+
+
+void ChunkIO::saveChunk(std::shared_ptr<Chunk> chunk, std::string name)
+{
+	std::string dir = Resource::DIR + "\\Saves\\" + name + "\\data\\c" +
 		std::to_string(chunk->x) + "." + std::to_string(chunk->y) + "." + std::to_string(chunk->z) + ".voxc";
 
 	FILE* chunkOutput = fopen(dir.c_str(), "wb");
@@ -41,11 +72,11 @@ void ChunkIO::saveChunk(std::shared_ptr<Chunk> chunk)
 
 }
 
-std::shared_ptr<Chunk> ChunkIO::readChunk(int x, int y, int z)
+std::shared_ptr<Chunk> ChunkIO::readChunk(int x, int y, int z, std::string name)
 {
 	std::shared_ptr<Chunk> chunk(new Chunk);
 
-	std::string dir = Resource::DIR + "\\Saves\\World\\c" +
+	std::string dir = Resource::DIR + "\\Saves\\" + name + "\\data\\c" +
 		std::to_string(x) + "." + std::to_string(y) + "." + std::to_string(z) + ".voxc";
 
 	FILE* chunkInput = fopen(dir.c_str(), "rb");

@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "WindowManager.h"
 #include "Controller.h"
+#include <SOIL\SOIL.h>
+#include "Resource.h"
 WindowManager::WindowManager()
 {
 }
@@ -38,6 +40,12 @@ void WindowManager::create()
 	width = 2000;
 	height = 1300;
 	window = glfwCreateWindow(width, height, title.c_str(), NULL, NULL);
+
+	GLFWimage icons[1];
+	std::string str = Resource::DIR + "\\Assets\\Textures\\coin.png";
+	icons[0].pixels = SOIL_load_image(str.c_str(), &icons[0].width, &icons[0].height, 0, SOIL_LOAD_RGBA);
+	glfwSetWindowIcon(window, 1, icons);
+	SOIL_free_image_data(icons[0].pixels);
 
 	glfwSetWindowSizeCallback(window, &displayResizeCallback);
 	glfwSetWindowPos(window, 1400, 50);

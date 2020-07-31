@@ -34,15 +34,18 @@ std::vector<Chunk> chunks;
 
 Chat chat;
 //ClientManager c;
-std::shared_ptr<Chunk> chunkToModel = nullptr;
 
 std::vector<std::shared_ptr<Chunk>> chunksToLoad;
 std::shared_ptr<Chunk> nextChunk;
 std::atomic_int lock = false;
 bool loading = false;
 
+std::atomic_bool cleanup = false;
+
 ServerManager iserver;
 std::thread chunkLoader;
+std::thread chunkMeshGenerator;
+std::thread server;
 
 Chunk ch;
 
@@ -100,6 +103,11 @@ void chunkLoading(int xC, int yC, int zC)
 				}
 				for (int y = -2; y < 4; y++)
 				{
+					if (cleanup)
+					{
+						return;
+					}
+					
 					if (!lock && !w.unloadLock)
 					{
 						cY = y;
@@ -116,8 +124,7 @@ void chunkLoading(int xC, int yC, int zC)
 							//nextChunk.release();
 							//chunksToLoad.emplace_back(std::unique_ptr<Chunk>(new Chunk(c)));
 
-
-							std::shared_ptr<Chunk> c = cio.readChunk(cX, cY, cZ);// new Chunk(cX, cY, cZ);
+							std::shared_ptr<Chunk> c = cio.readChunk(cX, cY, cZ, "myworld");// new Chunk(cX, cY, cZ);
 
 							//std::shared_ptr<Chunk> c (new Chunk(cX, cY, cZ));
 							//c->generateTerrain(ch);
@@ -161,28 +168,36 @@ void chunkLoading(int xC, int yC, int zC)
 	//std::cout << end - start << " DONE\n";
 	double avgg = 0;
 	int count = 0;
-	//GFX::CAM.y = height + 3;
 	
-	for (auto c : w.overworld)
-	{
-		if (!c->loaded && c->neighboursLoaded())
-		{
-			double before = glfwGetTime();
-			c->generate();
-			double now = glfwGetTime();
-			avgg += now - before;
-			count++;
-			c->loaded = true;
-			c->chunkUpdate = true;
-		}
-	}
-	//std::cout << avgg / (double)count << " AVG\n";
-
 	for (auto c : w.overworld)
 	{
 		//c->clearDensity();
 	}
 	return;
+}
+
+void chunkMeshGeneration()
+{
+	while (true)
+	{
+		int temp = w.overworld.size();
+		
+		for (int i = 0; i < temp; i++)
+		{
+			if (cleanup)
+			{
+				return;
+			}
+			auto c = w.overworld.at(i);
+			
+			if (c && !c->loaded && c->neighboursLoaded())
+			{
+				c->generate();
+				c->loaded = true;
+				c->chunkUpdate = true;
+			}
+		}
+	}
 }
 
 void GameState::update()
@@ -207,6 +222,11 @@ void GameState::update()
 	GFX::CAM.getPlayerInput();
 	w.update();
 	
+	int x = GFX::CAM.cX >> 2;
+	int y = GFX::CAM.cZ >> 2;
+
+	//std::cout << x << " " << y << "\n";
+
 	///////////c.update();
 }
 
@@ -235,7 +255,6 @@ void GameState::render()
 {
 	if (lock)
 	{
-		chunkToModel = std::shared_ptr<Chunk>(new Chunk(*nextChunk));
 		w.addChunk(std::shared_ptr<Chunk>(new Chunk(*nextChunk)));
 		nextChunk.reset();
 		lock = false;
@@ -379,7 +398,6 @@ void startChunkLoader()
 		chunkLoading(0, 0, 0);
 	}
 }
-std::thread server;
 void serverStart()
 {
 	iserver.start();
@@ -391,10 +409,12 @@ void physicsCallback(std::string s)
 }
 void GameState::start()
 {
+	ChunkIO c;
+	c.saveArea();
 	Physics::addCallback(physicsCallback);
 	
-	//Sound s;
-	//s.play(Assets::getAudio("song"));
+	Sound s;
+	s.play(Assets::getAudio("Fall"));
 	hostServer = false;// Settings::getBool("host");
 	
 	if (hostServer)
@@ -406,16 +426,19 @@ void GameState::start()
 		}
 	}
 	chunkLoader = std::thread(startChunkLoader);
+	chunkMeshGenerator = std::thread(chunkMeshGeneration);
 	w.create();
 	w.test();
 }
 
 void GameState::stop()
 {
+	cleanup = true;
 	/////////////c.stop();
 	iserver.stop();
 	chunkLoader.join();
-	while (iserver.running)
+	chunkMeshGenerator.join();
+	//while (iserver.running)
 	{
 
 	}
