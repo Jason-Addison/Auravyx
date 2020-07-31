@@ -3,7 +3,9 @@ A C++ implementation of my Java Smooth Voxels, also a lot quicker too. Still in 
 
 Current version has a few things disabled (chunk streaming, force noclip, multiplayer disabled). Some features are being reimplemented to be handled server-side.
 
-Most up-to-date version under x64/Release
+Most up-to-date version: Alpha-1.0.1 Release
+
+How to play: Extract Alpha-1.0.1.zip an run the .exe, if this fails make sure anti-virus are ignoring it (Windows Defender may try to auto-delete)
 
 ->Since chunk streaming is disabled, I included a small (2gb) world, which loads on startup. There are some snowy mountains in the distance, a tunnel at spawn and a brick pillar coming out of the ground.
 
