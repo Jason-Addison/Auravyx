@@ -1,5 +1,5 @@
 # C++ Smooth-Voxels
-A C++ implementation of my Java Smooth Voxels, also a lot quicker too. Still in development. Runs on Windows, unconfirmed if it can run on Linux/Mac (though it should be able to)
+A C++ implementation of my Java Smooth Voxels, fully destructable voxel sandbox with multiplayer, also a lot quicker too. Still in development. Runs on Windows, unconfirmed if it can run on Linux/Mac (though it should be able to)
 
 Current version has a few things disabled (chunk streaming, force noclip, multiplayer disabled). Some features are being reimplemented to be handled server-side.
 
