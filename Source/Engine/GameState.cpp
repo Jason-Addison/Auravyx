@@ -100,7 +100,7 @@ void chunkLoading(int xC, int yC, int zC)
 				//if (ch == nullptr)
 				{
 					//	ch = std::shared_ptr<ChunkHeight>(new ChunkHeight());
-					//	ch->generate(cX, cZ);
+						//ch->generate(cX, cZ);
 				}
 				for (int y = -2; y < 4; y++)
 				{

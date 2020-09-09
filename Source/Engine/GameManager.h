@@ -11,9 +11,13 @@ public:
 
 	static World world;
 
+	static double UPS;
+
 	static std::shared_ptr<State> getCurrentState();
 
 	static void setCurrentState(std::shared_ptr<State> s);
+
+	static double getUPS();
 
 private:
 

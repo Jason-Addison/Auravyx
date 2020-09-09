@@ -4,6 +4,8 @@ World GameManager::world;
 
 std::shared_ptr<State> GameManager::currentState;
 
+double GameManager::UPS = 60;
+
 GameManager::GameManager()
 {
 }
@@ -21,4 +23,9 @@ std::shared_ptr<State> GameManager::getCurrentState()
 void GameManager::setCurrentState(std::shared_ptr<State> s)
 {
 	currentState = s;
+}
+
+double GameManager::getUPS()
+{
+	return UPS;
 }
