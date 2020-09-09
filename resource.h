@@ -1,6 +1,6 @@
 //{{NO_DEPENDENCIES}}
 // Microsoft Visual C++ generated include file.
-// Used by Game.rc
+// Used by Auravyx.rc
 //
 #define IDB_PNG1                        101
 #define IDI_ICON3                       104

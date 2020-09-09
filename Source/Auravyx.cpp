@@ -15,7 +15,6 @@
 #include <GLManager.h>
 #include <wtypes.h>
 #include <Controller.h>
-double UPS = 60;
 double thisFrame = 0;
 double nextFrame = 0;
 
@@ -31,7 +30,7 @@ bool updateEnd = false;
 void updater()
 {
 	double lerp = 0;
-	double updatesPerSecond = 1 / UPS;
+	double updatesPerSecond = 1 / GameManager::getUPS();
 	double lastTimeUPS = -1;
 	double thisTimeUPS = 0;
 	Mouse m;
@@ -115,8 +114,6 @@ void loadAssetsAsync()
 int main(int argc, char* argv[])
 {
 	Resource::DIR = std::string(argv[0]) + "\\..";
-	Log::out("Game", "Loading...    UPS : " + std::to_string(UPS) + "  FPS : " + std::to_string(GFX::FPS), GREEN);
-	//FILE* chunkOutput = fopen("C:\\Game\\e.txt", "rb");
 	GLManager::start();
 
 	Resource::loadBootAssets();
