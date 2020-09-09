@@ -34,12 +34,18 @@ GLFWwindowrefreshfun windowUpdateCallback()
 
 void WindowManager::create()
 {
-	std::string title = "Game";//Polyvox | Ver " + std::string(1.3) + " | FPS : " + std::to_string(Display::frameRate);
+	std::string title = "Auravyx";//Polyvox | Ver " + std::string(1.3) + " | FPS : " + std::to_string(Display::frameRate);
 	glfwDefaultWindowHints();
 	//glfwWindowHint(GLFW_DECORATED, 0);
-	width = 2000;
-	height = 1300;
+	GLFWmonitor* monitor = glfwGetPrimaryMonitor();
+	const GLFWvidmode* mode = glfwGetVideoMode(monitor);
+
+	//2300 1300
+	width = mode->width * 0.7;
+	height = mode->height * 0.7;
+
 	window = glfwCreateWindow(width, height, title.c_str(), NULL, NULL);
+	glfwSetWindowPos(window, (mode->width - width) / 2, (mode->height - height) / 2);
 
 	GLFWimage icons[1];
 	std::string str = Resource::DIR + "\\Assets\\Textures\\coin.png";
@@ -48,7 +54,7 @@ void WindowManager::create()
 	SOIL_free_image_data(icons[0].pixels);
 
 	glfwSetWindowSizeCallback(window, &displayResizeCallback);
-	glfwSetWindowPos(window, 1400, 50);
+	//glfwSetWindowPos(window, 1400, 50);
 	//glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	glfwMakeContextCurrent(window);
 	glfwSwapInterval(0);
@@ -164,6 +170,11 @@ void WindowManager::hideMouse()
 void WindowManager::centerCursor()
 {
 	glfwSetCursorPos(window, width / 2, height / 2);
+}
+
+void WindowManager::setWindowTitle(std::string title)
+{
+	glfwSetWindowTitle(window, title.c_str());
 }
 
 
