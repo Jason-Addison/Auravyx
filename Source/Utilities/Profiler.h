@@ -11,5 +11,7 @@ public:
 	static void init();
 
 	static double getCurrentProcessCPU();
+
+	static int getCPUCoreCount();
 };
 
