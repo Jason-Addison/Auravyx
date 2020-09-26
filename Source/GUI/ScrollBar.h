@@ -1,9 +1,9 @@
 #pragma once
-#include "GUI.h"
-#include "Button.h"
-#include "GFX.h"
-#include "Vec4f.h"
-//#include "Controller.h"
+#include "GUI/GUI.h"
+#include "GUI/Button.h"
+#include <Auravyx.h>
+#include "Utilities/Vec4f.h"
+//#include "Engine/Controller.h"
 
 #define VERTICAL 0
 #define HORIZONTAL 1

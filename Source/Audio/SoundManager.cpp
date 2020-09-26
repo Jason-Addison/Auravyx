@@ -1,13 +1,14 @@
 #include "stdafx.h"
-#include "SoundManager.h"
-#include "al.h"
+#include "Audio/SoundManager.h"
+#include "Library/AL/al.h"
 #include "alc.h"
 #include <iostream>
-#include "Log.h"
+#include "Utilities/Log.h"
 #include "efx.h"
 #include <vector>
-#include "Assets.h"
-#include <Sound.h>
+#include "Utilities/Assets.h"
+#include <Audio/Sound.h>
+#include <Auravyx.h>
 SoundManager::SoundManager()
 {
 }
@@ -90,11 +91,30 @@ void SoundManager::start()
 
 void SoundManager::stop()
 {	
-	Sound::destroyAllSounds();
-	Assets::deleteAudio();
+	destroyAllSounds();
+	Auravyx::getAuravyx()->getAssets()->deleteAudio();
 
 	device = alcGetContextsDevice(context);
 	alcMakeContextCurrent(NULL);
 	alcDestroyContext(context);
 	alcCloseDevice(device);
+}
+
+void SoundManager::destroyAllSounds()
+{
+	for (auto s : sounds)
+	{
+		alDeleteSources(1, &s);
+	}
+	sounds.clear();
+}
+
+void SoundManager::addSound(ALuint source)
+{
+	sounds.insert(source);
+}
+
+void SoundManager::removeSound(ALuint source)
+{
+	sounds.erase(source);
 }

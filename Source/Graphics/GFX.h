@@ -1,80 +1,82 @@
 #pragma once
-#include "Texture.h"
-#include "Model.h"
-#include "Camera.h"
+#include "Engine/Texture.h"
+#include "Engine/Model.h"
+#include "Engine/Camera.h"
 #include <vector>
-#include "FBO.h"
+#include "Engine/FBO.h"
 class GFX
 {
 public:
 	GFX();
 	~GFX();
 
-	static double FPS;
+	double FPS = 144;
 
-	static Camera CAM;
+	Camera CAM = Camera();
 
-	static bool WIREFRAME;
+	bool WIREFRAME;
 
-	static Model quad;
+	Model quad = Model();
 
-	static GLuint tileMap;
+	GLuint tileMap = 0;
 
-	static int viewDistance;
+	int viewDistance = 0;
 
-	static int mipmapBias;
+	int mipmapBias = 0;
 
-	static int terrainTextureResolution;
+	int terrainTextureResolution = -1;
 
-	static double brightness;
+	double brightness = 0.13;
 
-	static int UNLIMITED_FPS;
+	int UNLIMITED_FPS = -1;
 	
-	static GLuint materials;
+	GLuint materials;
 
-	static GLuint terrainMaterials;
+	GLuint terrainMaterials = -1;
 
-	static void fillRect(float x, float y, float width, float height, float xScale, float yScale, float r, float g, float b, float a);
+	void fillRect(float x, float y, float width, float height, float xScale, float yScale, float r, float g, float b, float a);
 
-	static void fillRect(float x, float y, float xScale, float yScale, float r, float g, float b, float a);
+	void fillRect(float x, float y, float xScale, float yScale, float r, float g, float b, float a);
 
 
-	static void drawImage(float x, float y, float width, float height, int texture);
+	void drawImage(float x, float y, float width, float height, int texture);
 
-	static void drawImage(float x, float y, float width, float height, float rot, int texture);
+	void drawImage(float x, float y, float width, float height, float rot, int texture);
 
-	static void drawImage(float x, float y, float width, float height, float rotation, int texture, int xScale, int yScale);
+	void drawImage(float x, float y, float width, float height, float rotation, int texture, int xScale, int yScale);
 
-	static void drawImage(float x, float y, float xVel, float yVel, float width, float height, int texture);
+	void drawImage(float x, float y, float xVel, float yVel, float width, float height, int texture);
 	
-	static void drawString(std::string string, float x, float y, float size, float r, float g, float b, float a);
+	void drawString(std::string string, float x, float y, float size, float r, float g, float b, float a);
 
-	static void drawStringBG(std::string string, float x, float y, float size, float r, float g, float b, float a, 
+	void drawStringBG(std::string string, float x, float y, float size, float r, float g, float b, float a, 
 		float xB, float yB, float xSB, float ySB, float rB, float gB, float bB, float aB);
 
-	static void drawStringBGR(std::string string, float x, float y, float size, float r, float g, float b, float a,
+	void drawStringBGR(std::string string, float x, float y, float size, float r, float g, float b, float a,
 		float xB, float yB, float xSB, float ySB, float rB, float gB, float bB, float aB);
 
-	static void drawStringR(std::string string, float x, float y, float size, float r, float g, float b, float a);
+	void drawStringR(std::string string, float x, float y, float size, float r, float g, float b, float a);
 
-	static void drawStringC(std::string string, float x, float y, float size, float width, float r, float g, float b, float a);
+	void drawStringC(std::string string, float x, float y, float size, float width, float r, float g, float b, float a);
 
-	static void drawStringBGC(std::string string, float x, float y, float size, float width, float r, float g, float b, float a,
+	void drawStringBGC(std::string string, float x, float y, float size, float width, float r, float g, float b, float a,
 		float xB, float yB, float xSB, float ySB, float rB, float gB, float bB, float aB);
 
-	static float stringWidth(std::string string, float size);
+	float stringWidth(std::string string, float size);
 
-	static void renderModel(float x, float y, float z, float xScale, float yScale,
+	void renderModel(float x, float y, float z, float xScale, float yScale,
 		float zScale, float xRot, float yRot, float zRot, Model* m, Camera *c, Matrix4f *projection, Texture *tex);
 
-	static void init();
+	void init();
+
+	void setFPS(double fps);
 
 	//static void enableScissor(int x, int y, int width, int height);
 
 	//static void disableScissor();
-	static void enableScissor(float x, float y, float width, float height);
+	void enableScissor(float x, float y, float width, float height);
 
-	static void disableScissor();
+	void disableScissor();
 
 };
 

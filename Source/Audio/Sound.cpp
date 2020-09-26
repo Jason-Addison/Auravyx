@@ -1,6 +1,7 @@
 #include "stdafx.h"
-#include "Sound.h"
+#include "Audio/Sound.h"
 #include "efx.h"
+#include "Auravyx.h"
 
 Sound::Sound()
 {
@@ -11,8 +12,6 @@ Sound::Sound()
 Sound::~Sound()
 {
 }
-
-std::unordered_set<ALuint> Sound::sounds;
 
 void Sound::create()
 {
@@ -25,7 +24,7 @@ void Sound::create()
 	alSourcei(source, AL_LOOPING, AL_TRUE);
 	alSourcei(source, AL_AIR_ABSORPTION_FACTOR, 100);
 
-	sounds.insert(source);
+	Auravyx::getAuravyx()->getSoundManager()->addSound(source);
 }
 
 void Sound::play(WAVE wave)
@@ -93,6 +92,6 @@ void Sound::setTime(ALfloat time)
 
 void Sound::destroy()
 {
-	sounds.erase(source);
+	Auravyx::getAuravyx()->getSoundManager()->removeSound(source);
 	alDeleteSources(1, &source);
 }

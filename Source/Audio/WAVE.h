@@ -1,5 +1,5 @@
 #pragma once
-#include "al.h"
+#include "Library/AL/al.h"
 
 class WAVE
 {

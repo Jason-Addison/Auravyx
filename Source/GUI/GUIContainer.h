@@ -1,6 +1,6 @@
 #pragma once
-#include "GUI.h"
-#include "GUIContainerData.h"
+#include "GUI/GUI.h"
+#include "GUI/GUIContainerData.h"
 class GUIContainer : public GUI
 {
 public:

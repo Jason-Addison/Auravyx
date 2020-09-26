@@ -1,17 +1,18 @@
 #include "stdafx.h"
-#include "World.h"
-#include "Chunk.h"
-#include "GFX.h"
-#include "Profiler.h"
-#include "WindowManager.h"
-#include <Clock.h>
-#include <Controller.h>
-#include <M.h>
+#include "World/World.h"
+#include "World/Chunk.h"
+#include <Auravyx.h>
+#include "Utilities/Profiler.h"
+#include "Engine/WindowManager.h"
+#include <Engine/Clock.h>
+#include <Engine/Controller.h>
+#include <Utilities/M.h>
 #include <Shaders.h>
-#include <Assets.h>
-#include "PhysicsSphere.h"
-#include "PhysicsWorld.h"
+#include <Utilities/Assets.h>
+#include "Physics/PhysicsSphere.h"
+#include "Physics/PhysicsWorld.h"
 #include <iostream>
+#include <Auravyx.h>
 FBO fbo;
 
 std::vector<std::string> fboStrings;
@@ -44,11 +45,11 @@ void World::generate()
 void World::update()
 {
 	float speed = 50000;
-	if (Controller::isKeyDown(GLFW_KEY_EQUAL))
+	if (Auravyx::getAuravyx()->getWindow()->getController()->isKeyDown(GLFW_KEY_EQUAL))
 	{
 		overworldTime += Clock::get(speed);
 	}
-	if (Controller::isKeyDown(GLFW_KEY_MINUS))
+	if (Auravyx::getAuravyx()->getWindow()->getController()->isKeyDown(GLFW_KEY_MINUS))
 	{
 		overworldTime -= Clock::get(speed);
 	}
@@ -58,7 +59,7 @@ void World::update()
 ShadowMap shadowMap;
 void World::create()
 {
-	fbo = FBO(WindowManager::width, WindowManager::height);
+	fbo = FBO(Auravyx::getAuravyx()->getWindow()->getWidth(), Auravyx::getAuravyx()->getWindow()->getHeight());
 	shadowMap = ShadowMap(2048 * 2, 2048 * 2);
 }
 
@@ -75,49 +76,49 @@ void World::render(Camera* cam, Matrix4f* projectionMatrix)
 	m = fmod((double)(getOverworldTime() % getOverworldDayCycle()) * 0.0015, 360);
 	
 	Vec3f dir(0, -90, -m);
-	Shaders::shadowShader->render(*this, shadowMap, *cam, dir);
+	Auravyx::getAuravyx()->getRenderer()->getShaders()->shadowShader->render(*this, shadowMap, *cam, dir);
 	
 	shadowMap.unbind();
-	fbo.update(WindowManager::width, WindowManager::height);
+	fbo.update(Auravyx::getAuravyx()->getWindow()->getWidth(), Auravyx::getAuravyx()->getWindow()->getHeight());
 	fbo.bind();
 	fbo.clear();
 
-	Shaders::skyShader->start();
-	Shaders::skyShader->loadProjectionMatrix(*projectionMatrix);
+	Auravyx::getAuravyx()->getRenderer()->getShaders()->skyShader->start();
+	Auravyx::getAuravyx()->getRenderer()->getShaders()->skyShader->loadProjectionMatrix(*projectionMatrix);
 	Camera altCam = *cam;
 	altCam.x = 0; altCam.y = 0; altCam.z = 0;
 
 	double p = 0.0174532925;
 
-	Shaders::skyShader->loadCamera(altCam.getViewMatrix());
-	Shaders::skyShader->loadSun(-cos(m * p), sin(m * p), 0);
-	Shaders::skyShader->loadTime((double)((getOverworldTime() + 60000) % getOverworldDayCycle()) / (double) getOverworldDayCycle());
-	Shaders::skyShader->loadScreenResolution(WindowManager::getWidth(), WindowManager::getHeight());
+	Auravyx::getAuravyx()->getRenderer()->getShaders()->skyShader->loadCamera(altCam.getViewMatrix());
+	Auravyx::getAuravyx()->getRenderer()->getShaders()->skyShader->loadSun(-cos(m * p), sin(m * p), 0);
+	Auravyx::getAuravyx()->getRenderer()->getShaders()->skyShader->loadTime((double)((getOverworldTime() + 60000) % getOverworldDayCycle()) / (double) getOverworldDayCycle());
+	Auravyx::getAuravyx()->getRenderer()->getShaders()->skyShader->loadScreenResolution(Auravyx::getAuravyx()->getWindow()->getWidth(), Auravyx::getAuravyx()->getWindow()->getHeight());
 	double rot = (double)(getOverworldTime() % getOverworldDayCycle()) / (double)360;
 	Matrix4f t = M::createTransformationMatrix(0, 0, 0, 1, 1, 1, 70, rot, 0);
-	Shaders::skyShader->loadTransformationMatrix(t);
-	Shaders::skyShader->render();
+	Auravyx::getAuravyx()->getRenderer()->getShaders()->skyShader->loadTransformationMatrix(t);
+	Auravyx::getAuravyx()->getRenderer()->getShaders()->skyShader->render();
 	if (Profiler::showChunkMetrics)
 	{
-		Shaders::lineShader->start();
-		Shaders::lineShader->loadCamera(cam->getViewMatrix());
-		Shaders::lineShader->loadProjectionMatrix(*projectionMatrix);
-		Shaders::lineShader->loadOffset(GFX::CAM.cX, GFX::CAM.cY, GFX::CAM.cZ);
-		Shaders::lineShader->render();
+		Auravyx::getAuravyx()->getRenderer()->getShaders()->lineShader->start();
+		Auravyx::getAuravyx()->getRenderer()->getShaders()->lineShader->loadCamera(cam->getViewMatrix());
+		Auravyx::getAuravyx()->getRenderer()->getShaders()->lineShader->loadProjectionMatrix(*projectionMatrix);
+		Auravyx::getAuravyx()->getRenderer()->getShaders()->lineShader->loadOffset(Auravyx::getAuravyx()->getOverlay()->CAM.cX, Auravyx::getAuravyx()->getOverlay()->CAM.cY, Auravyx::getAuravyx()->getOverlay()->CAM.cZ);
+		Auravyx::getAuravyx()->getRenderer()->getShaders()->lineShader->render();
 	}
-	Shaders::lineShader->stop();
+	Auravyx::getAuravyx()->getRenderer()->getShaders()->lineShader->stop();
 
-	Shaders::voxelShader->start();
-	Shaders::voxelShader->loadProjectionMatrix(*projectionMatrix); // *projectionMatrix);
-	Shaders::voxelShader->loadCamera(cam->getViewMatrix());
-	Shaders::voxelShader->loadCamera(cam->x, cam->y, cam->z, GFX::viewDistance * 128);
+	Auravyx::getAuravyx()->getRenderer()->getShaders()->voxelShader->start();
+	Auravyx::getAuravyx()->getRenderer()->getShaders()->voxelShader->loadProjectionMatrix(*projectionMatrix); // *projectionMatrix);
+	Auravyx::getAuravyx()->getRenderer()->getShaders()->voxelShader->loadCamera(cam->getViewMatrix());
+	Auravyx::getAuravyx()->getRenderer()->getShaders()->voxelShader->loadCamera(cam->x, cam->y, cam->z, Auravyx::getAuravyx()->getOverlay()->viewDistance * 128);
 
 	std::vector<int> toRemove;
 	int distance;
 	/*for (int i = 0; i < overworld.size(); i++)
 	{
 		distance = abs(cam->cX - overworld.at(i)->x) + abs(cam->cY - overworld.at(i)->y) + abs(cam->cZ - overworld.at(i)->z);
-		if (distance <= GFX::viewDistance * 2)
+		if (distance <= Auravyx::getAuravyx()->getOverlay()->viewDistance * 2)
 		{
 			if (overworld.at(i) != nullptr)
 			{
@@ -143,7 +144,7 @@ void World::render(Camera* cam, Matrix4f* projectionMatrix)
 		{
 			distance = abs(cam->cX - (*it)->x) + abs(cam->cZ - (*it)->z);
 			//distance = 10000;
-			/*if (distance <= GFX::viewDistance * 2)
+			/*if (distance <= Auravyx::getAuravyx()->getOverlay()->viewDistance * 2)
 			{
 				if ((*it) != nullptr)
 				{
@@ -151,7 +152,7 @@ void World::render(Camera* cam, Matrix4f* projectionMatrix)
 				}
 				++it;
 			}
-			if (distance > GFX::viewDistance * 2 && (*it) != nullptr && (*it)->loaded)
+			if (distance > Auravyx::getAuravyx()->getOverlay()->viewDistance * 2 && (*it) != nullptr && (*it)->loaded)
 			{
 				//std::shared_ptr<Chunk> e = (*it);
 				//(*it)->destroy();
@@ -159,7 +160,7 @@ void World::render(Camera* cam, Matrix4f* projectionMatrix)
 				//++it;
 				//overworld.clear();
 			}
-			else if (distance <= GFX::viewDistance * 2)
+			else if (distance <= Auravyx::getAuravyx()->getOverlay()->viewDistance * 2)
 			{
 				++it;
 			}
@@ -167,7 +168,7 @@ void World::render(Camera* cam, Matrix4f* projectionMatrix)
 		/*for (int i = 0; i < overworld.size();)
 		{
 			distance = abs(cam->cX - overworld.at(i)->x) + abs(cam->cZ - overworld.at(i)->z);
-			if (distance > GFX::viewDistance * 10000.2)
+			if (distance > Auravyx::getAuravyx()->getOverlay()->viewDistance * 10000.2)
 			{
 				//////////////////////overworld.at(i)->destroy();
 				overworld.erase(overworld.begin() + i);
@@ -186,7 +187,7 @@ void World::render(Camera* cam, Matrix4f* projectionMatrix)
 		unloadLock = false;
 	}*/
 
-	if (Controller::isKeyDown(GLFW_KEY_R))
+	if (Auravyx::getAuravyx()->getWindow()->getController()->isKeyDown(GLFW_KEY_R))
 	{
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	}
@@ -199,41 +200,41 @@ void World::render(Camera* cam, Matrix4f* projectionMatrix)
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D_ARRAY, GFX::terrainMaterials);
+	glBindTexture(GL_TEXTURE_2D_ARRAY, Auravyx::getAuravyx()->getOverlay()->terrainMaterials);
 	
 	for (auto c : overworld)
 	{
 		if (c != nullptr && c->ready)
 		{
-			c->render(GFX::CAM, *projectionMatrix);
-			//GFX::renderModel(c->x * 128, c->y * 128, c->z * 128, 10, 10, 10, 0, 0, 0, Assets::getModel("sky").get(), &GFX::CAM, projectionMatrix, Assets::getTexture("light_blue").get());
+			c->render(Auravyx::getAuravyx()->getOverlay()->CAM, *projectionMatrix);
+			//Auravyx::getAuravyx()->getOverlay()->renderModel(c->x * 128, c->y * 128, c->z * 128, 10, 10, 10, 0, 0, 0, Auravyx::getAuravyx()->getAssets()->getModel("sky").get(), &Auravyx::getAuravyx()->getOverlay()->CAM, projectionMatrix, Auravyx::getAuravyx()->getAssets()->getTexture("light_blue").get());
 		}
 	}
-	Shaders::voxelShader->stop();
-	//s1.setPosition(GFX::CAM.x, GFX::CAM.y - 5, GFX::CAM.z);
+	Auravyx::getAuravyx()->getRenderer()->getShaders()->voxelShader->stop();
+	//s1.setPosition(Auravyx::getAuravyx()->getOverlay()->CAM.x, Auravyx::getAuravyx()->getOverlay()->CAM.y - 5, Auravyx::getAuravyx()->getOverlay()->CAM.z);
 	
-	GFX::renderModel(s1->getX(), s1->getY(), s1->getZ(), 1, 1, 1, 0, 0, 0, Assets::getModel("sky").get(), &GFX::CAM, projectionMatrix, Assets::getTexture("light_blue").get());
+	Auravyx::getAuravyx()->getOverlay()->renderModel(s1->getX(), s1->getY(), s1->getZ(), 1, 1, 1, 0, 0, 0, Auravyx::getAuravyx()->getAssets()->getModel("sky").get(), &(Auravyx::getAuravyx()->getOverlay()->CAM), projectionMatrix, Auravyx::getAuravyx()->getAssets()->getTexture("light_blue").get());
 	if (s1->checkCollision(s2.get()))
 	{
-		//GFX::renderModel(0, 0, 0, 1, 1, 1, 0, 0, 0, Assets::getModel("sky").get(), &GFX::CAM, projectionMatrix, Assets::getTexture("yellow").get());
+		//Auravyx::getAuravyx()->getOverlay()->renderModel(0, 0, 0, 1, 1, 1, 0, 0, 0, Auravyx::getAuravyx()->getAssets()->getModel("sky").get(), &Auravyx::getAuravyx()->getOverlay()->CAM, projectionMatrix, Auravyx::getAuravyx()->getAssets()->getTexture("yellow").get());
 	}
 	else
 	{
-		//GFX::renderModel(0, 0, 0, 1, 1, 1, 0, 0, 0, Assets::getModel("sky").get(), &GFX::CAM, projectionMatrix, Assets::getTexture("light_blue").get());
+		//Auravyx::getAuravyx()->getOverlay()->renderModel(0, 0, 0, 1, 1, 1, 0, 0, 0, Auravyx::getAuravyx()->getAssets()->getModel("sky").get(), &Auravyx::getAuravyx()->getOverlay()->CAM, projectionMatrix, Auravyx::getAuravyx()->getAssets()->getTexture("light_blue").get());
 	}
 
 	fbo.unbind();
 	glDisable(GL_CULL_FACE);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	GFX::drawImage(0, 0, WindowManager::width, WindowManager::height, fbo.texture);
+	Auravyx::getAuravyx()->getOverlay()->drawImage(0, 0, Auravyx::getAuravyx()->getWindow()->getWidth(), Auravyx::getAuravyx()->getWindow()->getHeight(), fbo.texture);
 	
-	Shaders::deferredShader->start();
+	Auravyx::getAuravyx()->getRenderer()->getShaders()->deferredShader->start();
 
-	Shaders::deferredShader->loadDepthMVP(shadowMap.depthMVP);
-	//Shaders::deferredShader->loadPointLights(lights);
+	Auravyx::getAuravyx()->getRenderer()->getShaders()->deferredShader->loadDepthMVP(shadowMap.depthMVP);
+	//Auravyx::getAuravyx()->getRenderer()->getShaders()->deferredShader->loadPointLights(lights);
 	//float amt = sin(M::toRadians(-45));
-	Shaders::deferredShader->loadSunDirection(cos(M::toRadians(m)), -sin(M::toRadians(m)), 0);
-	Shaders::deferredShader->loadCamera(cam->x, cam->y, cam->z, GFX::viewDistance * 128, cam->getViewMatrix());
+	Auravyx::getAuravyx()->getRenderer()->getShaders()->deferredShader->loadSunDirection(cos(M::toRadians(m)), -sin(M::toRadians(m)), 0);
+	Auravyx::getAuravyx()->getRenderer()->getShaders()->deferredShader->loadCamera(cam->x, cam->y, cam->z, Auravyx::getAuravyx()->getOverlay()->viewDistance * 128, cam->getViewMatrix());
 	double lightFactor = (1 - 1) * 0.9 + 0.1;
 	   
 	double step = (double)(getOverworldTime() % getOverworldDayCycle()) / (double)getOverworldDayCycle();
@@ -246,7 +247,7 @@ void World::render(Camera* cam, Matrix4f* projectionMatrix)
 	{
 		brightness = -1;
 	}
-	Shaders::deferredShader->loadAmbientLight((brightness + 1 + GFX::brightness) / (2 + GFX::brightness), 1, 1, 1);
+	Auravyx::getAuravyx()->getRenderer()->getShaders()->deferredShader->loadAmbientLight((brightness + 1 + Auravyx::getAuravyx()->getOverlay()->brightness) / (2 + Auravyx::getAuravyx()->getOverlay()->brightness), 1, 1, 1);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, fbo.buffers[0]);
 	glActiveTexture(GL_TEXTURE1);
@@ -261,25 +262,25 @@ void World::render(Camera* cam, Matrix4f* projectionMatrix)
 	glBindTexture(GL_TEXTURE_2D, shadowMap.depthTexture);
 	glActiveTexture(GL_TEXTURE6);
 	glBindTexture(GL_TEXTURE_2D, fbo.buffers[1]);
-	glBindVertexArray(GFX::quad.getVAO());
-	glEnableVertexArrayAttrib(GFX::quad.getVAO(), 0);
+	glBindVertexArray(Auravyx::getAuravyx()->getOverlay()->quad.getVAO());
+	glEnableVertexArrayAttrib(Auravyx::getAuravyx()->getOverlay()->quad.getVAO(), 0);
 	glDrawArrays(GL_TRIANGLES, 0, 6 * 3);
 
 
-	int width = WindowManager::width / 6;
-	int height = (int) (width * ((float) WindowManager::height / (float) WindowManager::width));
+	int width = Auravyx::getAuravyx()->getWindow()->getWidth() / 6;
+	int height = (int) (width * ((float) Auravyx::getAuravyx()->getWindow()->getHeight() / (float) Auravyx::getAuravyx()->getWindow()->getWidth()));
 	
 	if (Profiler::showAdvancedDebugInfo)
 	{
-		GFX::fillRect(0, WindowManager::height - height - 1, WindowManager::width, 1, 0, 0, 0, 1);
+		Auravyx::getAuravyx()->getOverlay()->fillRect(0, Auravyx::getAuravyx()->getWindow()->getHeight() - height - 1, Auravyx::getAuravyx()->getWindow()->getWidth(), 1, 0, 0, 0, 1);
 		for (int i = 0; i < 5; i++)
 		{
-			GFX::drawImage(width * i, 0, width, height, fbo.buffers[i]);
-			GFX::drawStringBG(fboStrings.at(i), i * width, WindowManager::height - height, 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3);
+			Auravyx::getAuravyx()->getOverlay()->drawImage(width * i, 0, width, height, fbo.buffers[i]);
+			Auravyx::getAuravyx()->getOverlay()->drawStringBG(fboStrings.at(i), i * width, Auravyx::getAuravyx()->getWindow()->getHeight() - height, 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3);
 		}
-		GFX::drawImage(width * 5, 0, width, height, shadowMap.depthTexture);
-		GFX::drawImage(width * 5, height, width, height, Assets::getTexture("font_plain")->texture);
-		GFX::drawStringBG("shadow", width * 5, WindowManager::height - height, 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3);
+		Auravyx::getAuravyx()->getOverlay()->drawImage(width * 5, 0, width, height, shadowMap.depthTexture);
+		Auravyx::getAuravyx()->getOverlay()->drawImage(width * 5, height, width, height, Auravyx::getAuravyx()->getAssets()->getTexture("font_plain")->texture);
+		Auravyx::getAuravyx()->getOverlay()->drawStringBG("shadow", width * 5, Auravyx::getAuravyx()->getWindow()->getHeight() - height, 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3);
 	}
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }
@@ -397,7 +398,7 @@ void World::sphere(float xP, float yP, float zP, float radius, float power)
 
 				if (distance < radius / 2)
 				{
-					c = getChunk(GFX::CAM.cX, GFX::CAM.cY, GFX::CAM.cZ);
+					c = getChunk(Auravyx::getAuravyx()->getOverlay()->CAM.cX, Auravyx::getAuravyx()->getOverlay()->CAM.cY, Auravyx::getAuravyx()->getOverlay()->CAM.cZ);
 					
 					if (c != nullptr)
 					{

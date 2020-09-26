@@ -1,8 +1,8 @@
 #pragma once
-#include "Shader.h"
-#include "World\World.h"
-#include "Camera.h"
-#include "ShadowMap.h"
+#include "Shader/Shader.h"
+#include "World/World.h"
+#include "Engine/Camera.h"
+#include "Shader/ShadowMap.h"
 
 class ShadowShader : public Shader
 {

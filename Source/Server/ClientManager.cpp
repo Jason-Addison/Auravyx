@@ -1,4 +1,4 @@
-#include "ClientManager.h"
+#include "Server/ClientManager.h"
 #include <chrono>
 #include <cstdlib>
 #include <WS2tcpip.h>
@@ -8,15 +8,16 @@
 #include <cstdlib>
 #include <windows.h>
 #include <string>
-#include "Controller.h"
-#include "GLFW/glfw3.h"
-#include "FileIO.h"
-#include "Resource.h"
+#include "Engine/Controller.h"
+#include "Library/GLFW/glfw3.h"
+#include "Utilities/FileIO.h"
+#include "Utilities/Resource.h"
 #include <chrono>
 #include <thread>
-#include "Settings.h"
+#include "Utilities/Settings.h"
 #include "Packet.h"
-//#include "PacketChunk.h"
+#include <Auravyx.h>
+//#include "PacketWorld/Chunk.h"
 #pragma comment (lib, "ws2_32.lib")
 
 bool host = false;
@@ -96,7 +97,7 @@ void ClientManager::init()
 void ClientManager::update()
 {
 	std::string msg = "hello";
-	if (Controller::isKeyDown(GLFW_KEY_0))
+	if (Auravyx::getAuravyx()->getWindow()->getController()->isKeyDown(GLFW_KEY_0))
 	{
 		int sendOK = sendto(out, msg.c_str(), 256, 0, (sockaddr*)&server, sizeof(server));
 		if (sendOK == SOCKET_ERROR)

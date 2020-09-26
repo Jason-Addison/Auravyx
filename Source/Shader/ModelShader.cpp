@@ -1,4 +1,4 @@
-#include "ModelShader.h"
+#include "Shader/ModelShader.h"
 
 ModelShader::ModelShader()
 {

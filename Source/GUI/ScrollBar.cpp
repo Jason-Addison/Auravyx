@@ -1,6 +1,6 @@
 #include "stdafx.h"
-#include "ScrollBar.h"
-#include "Controller.h"
+#include "GUI/ScrollBar.h"
+#include "Engine/Controller.h"
 //#include "Graphics\Theme.h"
 
 ScrollBar::ScrollBar()
@@ -43,14 +43,14 @@ void ScrollBar::handleResize()
 	}
 	button->setDownEvent([this, spacing]()
 	{
-		if (Controller::active("e"))
+		if (Auravyx::getAuravyx()->getWindow()->getController()->active("e"))
 		{
 			mouseDown = true;
 		}
 	});
 	button->updateEvent = [this, spacing]()
 	{
-		if (!Controller::active("e"))
+		if (!Auravyx::getAuravyx()->getWindow()->getController()->active("e"))
 		{
 			mouseDown = false;
 		}
@@ -58,7 +58,7 @@ void ScrollBar::handleResize()
 		{
 			if (mode == VERTICAL)
 			{
-				progress -= Controller::getMouseDY();
+				progress -= Auravyx::getAuravyx()->getWindow()->getController()->getMouseDY();
 				if (progress > height - spacing * 2 - height / range)
 				{
 					progress = height - spacing * 2 - height / range;
@@ -73,7 +73,7 @@ void ScrollBar::handleResize()
 			}
 			else if (mode == HORIZONTAL)
 			{
-				progress -= Controller::getMouseDX();
+				progress -= Auravyx::getAuravyx()->getWindow()->getController()->getMouseDX();
 				if (progress > width - spacing - width / range)
 				{
 					progress = width - spacing - width / range;
@@ -107,7 +107,7 @@ void ScrollBar::update()
 
 void ScrollBar::render()
 {
-	GFX::fillRect(x, y, width, height, backgroundColour.x, backgroundColour.y, backgroundColour.z, backgroundColour.w);
+	Auravyx::getAuravyx()->getOverlay()->fillRect(x, y, width, height, backgroundColour.x, backgroundColour.y, backgroundColour.z, backgroundColour.w);
 	for (auto & gui : guis)
 	{
 		gui->render();

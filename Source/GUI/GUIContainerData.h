@@ -1,6 +1,6 @@
 #pragma once
 #include <memory>
-#include "GUI.h"
+#include "GUI/GUI.h"
 class GUIContainerData
 {
 public:

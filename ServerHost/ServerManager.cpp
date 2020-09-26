@@ -4,13 +4,13 @@
 
 #include <thread>
 #include "Server.h"
-#include "Log.h"
+#include "Utilities/Log.h"
 #include <ctime>
-//#include "PacketChunk.h"
+//#include "PacketWorld/Chunk.h"
 #include "LogType.h"
-#include "HostWorld.h"
+#include "World/World.h"
 #include "PacketTileChange.h"
-#include <GameManager.h>
+#include <Engine/GameManager.h>
 
 #define PORT 54000
 

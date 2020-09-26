@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "DropdownMenu.h"
+#include "GUI/DropdownMenu.h"
 
 DropdownMenu::DropdownMenu()
 {
@@ -30,7 +30,7 @@ DropdownMenu::DropdownMenu(std::string text)
 		}
 		else
 		{
-			if (!Util::pointAABB(Controller::getMouseX(), Controller::getMouseY(), list->x, list->y, list->width, list->height))
+			if (!Util::pointAABB(Auravyx::getAuravyx()->getWindow()->getController()->getMouseX(), Auravyx::getAuravyx()->getWindow()->getController()->getMouseY(), list->x, list->y, list->width, list->height))
 			{
 				active = false;
 				list->visible = false;
@@ -48,7 +48,7 @@ DropdownMenu::DropdownMenu(std::string text)
 				i->update();
 				i->render();
 			}
-			GFX::fillRect(0, 0, 50, 50, 0, 1, 0, 1);
+			Auravyx::getAuravyx()->getOverlay()->fillRect(0, 0, 50, 50, 0, 1, 0, 1);
 		}
 	};
 }

@@ -1,6 +1,6 @@
 #pragma once
-#include "GFX.h"
-#include "GUI.h"
+#include <Auravyx.h>
+#include "GUI/GUI.h"
 class Image : public GUI
 {
 public:

@@ -1,6 +1,7 @@
-#include "LineShader.h"
-#include "Chunk.h"
+#include "Shader/LineShader.h"
+#include "World/Chunk.h"
 #include <GFX.h>
+#include <Auravyx.h>
 
 
 void addColour(std::vector<float> &colours, float r, float g, float b, float a)
@@ -94,7 +95,7 @@ void LineShader::render()
 void LineShader::renderPoint(float x, float y, float z, Matrix4f projectionMatrix)
 {
 	start();
-	loadCamera(GFX::CAM.getViewMatrix());
+	loadCamera(Auravyx::getAuravyx()->getOverlay()->CAM.getViewMatrix());
 	loadProjectionMatrix(projectionMatrix);
 	loadOffset(x / 128, y / 128, z / 128);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);

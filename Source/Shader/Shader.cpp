@@ -1,8 +1,8 @@
 #include "stdafx.h"
-#include "Shader.h"
-#include "Util.h"
-#include "Log.h"
-#include "Resource.h"
+#include "Shader/Shader.h"
+#include "Utilities/Util.h"
+#include "Utilities/Log.h"
+#include "Utilities/Resource.h"
 #include <iostream>
 Shader::Shader()
 {

@@ -1,4 +1,4 @@
-#include "PhysicsTriangles.h"
+#include "Physics/PhysicsTriangles.h"
 
 PhysicsTriangles::PhysicsTriangles()
 {

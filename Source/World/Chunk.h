@@ -1,9 +1,9 @@
 #pragma once
-#include "Voxel.h"
-#include "Model.h"
-#include "Camera.h"
+#include "World/Voxel.h"
+#include "Engine/Model.h"
+#include "Engine/Camera.h"
 #include <memory>
-#include "ChunkHeight.h"
+#include "World/ChunkHeight.h"
 class Chunk
 {
 public:

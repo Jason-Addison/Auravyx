@@ -1,4 +1,4 @@
-#include "PhysicsPrism.h"
+#include "Physics/PhysicsPrism.h"
 
 PhysicsPrism::PhysicsPrism()
 {

@@ -1,8 +1,9 @@
 #include "stdafx.h"
-#include "WindowManager.h"
-#include "Controller.h"
-#include <SOIL\SOIL.h>
-#include "Resource.h"
+#include "Engine/WindowManager.h"
+#include "Engine/Controller.h"
+#include <Library\SOIL\SOIL.h>
+#include "Utilities/Resource.h"
+#include <Auravyx.h>
 WindowManager::WindowManager()
 {
 }
@@ -11,15 +12,11 @@ WindowManager::WindowManager()
 WindowManager::~WindowManager()
 {
 }
-
-int WindowManager::width = 0;
-int WindowManager::height = 0;
-GLFWwindow* WindowManager::window;
+bool WindowManager::resized = true;
 HWND hwnd;
-
 GLFWwindowrefreshfun windowUpdateCallback()
 {
-	GLFWwindow* w = WindowManager::window;
+	GLFWwindow* w;// = window;
 	int width, height;
 	glfwGetWindowSize(w, &width, &height);
 	glViewport(0, 0, width, height);
@@ -30,6 +27,15 @@ GLFWwindowrefreshfun windowUpdateCallback()
 
 	//resized = false;
 	return GLFWwindowrefreshfun();
+}
+void WindowManager::displayResizeCallback(GLFWwindow* _window, int _width, int _height)
+{
+	resized = true;
+}
+
+void WindowManager::errorCallback(int error, const char* description)
+{
+	std::cout << "[Error] " << error << " " << description << "\n";
 }
 
 void WindowManager::create()
@@ -54,6 +60,8 @@ void WindowManager::create()
 	SOIL_free_image_data(icons[0].pixels);
 
 	glfwSetWindowSizeCallback(window, &displayResizeCallback);
+	glfwSetErrorCallback(&errorCallback);
+
 	//glfwSetWindowPos(window, 1400, 50);
 	//glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	glfwMakeContextCurrent(window);
@@ -71,7 +79,7 @@ int windowedWidth = 0, windowedHeight = 0;
 
 void WindowManager::update()
 {
-	if (Controller::isKeyDown(GLFW_KEY_F11))
+	if (getController()->isKeyDown(GLFW_KEY_F11))
 	{
 		if (!toggling)
 		{
@@ -120,11 +128,6 @@ void WindowManager::update()
 	
 	resized = false;
 
-}
-bool WindowManager::resized = true;
-void WindowManager::displayResizeCallback(GLFWwindow* _window, int _width, int _height)
-{
-	resized = true;
 }
 
 int WindowManager::getWidth()
@@ -175,6 +178,11 @@ void WindowManager::centerCursor()
 void WindowManager::setWindowTitle(std::string title)
 {
 	glfwSetWindowTitle(window, title.c_str());
+}
+
+Controller* WindowManager::getController()
+{
+	return &controller;
 }
 
 

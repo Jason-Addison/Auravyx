@@ -1,5 +1,5 @@
-#include "PhysicsSphere.h"
-#include "Physics.h"
+#include "Physics/PhysicsSphere.h"
+#include "Physics/Physics.h"
 PhysicsSphere::PhysicsSphere()
 {
 	type = SPHERE;

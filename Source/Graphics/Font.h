@@ -1,7 +1,7 @@
 #pragma once
-#include "Util.h"
-#include "FontChar.h"
-#include "Texture.h"
+#include "Utilities/Util.h"
+#include "Graphics/FontChar.h"
+#include "Engine/Texture.h"
 #include <vector>
 class Font
 {

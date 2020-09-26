@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "StringUtil.h"
+#include "Utilities/StringUtil.h"
 
 
 StringUtil::StringUtil()

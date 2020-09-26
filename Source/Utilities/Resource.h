@@ -2,7 +2,7 @@
 #include <map>
 #include <string>
 #include <vector>
-#include "Vec3f.h"
+#include "Utilities/Vec3f.h"
 class Resource
 {
 public:
@@ -35,11 +35,13 @@ private:
 
 	static void loadAllTextures();
 
-	static void loadTerrainTextures();
+	static void loadAllTerrainTextures();
 
 	static void loadAllModels();
 
 	static void loadAllAudio();
+
+	static void loadAllMods();
 
 };
 

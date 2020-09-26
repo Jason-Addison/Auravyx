@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "DeferredShader.h"
+#include "Shader/DeferredShader.h"
 
 DeferredShader::DeferredShader()
 {

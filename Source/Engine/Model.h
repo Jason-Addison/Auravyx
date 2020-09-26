@@ -1,8 +1,8 @@
 #pragma once
-#include <gl\glew.h>
-#include "GLFW\glfw3.h"
+#include <Library\GL\glew.h>
+#include "Library\GLFW\glfw3.h"
 #include <vector>
-#include "OBJMaterial.h"
+#include "Engine/OBJMaterial.h"
 class Model
 {
 public:

@@ -1,7 +1,7 @@
 #pragma once
-#include "Shader.h"
-#include "Model.h"
-#include "FBO.h"
+#include "Shader/Shader.h"
+#include "Engine/Model.h"
+#include "Engine/FBO.h"
 class LineShader : public Shader
 {
 public:

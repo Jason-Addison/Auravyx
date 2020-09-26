@@ -1,6 +1,6 @@
 #include "stdafx.h"
-#include "Button.h"
-#include "GFX.h"
+#include "GUI/Button.h"
+#include <Auravyx.h>
 Button::Button()
 {
 }
@@ -19,25 +19,25 @@ void Button::update()
 	updateEvent();
 	isHover = false;
 	isClicked = false;
-	if (Controller::getMouseX() >= x && Controller::getMouseY() >= y &&
-		Controller::getMouseX() <= x + width && Controller::getMouseY() <= y + height)
+	if (Auravyx::getAuravyx()->getWindow()->getController()->getMouseX() >= x && Auravyx::getAuravyx()->getWindow()->getController()->getMouseY() >= y &&
+		Auravyx::getAuravyx()->getWindow()->getController()->getMouseX() <= x + width && Auravyx::getAuravyx()->getWindow()->getController()->getMouseY() <= y + height)
 	{
 		isHover = true;
 		hoverEvent();
 	}
-	if (!Controller::active("e"))
+	if (!Auravyx::getAuravyx()->getWindow()->getController()->active("e"))
 	{
 		wasHeld = false;
 	}
 	if (isHover)
 	{
-		if (Controller::active("e"))
+		if (Auravyx::getAuravyx()->getWindow()->getController()->active("e"))
 		{
 			isDown = true;
 			downEvent();
 			wasHeld = true;
 		}
-		if (isDown && !Controller::active("e"))
+		if (isDown && !Auravyx::getAuravyx()->getWindow()->getController()->active("e"))
 		{
 			isClicked = true;
 			isDown = false;
@@ -51,20 +51,20 @@ void Button::update()
 }
 void Button::render()
 {
-	GFX::fillRect(x, y, width, height, 0.5, 0.5, 0.5, 1);
+	Auravyx::getAuravyx()->getOverlay()->fillRect(x, y, width, height, 0.5, 0.5, 0.5, 1);
 
 	if (isHover)
 	{
-		GFX::fillRect(x, y, width, height, hoverColour.x, hoverColour.y, hoverColour.z, hoverColour.w);
+		Auravyx::getAuravyx()->getOverlay()->fillRect(x, y, width, height, hoverColour.x, hoverColour.y, hoverColour.z, hoverColour.w);
 	}
 	if (isDown)
 	{
-		GFX::fillRect(x, y, width, height, selectColour.x, selectColour.y, selectColour.z, selectColour.w);
+		Auravyx::getAuravyx()->getOverlay()->fillRect(x, y, width, height, selectColour.x, selectColour.y, selectColour.z, selectColour.w);
 	}
 	if (text.size() > 0)
 	{
 		//std::cout << height << " |\n";
-		GFX::drawString(text, x, y + (height / 2 - height * 1 / 2 + height * 0.1), height * 0.9, textColour.x, textColour.y, textColour.z, textColour.w);
+		Auravyx::getAuravyx()->getOverlay()->drawString(text, x, y + (height / 2 - height * 1 / 2 + height * 0.1), height * 0.9, textColour.x, textColour.y, textColour.z, textColour.w);
 	}
 }
 void Button::setBounds(float x, float y, float width, float height)

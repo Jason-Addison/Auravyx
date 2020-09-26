@@ -1,6 +1,6 @@
 #include "stdafx.h"
-#include "Vec3f.h"
-#include "M.h"
+#include "Utilities/Vec3f.h"
+#include "Utilities/M.h"
 
 Vec3f::Vec3f(float x, float y, float z)
 {

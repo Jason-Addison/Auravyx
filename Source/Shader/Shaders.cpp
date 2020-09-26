@@ -10,15 +10,6 @@ Shaders::~Shaders()
 {
 }
 
-ImageShader* Shaders::imageShader = new ImageShader();
-RectShader* Shaders::rectShader = new RectShader();
-FontShader* Shaders::fontShader = new FontShader();
-VoxelShader* Shaders::voxelShader = new VoxelShader();
-ShadowShader* Shaders::shadowShader = new ShadowShader();
-DeferredShader* Shaders::deferredShader = new DeferredShader();
-SkyShader* Shaders::skyShader = new SkyShader();
-LineShader* Shaders::lineShader = new LineShader();
-ModelShader* Shaders::modelShader = new ModelShader();
 void Shaders::init(std::map<std::string, std::string> shaders)
 {
 	voxelShader->createShader(shaders);

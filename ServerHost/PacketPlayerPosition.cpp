@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "PacketPlayerPosition.h"
-#include "M.h"
-#include "Log.h"
+#include "Utilities/M.h"
+#include "Utilities/Log.h"
 PacketPlayerPosition::PacketPlayerPosition()
 {
 	id = PLAYER_POSITION_CHANGE;

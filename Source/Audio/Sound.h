@@ -1,6 +1,6 @@
 #pragma once
-#include "al.h"
-#include "WAVE.h"
+#include "Library/AL/al.h"
+#include "Audio/WAVE.h"
 #include <memory>
 #include <unordered_set>
 
@@ -44,17 +44,7 @@ public:
 
 	void destroy();
 
-	static void destroyAllSounds()
-	{
-		for (auto s : sounds)
-		{
-			alDeleteSources(1, &s);
-		}
-		sounds.clear();
-	}
-
 private:
 
-	static std::unordered_set<ALuint> sounds;
 };
 

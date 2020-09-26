@@ -1,6 +1,6 @@
 #pragma once
-#include "GL\glew.h"
-#include "GLFW\glfw3.h"
+#include "Library\GL\glew.h"
+#include "Library\GLFW\glfw3.h"
 
 class FBO
 {
