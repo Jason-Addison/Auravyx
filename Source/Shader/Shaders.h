@@ -1,27 +1,27 @@
 #pragma once
 #include <map>
-#include "ImageShader.h"
-#include "RectShader.h"
-#include "FontShader.h"
-#include "VoxelShader.h"
-#include "DeferredShader.h"
-#include "ShadowShader.h"
-#include "SkyShader.h"
-#include "LineShader.h"
-#include "ModelShader.h"
+#include "Shader/ImageShader.h"
+#include "Shader/RectShader.h"
+#include "Graphics/FontShader.h"
+#include "World/VoxelShader.h"
+#include "Shader/DeferredShader.h"
+#include "Shader/ShadowShader.h"
+#include "Shader/SkyShader.h"
+#include "Shader/LineShader.h"
+#include "Shader/ModelShader.h"
 class Shaders
 {
 public:
 
-	static ImageShader* imageShader;
-	static RectShader* rectShader;
-	static FontShader* fontShader;
-	static VoxelShader* voxelShader;
-	static ShadowShader* shadowShader;
-	static DeferredShader* deferredShader;
-	static SkyShader* skyShader;
-	static LineShader* lineShader;
-	static ModelShader* modelShader;
+	ImageShader* imageShader = new ImageShader();
+	RectShader* rectShader = new RectShader();
+	FontShader* fontShader = new FontShader();
+	VoxelShader* voxelShader = new VoxelShader();
+	ShadowShader* shadowShader = new ShadowShader();
+	DeferredShader* deferredShader = new DeferredShader();
+	SkyShader* skyShader = new SkyShader();
+	LineShader* lineShader = new LineShader();
+	ModelShader* modelShader = new ModelShader();
 	Shaders();
 	~Shaders();
 

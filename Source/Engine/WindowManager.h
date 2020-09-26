@@ -1,16 +1,18 @@
 #pragma once
-#include "GL\glew.h"
-#include <GLFW/glfw3.h>
+#include "Library\GL\glew.h"
+#include <Library/GLFW/glfw3.h>
 #include <string>
+#include <Engine/Controller.h>
 class WindowManager
 {
 public:
 	WindowManager();
 	~WindowManager();
 
-	static GLFWwindow* window;
-	static int width;
-	static int height;
+	GLFWwindow *window;
+	Controller controller;
+	int width = 0;
+	int height = 0;
 	static bool resized;
 
 	void create();
@@ -19,24 +21,28 @@ public:
 
 	static void displayResizeCallback(GLFWwindow* _window, int _width, int _height);
 
-	static int getWidth();
+	static void errorCallback(int error, const char* description);
 
-	static int getHeight();
+	int getWidth();
 
-	static bool wasResized();
+	int getHeight();
 
-	static void setTextCallback(GLFWcharfun f);
+	bool wasResized();
 
-	static void setKeyCallback(GLFWkeyfun f);
+	void setTextCallback(GLFWcharfun f);
+
+	void setKeyCallback(GLFWkeyfun f);
 
 	int closeRequested();
 
-	static void showMouse();
+	void showMouse();
 
-	static void hideMouse();
+	void hideMouse();
 
-	static void centerCursor();
+	void centerCursor();
 
-	static void setWindowTitle(std::string title);
+	void setWindowTitle(std::string title);
+
+	Controller* getController();
 };
 

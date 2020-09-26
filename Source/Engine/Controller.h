@@ -1,7 +1,9 @@
 #pragma once
+#include "Library\GL\glew.h"
+#include "Library/GLFW/glfw3.h"
 #include <unordered_map>
-#include "Util.h"
-#include "Control.h"
+#include "Utilities/Util.h"
+#include "Engine/Control.h"
 #include <vector>
 #include <map>
 #define MOVE_FORWARD "Move forward"
@@ -30,51 +32,55 @@ public:
 	static bool mouseInput;
 	static bool controllerInput;
 
+
+
 	static std::vector<std::string*> inputTexts;
 
-	static double x, y;
+	double x = 0, y = 0;
 
-	static double dX, dY;
+	double dX = 0, dY = 0;
+	
+	int keys[360];
 
-	static std::map<std::string, std::vector<Control>> controls;
+	std::map<std::string, std::vector<Control>> controls;
 
-	static void loadControls();
+	void loadControls();
 
-	static bool isKeyDown(int keyCode);
+	bool isKeyDown(int keyCode);
 
-	static bool isControl(int keyCode, int controllerCode);
+	bool isControl(int keyCode, int controllerCode);
 
-	static float getMouseDX();
+	float getMouseDX();
 
-	static float getMouseDY();
+	float getMouseDY();
 
-	static bool isMouseDown(int code);
+	bool isMouseDown(int code);
 
-	static void getMousePos(double &x, double &y);
+	void getMousePos(double &x, double &y);
 
-	static void getMouseX(double &x);
+	void getMouseX(double &x);
 
-	static void getMouseY(double &y);
+	void getMouseY(double &y);
 
-	static bool active(std::string action);
+	bool active(std::string action);
 
-	static double getMouseX();
+	double getMouseX();
 
-	static double getMouseY();
+	double getMouseY();
 
-	static void inputText(char c, int mod);
+	void inputText(char c, int mod);
 
-	static void addText(std::string & str);
+	void addText(std::string & str);
 
-	static void removeText(std::string & str);
+	void removeText(std::string & str);
 
-	static void update();
+	void update();
 
-	static void init();
+	void init();
 
 	static void keyboardInput(int key, int scancode, int action, int mods);
 
-	static void resetMouse();
+	void resetMouse();
 
 };
 

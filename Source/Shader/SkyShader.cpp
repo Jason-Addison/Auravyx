@@ -1,5 +1,6 @@
-#include "SkyShader.h"
-#include "Assets.h"
+#include "Shader/SkyShader.h"
+#include "Utilities/Assets.h"
+#include <Auravyx.h>
 
 
 SkyShader::SkyShader()
@@ -49,10 +50,10 @@ void SkyShader::render()
 	glDisable(GL_CULL_FACE);
 	//glCullFace(GL_BACK);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	Model mesh = *Assets::getModel("sky");
+	Model mesh = *Auravyx::getAuravyx()->getAssets()->getModel("sky");
 
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, Assets::getTexture("stars")->texture);
+	glBindTexture(GL_TEXTURE_2D, Auravyx::getAuravyx()->getAssets()->getTexture("stars")->texture);
 	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 

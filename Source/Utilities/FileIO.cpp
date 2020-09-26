@@ -1,8 +1,8 @@
 #include "stdafx.h"
-#include "FileIO.h"
+#include "Utilities/FileIO.h"
 #include <filesystem>
-#include "FileIO.h"
-#include "StringUtil.h"
+#include "Utilities/FileIO.h"
+#include "Utilities/StringUtil.h"
 #define FOLDER 0
 FileIO::FileIO()
 {
@@ -17,7 +17,7 @@ std::vector<std::string> FileIO::listDirectory(std::string directory, std::strin
 {
 	std::vector<std::string> list;
 	std::vector<std::string> files = listDirectory(directory);
-	for (auto & i : files)
+	for (auto& i : files)
 	{
 		std::string fileEnding = ".";
 		fileEnding += fileType;
@@ -38,7 +38,7 @@ std::vector<std::string> FileIO::listDirectory(std::string directory, std::strin
 std::vector<std::string> FileIO::listDirectory(std::string directory)
 {
 	std::vector<std::string> items;
-	for (auto & p : std::filesystem::directory_iterator(directory))
+	for (auto& p : std::filesystem::directory_iterator(directory))
 	{
 		std::ostringstream oss;
 		oss << absolute(p.path()).string();

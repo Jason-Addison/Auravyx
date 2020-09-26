@@ -1,5 +1,5 @@
 #pragma once
-#include <WindowManager.h>
+#include <Engine/WindowManager.h>
 class GLManager
 {
 public:
@@ -8,7 +8,6 @@ public:
 
 	static void start();
 
-	static WindowManager getWindowManager();
 
 	static void setFPS(double fps);
 
@@ -16,7 +15,6 @@ public:
 
 private: 
 
-	static WindowManager window;
 
 	static double visibleFPS;
 

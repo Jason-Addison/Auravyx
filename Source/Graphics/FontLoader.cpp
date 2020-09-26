@@ -1,7 +1,8 @@
 #include "stdafx.h"
-#include "FontLoader.h"
-#include "Assets.h"
-#include "FileIO.h"
+#include "Graphics/FontLoader.h"
+#include "Utilities/Assets.h"
+#include "Utilities/FileIO.h"
+#include <Auravyx.h>
 
 FontLoader::FontLoader()
 {
@@ -35,7 +36,7 @@ void FontLoader::loadFont(std::string file)
 	
 	std::string fontName = FileIO::getFileName(file);
 	fontName = fontName.substr(0, fontName.length() - 4);
-	std::shared_ptr<Texture> texture = Assets::getTexture(fontName);
+	std::shared_ptr<Texture> texture = Auravyx::getAuravyx()->getAssets()->getTexture(fontName);
 	int largestValue = -10;
 	std::vector<std::string> lineOne = Util::splitString(lines.at(0), " ");
 	std::vector<std::string> sizeString = Util::splitString(lineOne.at(2), "=");
@@ -70,6 +71,6 @@ void FontLoader::loadFont(std::string file)
 		}
 	}
 	Font bitmapFont(*texture.get(), texture->getHeight(), (float) largestValue, (float)	size, characters, 0.0f, 0.0f, 1.0f, 1.0f);
-	Assets::addFont(fontName, bitmapFont);
+	Auravyx::getAuravyx()->getAssets()->addFont(fontName, bitmapFont);
 }
 

@@ -1,13 +1,13 @@
 #include "stdafx.h"
-#include "ShadowShader.h"
-//#include "EntityModel.h"
+#include "Shader/ShadowShader.h"
+//#include "EntityEngine/Model.h"
 //#include "Position.h"
-//#include "Entity\Entity.h"
-#include "ShadowMap.h"
+//#include "Entity\Engine/Entity.h"
+#include "Shader/ShadowMap.h"
 //#include "Game.h"
 #include <iostream>
-#include <GFX.h>
-#include <Assets.h>
+#include <Graphics/GFX.h>
+#include <Utilities/Assets.h>
 ShadowShader::ShadowShader()
 {
 	shader = "Shadow";

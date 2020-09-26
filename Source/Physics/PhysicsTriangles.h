@@ -1,5 +1,5 @@
 #pragma once
-#include "PhysicsObject.h"
+#include "Physics/PhysicsObject.h"
 #include <vector>
 class PhysicsTriangles : public PhysicsObject
 {

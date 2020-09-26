@@ -1,4 +1,4 @@
-#include "Voxel.h"
+#include "World/Voxel.h"
 
 Voxel::Voxel()
 {

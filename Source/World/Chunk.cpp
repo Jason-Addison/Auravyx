@@ -1,9 +1,9 @@
 #include "stdafx.h"
-#include "Chunk.h"
+#include "World/Chunk.h"
 #include <iostream>
-#include "M.h"
+#include "Utilities/M.h"
 #include <chrono>
-#include "RandomNoise.h"
+#include "Utilities/RandomNoise.h"
 Chunk::Chunk()
 {
 	zeroNeighbours();

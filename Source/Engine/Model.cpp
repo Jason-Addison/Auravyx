@@ -1,6 +1,6 @@
 #include <Windows.h>
-#include "Model.h"
-#include "Model.h"
+#include "Engine/Model.h"
+#include "Engine/Model.h"
 #include <iostream>
 GLuint vao;
 int count;
@@ -66,7 +66,6 @@ Model Model::load2DModel(std::vector<float> vertices)
 {
 	GLuint vao = generateVAO();
 	Model m(vao, vertices.size());
-
 	addVertexAttribute(0, 2, m, vertices);
 
 	glBindVertexArray(0);

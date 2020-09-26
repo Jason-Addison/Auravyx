@@ -1,7 +1,7 @@
 #pragma once
-#include "GUI.h"
-#include "Vec4f.h"
-#include "ScrollBar.h"
+#include "GUI/GUI.h"
+#include "Utilities/Vec4f.h"
+#include "GUI/ScrollBar.h"
 
 #define NO_SCROLL 0
 #define SCROLL 1

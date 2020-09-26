@@ -1,8 +1,8 @@
 #pragma once
-#include "GUI.h"
+#include "GUI/GUI.h"
 #include <functional>
-#include "Button.h"
-#include "ListMenu.h"
+#include "GUI/Button.h"
+#include "GUI/ListMenu.h"
 class DropdownMenu : public Button
 {
 public:

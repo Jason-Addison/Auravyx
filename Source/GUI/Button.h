@@ -1,9 +1,9 @@
 #pragma once
-#include "GUI.h"
+#include "GUI/GUI.h"
 #include <functional>
-#include "Util.h"
-#include "Vec4f.h"
-#include "Controller.h"
+#include "Utilities/Util.h"
+#include "Utilities/Vec4f.h"
+#include "Engine/Controller.h"
 class Button : public GUI
 {
 public:

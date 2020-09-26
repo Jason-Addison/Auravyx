@@ -1,6 +1,6 @@
 #include "stdafx.h"
-#include "TextBox.h"
-#include "GFX.h"
+#include "GUI/TextBox.h"
+#include <Auravyx.h>
 
 TextBox::TextBox()
 {
@@ -14,24 +14,24 @@ TextBox::TextBox()
 			}
 			if (isClicked && !on)
 			{
-				Controller::removeText(text);
+				Auravyx::getAuravyx()->getWindow()->getController()->removeText(text);
 				on = true;
 				active = true;
-				Controller::addText(text);
+				Auravyx::getAuravyx()->getWindow()->getController()->addText(text);
 			}
 			else
 			{
 				on = false;
 			}
-			if (Controller::active(LEFT_CLICK) && !isClicked)
+			if (Auravyx::getAuravyx()->getWindow()->getController()->active(LEFT_CLICK) && !isClicked)
 			{
 				active = false;
-				Controller::removeText(text);
+				Auravyx::getAuravyx()->getWindow()->getController()->removeText(text);
 			}
-			if (active && !on && (Controller::isKeyDown(GLFW_KEY_ENTER) || Controller::isKeyDown(GLFW_KEY_ESCAPE)))
+			if (active && !on && (Auravyx::getAuravyx()->getWindow()->getController()->isKeyDown(GLFW_KEY_ENTER) || Auravyx::getAuravyx()->getWindow()->getController()->isKeyDown(GLFW_KEY_ESCAPE)))
 			{
 				active = false;
-				Controller::removeText(text);
+				Auravyx::getAuravyx()->getWindow()->getController()->removeText(text);
 				if (text.size() >= 1 && text.at(text.size() - 1) == 1)
 				{
 					text = text.substr(0, text.size() - 1);
@@ -53,21 +53,21 @@ TextBox::~TextBox()
 
 void TextBox::render()
 {
-	GFX::fillRect(x, y, width, height, 0.3, 0.3, 0.3, 1);
+	Auravyx::getAuravyx()->getOverlay()->fillRect(x, y, width, height, 0.3, 0.3, 0.3, 1);
 
 	if (!lock)
 	{
 		if (isHover)
 		{
-			GFX::fillRect(x, y, width, height, hoverColour.x, hoverColour.y, hoverColour.z, hoverColour.w);
+			Auravyx::getAuravyx()->getOverlay()->fillRect(x, y, width, height, hoverColour.x, hoverColour.y, hoverColour.z, hoverColour.w);
 		}
 		if (isDown)
 		{
-			GFX::fillRect(x, y, width, height, selectColour.x, selectColour.y, selectColour.z, selectColour.w);
+			Auravyx::getAuravyx()->getOverlay()->fillRect(x, y, width, height, selectColour.x, selectColour.y, selectColour.z, selectColour.w);
 		}
 	}
 	if (text.size() > 0)
 	{
-		GFX::drawString(text, x, y + (height / 2 - height * 1 / 2) + 4, height, textColour.x, textColour.y, textColour.z, textColour.w);
+		Auravyx::getAuravyx()->getOverlay()->drawString(text, x, y + (height / 2 - height * 1 / 2) + 4, height, textColour.x, textColour.y, textColour.z, textColour.w);
 	}
 }

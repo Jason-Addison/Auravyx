@@ -1,7 +1,7 @@
 #pragma once
 #include "pch.h"
-#include "Vec3f.h"
-#include "Matrix4f.h"
+#include "Utilities/Vec3f.h"
+#include "Utilities/Matrix4f.h"
 #include <vector>
 class M
 {

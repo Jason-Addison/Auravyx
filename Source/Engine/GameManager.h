@@ -1,8 +1,8 @@
 #pragma once
-#include "World.h"
-#include "State.h"
+#include "World/World.h"
+#include "Engine/State.h"
 #include <memory>
-#include "GameState.h"
+#include "Engine/State.h"
 class GameManager
 {
 public:

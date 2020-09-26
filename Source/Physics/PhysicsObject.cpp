@@ -1,5 +1,5 @@
-#include "PhysicsObject.h"
-#include "Physics.h"
+#include "Physics/PhysicsObject.h"
+#include "Physics/Physics.h"
 PhysicsObject::PhysicsObject()
 {
 	type = OBJECT;

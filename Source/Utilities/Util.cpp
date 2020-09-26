@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "Util.h"
+#include "Utilities/Util.h"
 #include <iostream>
 #include <ShObjIdl_core.h>
 #include <sstream>
@@ -436,7 +436,7 @@ std::string Util::getFile(COMDLG_FILTERSPEC pFilter, LPCWSTR title, LPCWSTR defa
 bool Util::saveFile()
 {
 	/*LPWSTR fileName = L"D:/Music";
-	HWND hwndOwner = WindowManager::getHWND();
+	HWND hwndOwner = Auravyx::getAuravyx()->getWindow()->getHWND();
 	OPENFILENAME ofn = { 0 };
 
 	ofn.lStructSize = sizeof(ofn);

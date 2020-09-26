@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "VoxelShader.h"
+#include "World/VoxelShader.h"
 
 
 VoxelShader::VoxelShader()

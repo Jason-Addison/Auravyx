@@ -1,6 +1,7 @@
 #include "stdafx.h"
-#include "GUI.h"
-#include "WindowManager.h"
+#include "GUI/GUI.h"
+#include "Engine/WindowManager.h"
+#include <Auravyx.h>
 //#include "Game.h"
 
 GUI::GUI()
@@ -37,18 +38,18 @@ void GUI::handleResize()
 		}
 	}
 }
-//double lT = WindowManager::getTime();
+//double lT = Auravyx::getAuravyx()->getWindow()->getTime();
 void GUI::refresh()
 {
-	if (WindowManager::wasResized())
+	if (Auravyx::getAuravyx()->getWindow()->wasResized())
 	{
 		resizeEvent();
 		handleResize();
 	}
-	//double currentTime = WindowManager::getTime();
+	//double currentTime = Auravyx::getAuravyx()->getWindow()->getTime();
 	//if ((double) (currentTime - lT) > 1.0 / 20.0)
 	{
-		//lT = WindowManager::getTime();
+		//lT = Auravyx::getAuravyx()->getWindow()->getTime();
 		updateEvent();
 		for (auto i : guis)
 		{

@@ -1,7 +1,7 @@
 #include "stdafx.h"
-#include "WAVE.h"
+#include "Audio/WAVE.h"
 #include <windows.h>
-#include "Log.h"
+#include "Utilities/Log.h"
 WAVE::WAVE(const char* path)
 {
 	load(path);

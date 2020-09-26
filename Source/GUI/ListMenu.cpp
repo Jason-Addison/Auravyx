@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "ListMenu.h"
+#include "GUI/ListMenu.h"
 //#include "Theme.h"
 
 ListMenu::ListMenu()
@@ -67,12 +67,12 @@ void ListMenu::update()
 
 void ListMenu::render()
 {
-	//Gfx::fillRect(x, y, width, height, Theme::BACKGROUND.x, Theme::BACKGROUND.y, Theme::BACKGROUND.z, Theme::BACKGROUND.w);
+	//Auravyx::getAuravyx()->getOverlay()->fillRect(x, y, width, height, Theme::BACKGROUND.x, Theme::BACKGROUND.y, Theme::BACKGROUND.z, Theme::BACKGROUND.w);
 	for (auto & gui : guis)
 	{
-		GFX::enableScissor(x, y, width, height);
+		Auravyx::getAuravyx()->getOverlay()->enableScissor(x, y, width, height);
 		gui->render();
-		GFX::disableScissor();
+		Auravyx::getAuravyx()->getOverlay()->disableScissor();
 	}
 	if (mode == SCROLL)
 	{

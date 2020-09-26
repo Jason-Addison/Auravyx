@@ -1,10 +1,10 @@
 #pragma once
-#include "Chunk.h"
+#include "World/Chunk.h"
 #include <vector>
 #include <memory>
-#include "Camera.h"
+#include "Engine/Camera.h"
 #include <atomic>
-#include "ChunkHeight.h"
+#include "World/ChunkHeight.h"
 class World
 {
 public:

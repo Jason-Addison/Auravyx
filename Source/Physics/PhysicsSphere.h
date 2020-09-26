@@ -1,5 +1,5 @@
 #pragma once
-#include "PhysicsObject.h"
+#include "Physics/PhysicsObject.h"
 class PhysicsSphere : public PhysicsObject
 {
 public:

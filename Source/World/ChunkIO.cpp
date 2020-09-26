@@ -1,6 +1,6 @@
-#include "ChunkIO.h"
-#include "Resource.h"
-#include "Log.h"
+#include "World/ChunkIO.h"
+#include "Utilities/Resource.h"
+#include "Utilities/Log.h"
 #include <iostream>
 #include <filesystem>
 ChunkIO::ChunkIO()

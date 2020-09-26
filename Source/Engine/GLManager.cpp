@@ -1,8 +1,9 @@
-#include "GLManager.h"
-#include <GL/glew.h>
-#include "GLFW/glfw3.h"
-#include "Log.h"
+#include "Engine/GLManager.h"
+#include <Library/GL/glew.h>
+#include "Library/GLFW/glfw3.h"
+#include "Utilities/Log.h"
 #include <iostream>
+#include <Auravyx.h>
 GLManager::GLManager()
 {
 }
@@ -11,7 +12,6 @@ GLManager::~GLManager()
 {
 }
 
-WindowManager GLManager::window;
 double GLManager::visibleFPS;
 void glfwErrorCallback(int error, const char* description)
 {
@@ -31,9 +31,9 @@ void GLManager::start()
 
 	glfwSetErrorCallback(glfwErrorCallback);
 
-	window.create();
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
+	Auravyx::getAuravyx()->getWindow()->create();
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	glewExperimental = GL_TRUE;
@@ -46,13 +46,11 @@ void GLManager::start()
 	std::string glVersion = (char*)glGetString(GL_VERSION);
 	std::string glVendor = (char*)glGetString(GL_VENDOR);
 	std::string glRenderer = (char*)glGetString(GL_RENDERER);
+	std::string glslVersion = (char*)glGetString(GL_SHADING_LANGUAGE_VERSION);
 	Log::out("OpenGL", "Version: " + glVersion + ", Vendor: " + glVendor + ", GPU: " + glRenderer, LBLUE);
+	Log::out("OpenGL", "GLSL Version: " + glslVersion, LBLUE);
 }
 
-WindowManager GLManager::getWindowManager()
-{
-	return window;
-}
 
 void GLManager::setFPS(double fps)
 {

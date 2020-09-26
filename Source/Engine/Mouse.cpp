@@ -1,7 +1,7 @@
-#include "Mouse.h"
-#include "GameManager.h"
+#include "Engine/Mouse.h"
+#include "Engine/GameManager.h"
 #include "PacketTileChange.h"
-#include "ClientManager.h"
+#include "Server/ClientManager.h"
 Mouse::Mouse()
 {
 }
@@ -63,14 +63,14 @@ void Mouse::update(World * world)
 	}
 	int x = tX;
 	int y = tY;
-	if (Controller::isMouseDown(GLFW_MOUSE_BUTTON_LEFT))
+	if (Auravyx::getAuravyx()->getWindow()->getController()->isMouseDown(GLFW_MOUSE_BUTTON_LEFT))
 	{
 		if (x != prevX || y != prevY)
 		{
 			send(x, y, 5);
 		}
 	}
-	if (Controller::isMouseDown(GLFW_MOUSE_BUTTON_RIGHT))
+	if (Auravyx::getAuravyx()->getWindow()->getController()->isMouseDown(GLFW_MOUSE_BUTTON_RIGHT))
 	{
 		if (x != prevX || y != prevY)
 		{

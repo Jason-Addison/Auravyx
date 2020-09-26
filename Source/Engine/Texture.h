@@ -1,5 +1,5 @@
 #pragma once
-#include "GL\glew.h"
+#include "Library\GL\glew.h"
 #include "xstring"    // for string
 class Texture
 {

@@ -1,6 +1,6 @@
 #pragma once
 #include <vector>
-#include "PhysicsObject.h"
+#include "Physics/PhysicsObject.h"
 #include <memory>
 class PhysicsWorld
 {

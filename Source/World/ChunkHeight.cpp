@@ -1,5 +1,5 @@
-#include "ChunkHeight.h"
-#include <RandomNoise.h>
+#include "World/ChunkHeight.h"
+#include <Utilities/RandomNoise.h>
 
 ChunkHeight::ChunkHeight()
 {

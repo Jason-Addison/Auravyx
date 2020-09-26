@@ -1,8 +1,8 @@
 #pragma once
 #include <string>
 #include <map>
-#include <GL/glew.h>
-#include "Matrix4f.h"
+#include <Library/GL/glew.h>
+#include "Utilities/Matrix4f.h"
 class Shader
 {
 public:

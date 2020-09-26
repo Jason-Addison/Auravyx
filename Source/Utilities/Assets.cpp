@@ -1,7 +1,7 @@
 #include "stdafx.h"
-#include "Assets.h"
-#include "Log.h"
-#include "GFX.h"
+#include "Utilities/Assets.h"
+#include "Utilities/Log.h"
+#include <Auravyx.h>
 Assets::Assets()
 {
 }
@@ -10,10 +10,6 @@ Assets::Assets()
 Assets::~Assets()
 {
 }
-std::map<std::string, std::shared_ptr<Model>> Assets::models = std::map<std::string, std::shared_ptr<Model>>();
-std::map<std::string, std::shared_ptr<Texture>> Assets::textures = std::map<std::string, std::shared_ptr<Texture>>();
-std::map<std::string, std::shared_ptr<Font>> Assets::fonts = std::map<std::string, std::shared_ptr<Font>>();
-std::map<std::string, std::shared_ptr<WAVE>> Assets::audio = std::map<std::string, std::shared_ptr<WAVE>>();
 
 void Assets::addTexture(std::string name, Texture texture)
 {
@@ -95,7 +91,8 @@ void Assets::deleteTextures()
 	{
 		t.second->destroy();
 	}
-	glDeleteTextures(1, &GFX::terrainMaterials);
+	GLuint del = Auravyx::getAuravyx()->getOverlay()->terrainMaterials;
+	glDeleteTextures(1, &del);
 }
 
 void Assets::deleteFonts()

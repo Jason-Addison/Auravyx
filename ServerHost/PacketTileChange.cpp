@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "PacketTileChange.h"
-#include "M.h"
-#include "GameManager.h"
+#include "Utilities/M.h"
+#include "Engine/GameManager.h"
 #include "Server.h"
 PacketTileChange::PacketTileChange()
 {

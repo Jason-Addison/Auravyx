@@ -1,5 +1,5 @@
-#include "GameManager.h"
-#include "M.h"
+#include "Engine/GameManager.h"
+#include "Utilities/M.h"
 World GameManager::world;
 
 std::shared_ptr<State> GameManager::currentState;

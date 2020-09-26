@@ -1,9 +1,9 @@
-#include "Profiler.h"
+#include "Utilities/Profiler.h"
 #include "windows.h"
 #ifdef _WIN32
 #include <windows.h>
 #elif MACOS
-#include <sys/param.h>
+#include <sys/paraUtilities/M.h>
 #include <sys/sysctl.h>
 #else
 #include <unistd.h>
