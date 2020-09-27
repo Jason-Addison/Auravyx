@@ -6,7 +6,7 @@
 
 ---
 
-###### Welcome to Auravyx! Build whatever you can imagine with friends or on your own in this smooth voxel based sandbox. Easily moddable too!
+#### Welcome to Auravyx! Build whatever you can imagine with friends or on your own in this smooth voxel based sandbox. Easily moddable too!
 
 ---
 
