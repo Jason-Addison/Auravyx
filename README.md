@@ -93,7 +93,29 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
 
 #### Controls
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+Controls can be changed from `controls.txt`
+
+---
+
+| Input | Description |
+| --- | --- |
+| `W` | Move forward |
+| `A` | Move left |
+| `S` | Move back |
+| `D` | Move right |
+| `E` | Double speed |
+| `Left Shift` | Move down |
+| `Space` | Move up / jump |
+| `Left Click` | Add material to crosshair location (build) |
+| `Right Click` | Remove material from crosshair location (destroy) |
+| `T` | Chat. To use commands start message with `/`  |
+| `Enter` | Send current chat message or command |
+| `R` | Enable wireframe |
+| `+` | Increase game time |
+| `-` | Decrease game time |
+| `F1` | Takes a screenshot and saves in screenshots folder |
+| `F3` | View extra debug info |
+| `F5` | View chunk metrics |
 
 ---
 
