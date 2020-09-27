@@ -94,11 +94,11 @@ void Controller::update()
 	keyInput = false;
 	mouseInput = false;
 	//std::string s = std::to_string(x) + std::to_string(y);
-	///glfwSetWindowTitle(Auravyx::getAuravyx()->getWindow()->window, s.c_str());
+	///glfwSetWindowTitle(WindowManager::getWindow()->window, s.c_str());
 }
 bool Controller::isMouseDown(int code)
 {
-	int mouse = glfwGetMouseButton(Auravyx::getAuravyx()->getWindow()->window, code);
+	int mouse = glfwGetMouseButton(WindowManager::getWindow()->window, code);
 	if (mouse == GLFW_PRESS)
 	{
 		return true;
@@ -115,28 +115,28 @@ bool Controller::isKeyDown(int keyCode)
 }
 void Controller::getMousePos(double &x, double &y)
 {
-	glfwGetCursorPos(Auravyx::getAuravyx()->getWindow()->window, &x, &y);
+	glfwGetCursorPos(WindowManager::getWindow()->window, &x, &y);
 }
 void Controller::getMouseX(double &x)
 {
-	glfwGetCursorPos(Auravyx::getAuravyx()->getWindow()->window, &x, 0);
+	glfwGetCursorPos(WindowManager::getWindow()->window, &x, 0);
 }
 void Controller::getMouseY(double &y)
 {
-	glfwGetCursorPos(Auravyx::getAuravyx()->getWindow()->window, 0, &y);
+	glfwGetCursorPos(WindowManager::getWindow()->window, 0, &y);
 }
 
 double Controller::getMouseX()
 {
 	double x = -1;
-	glfwGetCursorPos(Auravyx::getAuravyx()->getWindow()->window, &x, 0);
+	glfwGetCursorPos(WindowManager::getWindow()->window, &x, 0);
 	return x;
 }
 
 double Controller::getMouseY()
 {
 	double y = -1;
-	glfwGetCursorPos(Auravyx::getAuravyx()->getWindow()->window, 0, &y);
+	glfwGetCursorPos(WindowManager::getWindow()->window, 0, &y);
 	return y;
 }
 void Controller::keyboardInput(int key, int scancode, int action, int mods)
@@ -184,7 +184,7 @@ void in(GLFWwindow* window, unsigned int codepoint)
 
 void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-	Auravyx::getAuravyx()->getWindow()->getController()->keys[key] = action;
+	WindowManager::getWindow()->getController()->keys[key] = action;
 	Controller::keyInput = true;
 	Controller::anyInput = true;
 	Controller::keyboardInput(key, scancode, action, mods);
@@ -206,9 +206,9 @@ void Controller::init()
 	{
 		Controller::keys[i] = 0;
 	}
-	glfwSetKeyCallback(Auravyx::getAuravyx()->getWindow()->window, keyCallback);
-	glfwSetMouseButtonCallback(Auravyx::getAuravyx()->getWindow()->window, mouseCallback);
+	glfwSetKeyCallback(WindowManager::getWindow()->window, keyCallback);
+	glfwSetMouseButtonCallback(WindowManager::getWindow()->window, mouseCallback);
 	glfwSetJoystickCallback(joystickCallback);
-	glfwSetCharCallback(Auravyx::getAuravyx()->getWindow()->window, in);
+	glfwSetCharCallback(WindowManager::getWindow()->window, in);
 	loadControls();
 }

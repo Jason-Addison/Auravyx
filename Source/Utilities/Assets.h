@@ -9,6 +9,7 @@ class Assets
 {
 public:
 	Assets();
+	Assets(Assets* a);
 	~Assets();
 
 	std::map<std::string, std::shared_ptr<Model>> models;
@@ -44,5 +45,10 @@ public:
 	void deleteFonts();
 
 	void deleteModels();
+
+	static Assets* getAssets();
+private:
+
+	static Assets* assets;
 };
 

@@ -10,7 +10,7 @@
 #include <Engine/WindowManager.h>
 #include <Audio/SoundManager.h>
 #include <Utilities/Settings.h>
-#include <Shaders.h>
+#include <Shader/Shaders.h>
 #include <Engine/Controller.h>
 #include <deque>
 #include <filesystem>
@@ -76,6 +76,12 @@ std::string whatIsLoadingSecondary = "";
 
 loadingMessage currentLoadingMessage;
 
+std::string ttDebug = "Terrain texture";
+std::string fDebug = "Font texture";
+std::string otherDebug = "Other";
+std::string bootDebug = "Boot";
+
+
 bool Resource::loadAllResources()
 {
 	//loadAllTextures();
@@ -85,17 +91,19 @@ bool Resource::loadAllResources()
 	{
 		if (shadersLoaded)
 		{
-			Auravyx::getAuravyx()->getRenderer()->getShaders()->init(preloadShaders);
+			Renderer::getRenderer()->getShaders()->init(preloadShaders);
 			shadersLoaded = false;
+			GFX::getOverlay()->checkForGLError(&otherDebug);
 		}
 		if (modelsLoaded)
 		{
 			for (auto pm : preloadedModels)
 			{
 				Model m = Model::load3DModelT(pm.vertices, pm.normals, pm.uvs);
-				Auravyx::getAuravyx()->getAssets()->addModel(pm.name, m);
+				Assets::getAssets()->getAssets()->addModel(pm.name, m);
 			}
 			modelsLoaded = false;
+			GFX::getOverlay()->checkForGLError(&otherDebug);
 		}
 		if (texturesLoaded)
 		{
@@ -103,49 +111,84 @@ bool Resource::loadAllResources()
 			{
 				unsigned int tex = SOIL_create_OGL_texture(pt.tex, pt.width, pt.height, pt.channel, SOIL_CREATE_NEW_ID,
 					SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_COMPRESS_TO_DXT);
+				if (tex == 0)
+				{
+					std::cout << "[SOIL] Error code: " << SOIL_last_result() << " at " << pt.name << "\n";
+				}
+				
 				SOIL_free_image_data(pt.tex);
 
+				if (tex == 0)
+				{
+					std::cout << "[SOIL] Error code: " << SOIL_last_result() << " at " << pt.name << "\n";
+				}
+
 				Texture t(tex, pt.width, pt.height);
-				Auravyx::getAuravyx()->getAssets()->addTexture(pt.name, t);
+				Assets::getAssets()->getAssets()->addTexture(pt.name, t);
 			}
 			texturesLoaded = false;
+			GFX::getOverlay()->checkForGLError(&otherDebug);
 		}
 		if (terrainTexturesLoaded)
 		{
+			int l = 0;
 			int width = 1024, height = 1024;
 			GLsizei count = (GLsizei) preloadedTerrainTextures.size();
+			GFX::getOverlay()->checkForGLError(&ttDebug, l++);
 			int i = 0;
 			GLuint texture3D;
 			glGenTextures(1, &texture3D);
+			GFX::getOverlay()->checkForGLError(&ttDebug, l++);
 			glBindTexture(GL_TEXTURE_2D_ARRAY, texture3D);
-
+			GFX::getOverlay()->checkForGLError(&ttDebug, l++);
 			glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_WIDTH, &width);
+			GFX::getOverlay()->checkForGLError(&ttDebug, l++);
 			glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_HEIGHT, &height);
+			GFX::getOverlay()->checkForGLError(&ttDebug, l++);
 			width = 1024;
 			height = 1024;
 			glPixelStorei(GL_UNPACK_ROW_LENGTH, width);
+			GFX::getOverlay()->checkForGLError(&ttDebug, l++);
 			glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-
+			GFX::getOverlay()->checkForGLError(&ttDebug, l++);
 			glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			GFX::getOverlay()->checkForGLError(&ttDebug, l++);
 			glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			GFX::getOverlay()->checkForGLError(&ttDebug, l++);
 			glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, GL_REPEAT);
+			GFX::getOverlay()->checkForGLError(&ttDebug, l++);
 			glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, GL_REPEAT);
+			GFX::getOverlay()->checkForGLError(&ttDebug, l++);
 			glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGBA8, width, height, count, 0, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, NULL);
+			GFX::getOverlay()->checkForGLError(&ttDebug, l++);
 			for (auto pt : preloadedTerrainTextures)
 			{
 				glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, i, width, height, 1, GL_RGBA, GL_UNSIGNED_BYTE, pt.tex);
+				GFX::getOverlay()->checkForGLError(&ttDebug, 1000);
 				glGenerateMipmap(GL_TEXTURE_2D_ARRAY);
+				GFX::getOverlay()->checkForGLError(&ttDebug, 1001);
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+				GFX::getOverlay()->checkForGLError(&ttDebug, 1002);
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+				GFX::getOverlay()->checkForGLError(&ttDebug, 1003);
 
 				glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-				glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-				glTexParameterf(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_LOD_BIAS, (GLfloat) Auravyx::getAuravyx()->getOverlay()->mipmapBias);
+				GFX::getOverlay()->checkForGLError(&ttDebug, 1004);
+				glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+				GFX::getOverlay()->checkForGLError(&ttDebug, 1005);
+				glTexParameterf(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_LOD_BIAS, (GLfloat) GFX::getOverlay()->mipmapBias);
+				GFX::getOverlay()->checkForGLError(&ttDebug, 1006);
 				i++;
 				SOIL_free_image_data(pt.tex);
+				if (pt.tex == 0)
+				{
+					std::cout << "[SOIL] Error code: " << SOIL_last_result() << " at " << pt.name << "\n";
+				}
+				GFX::getOverlay()->checkForGLError(&ttDebug, 1007);
 			}
-			Auravyx::getAuravyx()->getOverlay()->terrainMaterials = texture3D;
+			GFX::getOverlay()->terrainMaterials = texture3D;
 			terrainTexturesLoaded = false;
+			GFX::getOverlay()->checkForGLError(&ttDebug, l++);
 		}
 		if (modsLoaded)
 		{
@@ -182,7 +225,10 @@ void Resource::loadAllTextures()
 		int width, height;
 		int channel;
 		unsigned char* pixels = SOIL_load_image(texture.c_str(), &width, &height, &channel, SOIL_LOAD_AUTO);
-	
+		if (pixels == 0)
+		{
+			std::cout << "[SOIL] Error code: " << SOIL_last_result() << " at "<< "\n";
+		}
 		if (pixels)
 		{
 			preloadTexture pt;
@@ -218,23 +264,24 @@ void Resource::loadTextureSilent(std::string texture)
 	Texture t(tex, width, height);
 	std::string textureName = FileIO::getFileName(texture);
 	t.name = textureName.substr(0, textureName.length() - 4);
-	Auravyx::getAuravyx()->getAssets()->addTexture(t.name, t);
+	Assets::getAssets()->getAssets()->addTexture(t.name, t);
+	GFX::getOverlay()->checkForGLError(&bootDebug);
 }
 
 void Resource::loadAllAsyncAssets()
 {
 	preloadShaders = loadShaders("\\Shaders\\Regular");
 	shadersLoaded = true;
-	Auravyx::getAuravyx()->getSoundManager()->start();
+	SoundManager::getSoundManager()->start();
 	Log::out("Loader", "Loading settings...", YELLOW);
 	Settings::settings = FileIO::readConfig(Resource::DIR + "\\settings.txt");
 	Log::out("Loader", "Loading controller...", YELLOW);
 
-	Auravyx::getAuravyx()->getWindow()->getController()->init();
+	WindowManager::getWindow()->getController()->init();
 	Log::out("Loader", "Loading textures...", YELLOW);
 	loadAllAudio();
 	//Sound s;
-	//s.play(Auravyx::getAuravyx()->getAssets()->getAudio("song"));
+	//s.play(Assets::getAssets()->getAssets()->getAudio("song"));
 	//s.setPitch(1.1);
 	//Server::loadPackets();
 	loadAllModels();
@@ -250,7 +297,7 @@ void Resource::renderProgress()
 {
 	lastP = nowP;
 	nowP = glfwGetTime();
-	Auravyx::getAuravyx()->getOverlay()->fillRect(0, 0, (float) Auravyx::getAuravyx()->getWindow()->getWidth(), (float) Auravyx::getAuravyx()->getWindow()->getHeight() / 4, 1, 1, 1, 1);
+	GFX::getOverlay()->fillRect(0, 0, (float) WindowManager::getWindow()->getWidth(), (float) WindowManager::getWindow()->getHeight() / 4, 1, 1, 1, 1);
 	//progress = now - last;
 	progress -= (nowP - lastP) * (double) 3;
 	float a = (float) sin((progress) * 3.14);
@@ -262,28 +309,28 @@ void Resource::renderProgress()
 	float spacingSize = 5;
 
 	float loadingX = 10;
-	float loadingY = Auravyx::getAuravyx()->getWindow()->getHeight() - squareSize * 2 - spacingSize - loadingX;
+	float loadingY = WindowManager::getWindow()->getHeight() - squareSize * 2 - spacingSize - loadingX;
 
-	Auravyx::getAuravyx()->getOverlay()->fillRect(loadingX, loadingY, squareSize, squareSize, 1, 1, 1, a);
-	Auravyx::getAuravyx()->getOverlay()->fillRect(loadingX + squareSize + spacingSize, loadingY, squareSize, squareSize, 1, 1, 1, b);
-	Auravyx::getAuravyx()->getOverlay()->fillRect(loadingX, loadingY + squareSize + spacingSize, squareSize, squareSize, 1, 1, 1, d);
-	Auravyx::getAuravyx()->getOverlay()->fillRect(loadingX + squareSize + spacingSize, loadingY + squareSize + spacingSize, squareSize, squareSize, 1, 1, 1, c);
+	GFX::getOverlay()->fillRect(loadingX, loadingY, squareSize, squareSize, 1, 1, 1, a);
+	GFX::getOverlay()->fillRect(loadingX + squareSize + spacingSize, loadingY, squareSize, squareSize, 1, 1, 1, b);
+	GFX::getOverlay()->fillRect(loadingX, loadingY + squareSize + spacingSize, squareSize, squareSize, 1, 1, 1, d);
+	GFX::getOverlay()->fillRect(loadingX + squareSize + spacingSize, loadingY + squareSize + spacingSize, squareSize, squareSize, 1, 1, 1, c);
 
-	Auravyx::getAuravyx()->getOverlay()->fillRect(Auravyx::getAuravyx()->getWindow()->getWidth() - loadingX - squareSize * 2 - spacingSize, loadingY, squareSize, squareSize, 1, 1, 1, b);
-	Auravyx::getAuravyx()->getOverlay()->fillRect(Auravyx::getAuravyx()->getWindow()->getWidth() - loadingX - squareSize * 2 - spacingSize + squareSize + spacingSize, loadingY, squareSize, squareSize, 1, 1, 1, a);
-	Auravyx::getAuravyx()->getOverlay()->fillRect(Auravyx::getAuravyx()->getWindow()->getWidth() - loadingX - squareSize * 2 - spacingSize, loadingY + squareSize + spacingSize, squareSize, squareSize, 1, 1, 1, c);
-	Auravyx::getAuravyx()->getOverlay()->fillRect(Auravyx::getAuravyx()->getWindow()->getWidth() - loadingX - squareSize * 2 - spacingSize + squareSize + spacingSize, loadingY + squareSize + spacingSize, squareSize, squareSize, 1, 1, 1, d);
+	GFX::getOverlay()->fillRect(WindowManager::getWindow()->getWidth() - loadingX - squareSize * 2 - spacingSize, loadingY, squareSize, squareSize, 1, 1, 1, b);
+	GFX::getOverlay()->fillRect(WindowManager::getWindow()->getWidth() - loadingX - squareSize * 2 - spacingSize + squareSize + spacingSize, loadingY, squareSize, squareSize, 1, 1, 1, a);
+	GFX::getOverlay()->fillRect(WindowManager::getWindow()->getWidth() - loadingX - squareSize * 2 - spacingSize, loadingY + squareSize + spacingSize, squareSize, squareSize, 1, 1, 1, c);
+	GFX::getOverlay()->fillRect(WindowManager::getWindow()->getWidth() - loadingX - squareSize * 2 - spacingSize + squareSize + spacingSize, loadingY + squareSize + spacingSize, squareSize, squareSize, 1, 1, 1, d);
 
-	Auravyx::getAuravyx()->getOverlay()->drawStringC(whatIsLoadingPrimary, 0, (float)Auravyx::getAuravyx()->getWindow()->getHeight() - 45, 30, (float) Auravyx::getAuravyx()->getWindow()->getWidth(), 1, 1, 1, 1);
-	Auravyx::getAuravyx()->getOverlay()->drawStringC(whatIsLoadingSecondary, 0, (float)Auravyx::getAuravyx()->getWindow()->getHeight() - 20, 25, (float)Auravyx::getAuravyx()->getWindow()->getWidth(), 1, 1, 1, 1);
+	GFX::getOverlay()->drawStringC(whatIsLoadingPrimary, 0, (float)WindowManager::getWindow()->getHeight() - 45, 30, (float) WindowManager::getWindow()->getWidth(), 1, 1, 1, 1);
+	GFX::getOverlay()->drawStringC(whatIsLoadingSecondary, 0, (float)WindowManager::getWindow()->getHeight() - 20, 25, (float)WindowManager::getWindow()->getWidth(), 1, 1, 1, 1);
 
 	if (loadingMessages.size() > 0)
 	{
 		int l = 1;
 		for (int i = 0; i < loadingMessages.at(0).messageLines.size(); i++)
 		{
-			Auravyx::getAuravyx()->getOverlay()->drawString(loadingMessages.at(0).messageLines.at(i), 5, 
-				Auravyx::getAuravyx()->getWindow()->getHeight() / 4 + (float) (l++) * 15, 25,
+			GFX::getOverlay()->drawString(loadingMessages.at(0).messageLines.at(i), 5, 
+				WindowManager::getWindow()->getHeight() / 4 + (float) (l++) * 15, 25,
 				loadingMessages.at(0).messageLinesColours.at(i).x,
 				loadingMessages.at(0).messageLinesColours.at(i).y, loadingMessages.at(0).messageLinesColours.at(i).z, 1);
 		}
@@ -292,8 +339,8 @@ void Resource::renderProgress()
 		{
 			remainingTime = 0;
 		}
-		Auravyx::getAuravyx()->getOverlay()->drawString("Message ends in " + Util::removeDecimal(remainingTime, 1) + "s", 5,
-			loadingMessages.at(0).sourceLines.size() * 15 + Auravyx::getAuravyx()->getWindow()->getHeight() / 4 + (float) (l++) * 15, 25,
+		GFX::getOverlay()->drawString("Message ends in " + Util::removeDecimal(remainingTime, 1) + "s", 5,
+			loadingMessages.at(0).sourceLines.size() * 15 + WindowManager::getWindow()->getHeight() / 4 + (float) (l++) * 15, 25,
 			1, 1, 1, 1);
 	}
 }
@@ -320,29 +367,33 @@ void Resource::printLoadingMessage(std::vector<std::string> lines, double delay,
 void Resource::cleanupResources()
 {
 	Log::out("Cleanup", "Cleaning up audio...", LIGHT_GRAY);
-	Auravyx::getAuravyx()->getSoundManager()->stop();
-	Auravyx::getAuravyx()->getAssets()->deleteAudio();
+	SoundManager::getSoundManager()->stop();
+	Assets::getAssets()->getAssets()->deleteAudio();
 	Log::out("Cleanup", "Cleaning up textures...", LIGHT_GRAY);
-	Auravyx::getAuravyx()->getAssets()->deleteTextures();
+	Assets::getAssets()->getAssets()->deleteTextures();
 	Log::out("Cleanup", "Cleaning up fonts...", LIGHT_GRAY);
-	Auravyx::getAuravyx()->getAssets()->deleteFonts();
+	Assets::getAssets()->getAssets()->deleteFonts();
 	Log::out("Cleanup", "Cleaning up models...", LIGHT_GRAY);
-	Auravyx::getAuravyx()->getAssets()->deleteModels();
+	Assets::getAssets()->getAssets()->deleteModels();
 }
 void Resource::loadBootAssets()
 {
-	Auravyx::getAuravyx()->getRenderer()->getShaders()->initBootShaders(Resource::loadShaders("\\Shaders\\Base"));
+	Renderer::getRenderer()->getShaders()->initBootShaders(Resource::loadShaders("\\Shaders\\Base"));
 	//loadTextureSilent(Resource::DIR + "\\Assets\\Boot\\font.png");
 	///loadTextureSilent(Resource::DIR + "\\Assets\\Boot\\font_plain-.png");
 	//FontLoader::loadFont(Resource::DIR + "\\Assets\\font.fnt");
 	loadTextureSilent(Resource::DIR + "\\Assets\\Boot\\font_plain.png");
-	loadTextureSilent(Resource::DIR + "\\Assets\\Boot\\goo.png");
 	FontLoader::loadFont(Resource::DIR + "\\Assets\\Boot\\font_plain.fnt");
+	GFX::getOverlay()->checkForGLError(&bootDebug);
 }
 
 int Resource::loadTexture(std::string dir)
 {
 	unsigned int tex = SOIL_load_OGL_texture(dir.c_str(), SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_INVERT_Y);
+	if (tex == 0)
+	{
+		std::cout << "[SOIL] Error code: " << SOIL_last_result() << " at " << dir<< "\n";
+	}
 	int width = 0, height = 0;
 	
 	
@@ -458,7 +509,7 @@ void Resource::loadAllAudio()
 
 		std::string audioName = FileIO::getFileName(sound);
 		audioName = audioName.substr(0, audioName.length() - 4);
-		Auravyx::getAuravyx()->getAssets()->addAudio(audioName, wave);
+		Assets::getAssets()->getAssets()->addAudio(audioName, wave);
 		if (printEachAssetLoad)
 		{
 			std::cout << "         - " << audioName << "\n";
@@ -536,7 +587,7 @@ void Resource::loadAllTerrainTextures()
 			pt.height = height;
 			pt.channel = channel;
 			preloadedTerrainTextures.emplace_back(pt);
-			Auravyx::getAuravyx()->getOverlay()->terrainTextureResolution = width;
+			GFX::getOverlay()->terrainTextureResolution = width;
 			std::string textureName = FileIO::getFileName(texture);
 			textureName = textureName.substr(0, textureName.length() - 4);
 			whatIsLoadingSecondary = textureName;
@@ -611,7 +662,7 @@ void Resource::loadAllMods()
 				std::cout << "could not locate the function" << m << " " << std::endl;
 			}*/
 
-			//Auravyx::getAuravyx()->getModify()->enabledModCount++;
+			//Modify::getModify()->enabledModCount++;
 		//funci(Auravyx::getAuravyx());
 			std::cout << "         - " << modName << " [v" << modVersion << "] for game version " << gameVersion << "\n";
 		}

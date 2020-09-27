@@ -7,6 +7,7 @@ class WindowManager
 {
 public:
 	WindowManager();
+	WindowManager(WindowManager* wm);
 	~WindowManager();
 
 	GLFWwindow *window;
@@ -44,5 +45,15 @@ public:
 	void setWindowTitle(std::string title);
 
 	Controller* getController();
+
+	static WindowManager* getWindow();
+
+private:
+
+	static WindowManager* windowManager;
+
+	GLFWcharfun charCallback;
+
+	GLFWkeyfun keyCallback;
 };
 

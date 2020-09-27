@@ -33,7 +33,7 @@ void GUIContainer::update()
 
 void GUIContainer::render()
 {
-	Auravyx::getAuravyx()->getOverlay()->fillRect(x, y, width, height, 60.0 / 255.0, 60.0 / 255.0, 60.0 / 255.0, 1);
+	GFX::getOverlay()->fillRect(x, y, width, height, 60.0 / 255.0, 60.0 / 255.0, 60.0 / 255.0, 1);
 
 	for (auto & i : containerInfo)
 	{
@@ -81,7 +81,7 @@ void GUIContainer::handleResize()
 			(i->height / yMax * h) - (spacing * i->height * 1.3));
 		if (ra)
 		{
-			i->gui->setBounds(Auravyx::getAuravyx()->getWindow()->getWidth() + -i->x * w / xMax + spacing * (1 - i->x / xMax) + x,
+			i->gui->setBounds(WindowManager::getWindow()->getWidth() + -i->x * w / xMax + spacing * (1 - i->x / xMax) + x,
 				i->y * h / yMax + spacing * (1 - i->y / yMax) + y,
 				(i->width / xMax * w) - (spacing * i->width * 1.3),
 				(i->height / yMax * h) - (spacing * i->height * 1.3));

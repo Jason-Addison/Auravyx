@@ -1,7 +1,11 @@
 #include "stdafx.h"
 #include "Utilities/Log.h"
 #include <iostream>
+#ifdef __linux__ 
+#elif _WIN32
 #include <Windows.h>
+#else
+#endif
 
 Log::Log()
 {

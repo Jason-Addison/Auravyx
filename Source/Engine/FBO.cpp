@@ -47,8 +47,8 @@ void FBO::create()
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_INT, 0);
 	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
 	glGenRenderbuffers(1, &depthTexture);
 	glBindRenderbuffer(GL_RENDERBUFFER, depthTexture);
@@ -89,7 +89,7 @@ void FBO::bind()
 void FBO::unbind()
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	glViewport(0, 0, Auravyx::getAuravyx()->getWindow()->getWidth(), Auravyx::getAuravyx()->getWindow()->getHeight());
+	glViewport(0, 0, WindowManager::getWindow()->getWidth(), WindowManager::getWindow()->getHeight());
 }
 
 void FBO::update(int width, int height)

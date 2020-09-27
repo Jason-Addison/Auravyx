@@ -6,7 +6,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <cstdlib>
-#include <windows.h>
+#ifdef __linux__ 
+#elif _WIN32
+#include <Windows.h>
+#else
+#endif
 #include <string>
 #include "Engine/Controller.h"
 #include "Library/GLFW/glfw3.h"
@@ -97,7 +101,7 @@ void ClientManager::init()
 void ClientManager::update()
 {
 	std::string msg = "hello";
-	if (Auravyx::getAuravyx()->getWindow()->getController()->isKeyDown(GLFW_KEY_0))
+	if (WindowManager::getWindow()->getController()->isKeyDown(GLFW_KEY_0))
 	{
 		int sendOK = sendto(out, msg.c_str(), 256, 0, (sockaddr*)&server, sizeof(server));
 		if (sendOK == SOCKET_ERROR)

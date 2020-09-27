@@ -1,6 +1,11 @@
 #include "stdafx.h"
 #include "Audio/WAVE.h"
-#include <windows.h>
+#ifdef __linux__ 
+#elif _WIN32
+#include <Windows.h>
+#else
+#endif
+
 #include "Utilities/Log.h"
 WAVE::WAVE(const char* path)
 {
@@ -91,7 +96,11 @@ void WAVE::load(const char * path)
 			format = AL_FORMAT_STEREO16;
 		}
 	}
-	ALuint frequency = sampleRate;
+	frequency = sampleRate;
 	alBufferData(buffer, format, buf, dataSize, frequency);
 	this->buf = buf;
+
+	lengthInSamples = dataSize * 8 / (channels * bitsPerSample);
+
+	duration = (float)lengthInSamples / (float)frequency;
 }

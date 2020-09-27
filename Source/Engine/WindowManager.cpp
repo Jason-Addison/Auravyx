@@ -8,7 +8,12 @@ WindowManager::WindowManager()
 {
 }
 
+WindowManager::WindowManager(WindowManager* wm)
+{
+	windowManager = wm;
+}
 
+WindowManager* WindowManager::windowManager;
 WindowManager::~WindowManager()
 {
 }
@@ -144,15 +149,39 @@ bool WindowManager::wasResized()
 {
 	return resized;
 }
+void noCCallback(GLFWwindow* window, unsigned int codepoint)
+{
+
+}
+GLFWcharfun charback = noCCallback;
+void cCallback(GLFWwindow* window, unsigned int codepoint)
+{
+	charback(window, codepoint);
+}
+void noKCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+
+}
+GLFWkeyfun keyback = noKCallback;
+void kCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+	WindowManager::getWindow()->getController()->keys[key] = action;
+	Controller::keyInput = true;
+	Controller::anyInput = true;
+	Controller::keyboardInput(key, scancode, action, mods);
+	keyback(window, key, scancode, action, mods);
+}
 
 void WindowManager::setTextCallback(GLFWcharfun f)
 {
-	glfwSetCharCallback(window, f);
+	charback = f;
+	glfwSetKeyCallback(window, kCallback);
 }
 
 void WindowManager::setKeyCallback(GLFWkeyfun f)
 {
-	glfwSetKeyCallback(window, f);
+	keyback = f;
+	glfwSetCharCallback(window, cCallback);
 }
 
 int WindowManager::closeRequested()
@@ -183,6 +212,11 @@ void WindowManager::setWindowTitle(std::string title)
 Controller* WindowManager::getController()
 {
 	return &controller;
+}
+
+WindowManager* WindowManager::getWindow()
+{
+	return windowManager;
 }
 
 

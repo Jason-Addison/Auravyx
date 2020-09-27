@@ -1,11 +1,14 @@
 #pragma once
-#include <windows.h>
 #include <iostream>
 #include "Utilities/FileIO.h"
 class Modify
 {
 public:
 	
+	Modify();
+	~Modify();
+	Modify(Modify* m);
+
 	void loadAllMods();
 	void render();
 
@@ -15,5 +18,11 @@ public:
 	int getEnabledModCount();
 
 	int getDisabledModCount();
+
+	static Modify* getModify();
+
+private:
+
+	static Modify* modify;
 };
 

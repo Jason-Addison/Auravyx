@@ -63,14 +63,14 @@ void Mouse::update(World * world)
 	}
 	int x = tX;
 	int y = tY;
-	if (Auravyx::getAuravyx()->getWindow()->getController()->isMouseDown(GLFW_MOUSE_BUTTON_LEFT))
+	if (WindowManager::getWindow()->getController()->isMouseDown(GLFW_MOUSE_BUTTON_LEFT))
 	{
 		if (x != prevX || y != prevY)
 		{
 			send(x, y, 5);
 		}
 	}
-	if (Auravyx::getAuravyx()->getWindow()->getController()->isMouseDown(GLFW_MOUSE_BUTTON_RIGHT))
+	if (WindowManager::getWindow()->getController()->isMouseDown(GLFW_MOUSE_BUTTON_RIGHT))
 	{
 		if (x != prevX || y != prevY)
 		{

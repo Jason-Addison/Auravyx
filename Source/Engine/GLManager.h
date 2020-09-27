@@ -1,4 +1,6 @@
 #pragma once
+#define GLEW_STATIC
+
 #include <Engine/WindowManager.h>
 class GLManager
 {

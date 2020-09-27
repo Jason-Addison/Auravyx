@@ -5,8 +5,8 @@
 #include <Auravyx.h>
 #include "Utilities/Clipboard.hpp"
 #include <World/ChunkIO.h>
-#include "SOIL/SOIL.h"
-#include <Resource.h>
+#include "Library/SOIL/SOIL.h"
+#include <Utilities/Resource.h>
 #include <iomanip>
 #include <iostream>
 Chat::Chat()
@@ -134,23 +134,23 @@ bool f1Lock = false;
 void Chat::render()
 {
 	lastMode = isChatting;
-	if (!isChatting && Auravyx::getAuravyx()->getWindow()->getController()->isKeyDown(GLFW_KEY_T))
+	if (!isChatting && WindowManager::getWindow()->getController()->isKeyDown(GLFW_KEY_T))
 	{
 		isChatting = true;
-		Auravyx::getAuravyx()->getWindow()->setTextCallback(textCallback);
-		Auravyx::getAuravyx()->getWindow()->setKeyCallback(chatKeyCallback);
+		WindowManager::getWindow()->setTextCallback(textCallback);
+		WindowManager::getWindow()->setKeyCallback(chatKeyCallback);
 	}
-	if (isChatting && Auravyx::getAuravyx()->getWindow()->getController()->isKeyDown(GLFW_KEY_ESCAPE))
+	if (isChatting && WindowManager::getWindow()->getController()->isKeyDown(GLFW_KEY_ESCAPE))
 	{
-		Auravyx::getAuravyx()->getWindow()->setTextCallback(noTextCallback);
-		Auravyx::getAuravyx()->getWindow()->setKeyCallback(noKeyCallback);
+		WindowManager::getWindow()->setTextCallback(noTextCallback);
+		WindowManager::getWindow()->setKeyCallback(noKeyCallback);
 		isChatting = false;
 		currentMessage = std::string();
 	}
-	if (isChatting && Auravyx::getAuravyx()->getWindow()->getController()->isKeyDown(GLFW_KEY_ENTER))
+	if (isChatting && WindowManager::getWindow()->getController()->isKeyDown(GLFW_KEY_ENTER))
 	{
-		Auravyx::getAuravyx()->getWindow()->setTextCallback(noTextCallback);
-		Auravyx::getAuravyx()->getWindow()->setKeyCallback(noKeyCallback);
+		WindowManager::getWindow()->setTextCallback(noTextCallback);
+		WindowManager::getWindow()->setKeyCallback(noKeyCallback);
 		if (currentMessage.length() > 0)
 		{
 			std::string outputMessage = currentMessage;
@@ -171,14 +171,14 @@ void Chat::render()
 	{
 		if (isChatting)
 		{
-			Auravyx::getAuravyx()->getWindow()->centerCursor();
-			Auravyx::getAuravyx()->getWindow()->centerCursor();
-			Auravyx::getAuravyx()->getWindow()->showMouse();
-			Auravyx::getAuravyx()->getWindow()->centerCursor();
+			WindowManager::getWindow()->centerCursor();
+			WindowManager::getWindow()->centerCursor();
+			WindowManager::getWindow()->showMouse();
+			WindowManager::getWindow()->centerCursor();
 		}
 		if (!isChatting)
 		{
-			Auravyx::getAuravyx()->getWindow()->hideMouse();
+			WindowManager::getWindow()->hideMouse();
 		}
 	}
 	thisTime = glfwGetTime();
@@ -189,17 +189,17 @@ void Chat::render()
 	}
 	if (isChatting)
 	{
-		Auravyx::getAuravyx()->getOverlay()->fillRect(5, Auravyx::getAuravyx()->getWindow()->getHeight() - 35, Auravyx::getAuravyx()->getWindow()->getWidth() - 10, 30, 0, 0, 0, 0.5);
+		GFX::getOverlay()->fillRect(5, WindowManager::getWindow()->getHeight() - 35, WindowManager::getWindow()->getWidth() - 10, 30, 0, 0, 0, 0.5);
 		std::string outmsg = "";
 		outmsg += currentMessage;
 		if (textFlashOn)
 		{
 			outmsg += "_";
 		}
-		Auravyx::getAuravyx()->getOverlay()->drawString(outmsg, 7, Auravyx::getAuravyx()->getWindow()->getHeight() - 32.5, 30, 1, 1, 1, 1);
+		GFX::getOverlay()->drawString(outmsg, 7, WindowManager::getWindow()->getHeight() - 32.5, 30, 1, 1, 1, 1);
 		
 	}
-	if (!f1Lock && Auravyx::getAuravyx()->getWindow()->getController()->isKeyDown(GLFW_KEY_F1))
+	if (!f1Lock && WindowManager::getWindow()->getController()->isKeyDown(GLFW_KEY_F1))
 	{
 		auto t = std::time(nullptr);
 		auto tm = *std::localtime(&t);
@@ -213,11 +213,11 @@ void Chat::render()
 		(
 			ss.str().c_str(),
 			SOIL_SAVE_TYPE_BMP,
-			0, 0, Auravyx::getAuravyx()->getWindow()->getWidth(), Auravyx::getAuravyx()->getWindow()->getHeight()
+			0, 0, WindowManager::getWindow()->getWidth(), WindowManager::getWindow()->getHeight()
 		);
 		message(ss.str());
 	}
-	else if (!Auravyx::getAuravyx()->getWindow()->getController()->isKeyDown(GLFW_KEY_F1))
+	else if (!WindowManager::getWindow()->getController()->isKeyDown(GLFW_KEY_F1))
 	{
 		f1Lock = false;
 	}
@@ -226,7 +226,7 @@ void Chat::render()
 	float thisTime = glfwGetTime();
 	for (int i = (int) chatLog.size() - 1; i >= 0; i--)
 	{
-		Auravyx::getAuravyx()->getOverlay()->drawStringBG(chatLog.at(i), 5, Auravyx::getAuravyx()->getWindow()->getHeight() - 65 - (chatLog.size() - i) * 30, 30, 1, 1, 1, 1, 0, -2, 0, 0, 0, 0, 0, 0.3);
+		GFX::getOverlay()->drawStringBG(chatLog.at(i), 5, WindowManager::getWindow()->getHeight() - 65 - (chatLog.size() - i) * 30, 30, 1, 1, 1, 1, 0, -2, 0, 0, 0, 0, 0, 0.3);
 	}
 	for (int i = 0; i < chatLogTimings.size(); i++)
 	{
@@ -256,19 +256,19 @@ void Chat::command(std::string cmd)
 	{
 		float speed = std::stof(parse.at(1));
 		Log::out("Command", "Speed set to " + std::to_string(speed), RED);
-		Auravyx::getAuravyx()->getOverlay()->CAM.setSpeedMultiplier(speed);
+		GFX::getOverlay()->CAM.setSpeedMultiplier(speed);
 	}
 	if (parse.size() > 1 && parse.at(0).compare("fov") == 0)
 	{
 		float fov = std::stof(parse.at(1));
 		Log::out("Command", "FOV set to " + std::to_string(fov), RED);
-		Auravyx::getAuravyx()->getOverlay()->CAM.setFOV(fov);
+		GFX::getOverlay()->CAM.setFOV(fov);
 	}
 	if (parse.size() > 1 && parse.at(0).compare("fps") == 0)
 	{
 		float fps = std::stof(parse.at(1));
 		Log::out("Command", "FPS set to " + std::to_string(fps), RED);
-		Auravyx::getAuravyx()->getOverlay()->setFPS(fps);
+		GFX::getOverlay()->setFPS(fps);
 	}
 	if (parse.size() > 0 && parse.at(0).compare("save") == 0)
 	{

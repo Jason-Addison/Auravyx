@@ -2,7 +2,7 @@
 #include <winsock2.h>
 #include <stdio.h>
 #include <Graphics/GFX.h>
-#include <Util.h>
+#include <Utilities/Util.h>
 #include <Engine/WindowManager.h>
 #include <chrono>
 #include <Engine/Controller.h>
@@ -56,7 +56,7 @@ World w;
 
 void chunkLoading(int xC, int yC, int zC)
 {
-	int size = Auravyx::getAuravyx()->getOverlay()->viewDistance * 2;
+	int size = GFX::getOverlay()->viewDistance * 2;
 	double avg = 0;
 	bool origin = 0;
 	int cX = 0;
@@ -73,9 +73,9 @@ void chunkLoading(int xC, int yC, int zC)
 		{
 			for (int a = 0; a < 4; a++)
 			{
-				if (Auravyx::getAuravyx()->getOverlay()->CAM.cX != xC || 0 != yC || Auravyx::getAuravyx()->getOverlay()->CAM.cZ != zC)
+				if (GFX::getOverlay()->CAM.cX != xC || 0 != yC || GFX::getOverlay()->CAM.cZ != zC)
 				{
-					//std::cout << Auravyx::getAuravyx()->getOverlay()->CAM.cX << "  " << Auravyx::getAuravyx()->getOverlay()->CAM.cY << "\n";
+					//std::cout << GFX::getOverlay()->CAM.cX << "  " << GFX::getOverlay()->CAM.cY << "\n";
 					//return;
 				}
 				if (a == 0)
@@ -137,13 +137,13 @@ void chunkLoading(int xC, int yC, int zC)
 
 							if (c)
 							{
-								/*if (Auravyx::getAuravyx()->getOverlay()->CAM.cX == c->x && Auravyx::getAuravyx()->getOverlay()->CAM.cY == c->z)
+								/*if (GFX::getOverlay()->CAM.cX == c->x && GFX::getOverlay()->CAM.cY == c->z)
 								{
 
 									for (int i = 0; i < Chunk::CHUNK_SIZE; i++)
 									{
-										if (c->getDensity(Auravyx::getAuravyx()->getOverlay()->CAM.cX * Chunk::CHUNK_SIZE - Auravyx::getAuravyx()->getOverlay()->CAM.x, Chunk::CHUNK_SIZE - 1 - i,
-											Auravyx::getAuravyx()->getOverlay()->CAM.cZ * Chunk::CHUNK_SIZE - Auravyx::getAuravyx()->getOverlay()->CAM.z) != 0)
+										if (c->getDensity(GFX::getOverlay()->CAM.cX * Chunk::CHUNK_SIZE - GFX::getOverlay()->CAM.x, Chunk::CHUNK_SIZE - 1 - i,
+											GFX::getOverlay()->CAM.cZ * Chunk::CHUNK_SIZE - GFX::getOverlay()->CAM.z) != 0)
 										{
 											if (c->y * Chunk::CHUNK_SIZE + Chunk::CHUNK_SIZE - 1 - i > height)
 											{
@@ -214,9 +214,9 @@ void chunkMeshGeneration()
 
 void GameState::update()
 {
-	Auravyx::getAuravyx()->getWindow()->getController()->update();
+	WindowManager::getWindow()->getController()->update();
 	//std::cout << s1.checkCollision(&s2) << "\n";
-	if (Auravyx::getAuravyx()->getWindow()->getController()->isKeyDown(GLFW_KEY_ENTER))
+	if (WindowManager::getWindow()->getController()->isKeyDown(GLFW_KEY_ENTER))
 	{
 		//s = s.substr(0, s.size() - 1);
 		//if (s.size() != 0)
@@ -226,16 +226,16 @@ void GameState::update()
 		}
 	}
 
-	if (Auravyx::getAuravyx()->getWindow()->getController()->isKeyDown(GLFW_KEY_Q))
+	if (WindowManager::getWindow()->getController()->isKeyDown(GLFW_KEY_Q))
 	{
 		//PacketMsg::sendMessage("hello!!!");
 	}
 	
-	Auravyx::getAuravyx()->getOverlay()->CAM.getPlayerInput();
+	GFX::getOverlay()->CAM.getPlayerInput();
 	w.update();
 	
-	int x = Auravyx::getAuravyx()->getOverlay()->CAM.cX >> 2;
-	int y = Auravyx::getAuravyx()->getOverlay()->CAM.cZ >> 2;
+	int x = GFX::getOverlay()->CAM.cX >> 2;
+	int y = GFX::getOverlay()->CAM.cZ >> 2;
 
 	//std::cout << x << " " << y << "\n";
 
@@ -245,16 +245,16 @@ void GameState::update()
 void world()
 {
 	Matrix4f m4;
-	int fov = Auravyx::getAuravyx()->getOverlay()->CAM.fov;
-	if (glfwGetMouseButton(Auravyx::getAuravyx()->getWindow()->window, GLFW_MOUSE_BUTTON_4) == GLFW_PRESS)
+	int fov = GFX::getOverlay()->CAM.fov;
+	if (glfwGetMouseButton(WindowManager::getWindow()->window, GLFW_MOUSE_BUTTON_4) == GLFW_PRESS)
 	{
 		fov = 30;
 	}
-	m4.createProjectionMatrix(Auravyx::getAuravyx()->getWindow()->getWidth(), Auravyx::getAuravyx()->getWindow()->getHeight(), Auravyx::getAuravyx()->getOverlay()->viewDistance * 1000, 0.1, fov);
+	m4.createProjectionMatrix(WindowManager::getWindow()->getWidth(), WindowManager::getWindow()->getHeight(), GFX::getOverlay()->viewDistance * 1000, 0.1, fov);
 
-	w.render(&Auravyx::getAuravyx()->getOverlay()->CAM, &m4);
+	w.render(&GFX::getOverlay()->CAM, &m4);
 	
-	Camera cam = Auravyx::getAuravyx()->getOverlay()->CAM;
+	Camera cam = GFX::getOverlay()->CAM;
 }
 double cpuUsageA = 0;
 double cpuUsageB = 1;
@@ -276,7 +276,7 @@ void GameState::render()
 	{
 		w.unloadLock = false;
 	}
-	std::string fps = std::to_string(Auravyx::getAuravyx()->getOverlay()->FPS);
+	std::string fps = std::to_string(GFX::getOverlay()->FPS);
 	int curFPS = 0;
 	now = glfwGetTime();
 	if (now > last + 0.5)
@@ -313,7 +313,7 @@ void GameState::render()
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glClearColor(1, 1, 1, 1);
-	Camera cam = Camera(Auravyx::getAuravyx()->getOverlay()->CAM);
+	Camera cam = Camera(GFX::getOverlay()->CAM);
 	auto finish = std::chrono::high_resolution_clock::now();
 
 	world();
@@ -330,25 +330,25 @@ void GameState::render()
 
 	int rdi = 0;
 
-	std::string fpsCap = std::to_string((int)Auravyx::getAuravyx()->getOverlay()->FPS);
-	if (Auravyx::getAuravyx()->getOverlay()->FPS == Auravyx::getAuravyx()->getOverlay()->UNLIMITED_FPS)
+	std::string fpsCap = std::to_string((int)GFX::getOverlay()->FPS);
+	if (GFX::getOverlay()->FPS == GFX::getOverlay()->UNLIMITED_FPS)
 	{
 		fpsCap = "No cap";
 	}
 	curFPS = (int)roundf(((fpsCounter + lastFpsCounter) / 2));
 	fps = std::to_string(curFPS);
 	fps += std::string(" (" + fpsCap + ")");
-	Auravyx::getAuravyx()->getOverlay()->drawStringBG("fps : " + fps, 0, dim * (di++), 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3f);
-	Auravyx::getAuravyx()->getOverlay()->drawStringBGC("authenticated", 0, 0, 30, Auravyx::getAuravyx()->getWindow()->getWidth(), 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3f);
-	Auravyx::getAuravyx()->getOverlay()->drawStringBG("x : " + Util::removeDecimal(Auravyx::getAuravyx()->getOverlay()->CAM.x, 3), 0, dim * (di++), 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3f);
-	Auravyx::getAuravyx()->getOverlay()->drawStringBG("y : " + Util::removeDecimal(Auravyx::getAuravyx()->getOverlay()->CAM.y, 3), 0, dim * (di++), 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3f);
-	Auravyx::getAuravyx()->getOverlay()->drawStringBG("z : " + Util::removeDecimal(Auravyx::getAuravyx()->getOverlay()->CAM.z, 3), 0, dim * (di++), 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3f);
-	Auravyx::getAuravyx()->getOverlay()->drawStringBG("c : " + std::to_string(Auravyx::getAuravyx()->getOverlay()->CAM.cX) + " / " + std::to_string(Auravyx::getAuravyx()->getOverlay()->CAM.cY) + " / " +
-		std::to_string(Auravyx::getAuravyx()->getOverlay()->CAM.cZ), 0, dim * (di++), 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3f);
+	GFX::getOverlay()->drawStringBG("fps: " + fps, 0, dim * (di++), 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3f);
+	GFX::getOverlay()->drawStringBGC("authenticated", 0, 0, 30, WindowManager::getWindow()->getWidth(), 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3f);
+	GFX::getOverlay()->drawStringBG("x: " + Util::removeDecimal(GFX::getOverlay()->CAM.x, 3), 0, dim * (di++), 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3f);
+	GFX::getOverlay()->drawStringBG("y: " + Util::removeDecimal(GFX::getOverlay()->CAM.y, 3), 0, dim * (di++), 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3f);
+	GFX::getOverlay()->drawStringBG("z: " + Util::removeDecimal(GFX::getOverlay()->CAM.z, 3), 0, dim * (di++), 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3f);
+	GFX::getOverlay()->drawStringBG("c: " + std::to_string(GFX::getOverlay()->CAM.cX) + " / " + std::to_string(GFX::getOverlay()->CAM.cY) + " / " +
+		std::to_string(GFX::getOverlay()->CAM.cZ), 0, dim * (di++), 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3f);
 
-	float velocity = sqrt(pow(Auravyx::getAuravyx()->getOverlay()->CAM.xVel, 2) + pow(Auravyx::getAuravyx()->getOverlay()->CAM.yVel, 2) + pow(Auravyx::getAuravyx()->getOverlay()->CAM.zVel, 2));
+	float velocity = sqrt(pow(GFX::getOverlay()->CAM.xVel, 2) + pow(GFX::getOverlay()->CAM.yVel, 2) + pow(GFX::getOverlay()->CAM.zVel, 2));
 	velocity *= 60;
-	Auravyx::getAuravyx()->getOverlay()->drawStringBG("v : " + Util::removeDecimal(velocity, 1) + " m/s", 0, dim * (di++), 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3f);
+	GFX::getOverlay()->drawStringBG("v: " + Util::removeDecimal(velocity, 1) + " m/s", 0, dim * (di++), 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3f);
 	SIZE_T physMemUsedByMe = pmc.WorkingSetSize;
 	DWORDLONG totalPhysMem = memInfo.ullTotalPhys;
 	int renderableChunk = 0;
@@ -359,59 +359,60 @@ void GameState::render()
 			renderableChunk++;
 		}
 	}
-	Auravyx::getAuravyx()->getOverlay()->drawStringBG("render : " + std::to_string(renderableChunk) + " / " +
+	GFX::getOverlay()->drawStringBG("render: " + std::to_string(renderableChunk) + " / " +
 		std::to_string(w.overworld.size()), 0, dim * (di++), 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3);
 
-	Auravyx::getAuravyx()->getOverlay()->drawStringBG("time : " +
+	GFX::getOverlay()->drawStringBG("time: " +
 		std::to_string(((w.getOverworldTime() + 60000) % w.getOverworldDayCycle()) / 10000) + ":" +
 		std::to_string((int)((w.getOverworldTime() % w.getOverworldDayCycle() / (3600)) % 60)) + ":" +
 		std::to_string((int)((w.getOverworldTime() % 10000 / 60 % 60))) + " (" +
 		std::to_string((int)(((w.getOverworldTime()) + 60000) / w.getOverworldDayCycle())) + ")",
 		0, dim * (di++), 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3);
-	Auravyx::getAuravyx()->getOverlay()->drawStringBG("tick : " + std::to_string((int)(w.getOverworldTime())),
+	GFX::getOverlay()->drawStringBG("tick: " + std::to_string((int)(w.getOverworldTime())),
 		0, dim * (di++), 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3);
 
-	Auravyx::getAuravyx()->getOverlay()->drawStringBG("physics : " + std::string("no clip"),
+	GFX::getOverlay()->drawStringBG("physics: " + std::string("no clip"),
 		0, dim * (di++), 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3);
 
-	Auravyx::getAuravyx()->getOverlay()->drawStringBG("fly : " + std::string("on"),
+	GFX::getOverlay()->drawStringBG("fly: " + std::string("on"),
 		0, dim * (di++), 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3);
 
-	Auravyx::getAuravyx()->getOverlay()->drawStringBGR("cpu usage : " + Util::removeDecimal((cpuUsageA + cpuUsageB) / 2, 2) + "%",
+	GFX::getOverlay()->drawStringBGR("cpu usage: " + Util::removeDecimal((cpuUsageA + cpuUsageB) / 2, 2) + "%",
 		0, dim * (rdi++), 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3);
 
-	Auravyx::getAuravyx()->getOverlay()->drawStringBGR("mem : " + Util::removeDecimal(((float) static_cast<long long>(physMemUsedByMe) / 1000000000.0), 3) + " / " +
+	GFX::getOverlay()->drawStringBGR("mem: " + Util::removeDecimal(((float) static_cast<long long>(physMemUsedByMe) / 1000000000.0), 3) + " / " +
 		Util::removeDecimal((float) static_cast<long long>(totalPhysMem) / 1000000000.0, 1) + " GB"
 		, 0, dim * (rdi++), 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3);
 
-	Auravyx::getAuravyx()->getOverlay()->drawStringBGR("mods active : " + std::to_string(Auravyx::getAuravyx()->getModify()->getEnabledModCount()) +
-		" / " + std::to_string(Auravyx::getAuravyx()->getModify()->getDisabledModCount())
+	GFX::getOverlay()->drawStringBGR("mods active: " + std::to_string(Modify::getModify()->getEnabledModCount()) +
+		" / " + std::to_string(Modify::getModify()->getDisabledModCount())
 		, 0, dim* (rdi++), 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3);
 
-	Auravyx::getAuravyx()->getOverlay()->drawStringBGR("view distance : " + std::to_string(Auravyx::getAuravyx()->getOverlay()->viewDistance) + " (" +
-		std::to_string(Auravyx::getAuravyx()->getOverlay()->viewDistance * Chunk::CHUNK_SIZE) + "m)", 0, dim * (rdi++), 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3);
+	GFX::getOverlay()->drawStringBGR("view distance: " + std::to_string(GFX::getOverlay()->viewDistance) + " (" +
+		std::to_string(GFX::getOverlay()->viewDistance * Chunk::CHUNK_SIZE) + "m)", 0, dim * (rdi++), 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3);
 
-	Auravyx::getAuravyx()->getOverlay()->drawStringBGR("brightness : " + Util::removeDecimal(Auravyx::getAuravyx()->getOverlay()->brightness, 2), 0, dim * (rdi++), 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3);
+	GFX::getOverlay()->drawStringBGR("brightness: " + Util::removeDecimal(GFX::getOverlay()->brightness, 2), 0, dim * (rdi++), 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3);
 
 	if (Profiler::showAdvancedDebugInfo)
 	{
-		Auravyx::getAuravyx()->getOverlay()->drawStringBGR("advanced debug on", 0, dim * (rdi++), 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3);
-		Auravyx::getAuravyx()->getOverlay()->drawStringBGR("mipmap bias : " + std::to_string(Auravyx::getAuravyx()->getOverlay()->mipmapBias), 0, dim * (rdi++), 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3);
-		Auravyx::getAuravyx()->getOverlay()->drawStringBGR("terrain tex res : " + std::to_string(Auravyx::getAuravyx()->getOverlay()->terrainTextureResolution), 0, dim * (rdi++), 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3);
-		Auravyx::getAuravyx()->getOverlay()->drawStringBGR("physics objects : " + std::to_string(0), 0, dim * (rdi++), 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3);
+		GFX::getOverlay()->drawStringBGR("advanced debug on", 0, dim * (rdi++), 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3);
+		GFX::getOverlay()->drawStringBGR("mipmap bias: " + std::to_string(GFX::getOverlay()->mipmapBias), 0, dim * (rdi++), 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3);
+		GFX::getOverlay()->drawStringBGR("terrain tex res: " + std::to_string(GFX::getOverlay()->terrainTextureResolution), 0, dim * (rdi++), 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3);
+		GFX::getOverlay()->drawStringBGR("physics objects: " + std::to_string(0), 0, dim * (rdi++), 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3);
 	}
 	else
 	{
-		Auravyx::getAuravyx()->getOverlay()->drawStringBGR("advanced debug off", 0, dim * (rdi++), 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3);
+		GFX::getOverlay()->drawStringBGR("advanced debug off", 0, dim * (rdi++), 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3);
 	}
 	chat.render();
 	//Auravyx::getAuravyx()->draw();
+	Modify::getModify()->render();
 }
 void startChunkLoader()
 {
 	//while (true)
 	{
-		Camera cam = Auravyx::getAuravyx()->getOverlay()->CAM;
+		Camera cam = GFX::getOverlay()->CAM;
 		////////FOLLOW PLAYER/////////////////////////chunkLoading(cam.cX, 0, cam.cZ);
 		chunkLoading(0, 0, 0);
 	}
@@ -432,8 +433,9 @@ void GameState::start()
 	Physics::addCallback(physicsCallback);
 	
 	Sound s;
-	s.play(Auravyx::getAuravyx()->getAssets()->getAudio("Fall"));
+	s.play(Assets::getAssets()->getAssets()->getAudio("Fall"));
 	hostServer = false;// Settings::getBool("host");
+	Modify::getModify()->loadAllMods();
 	
 	if (hostServer)
 	{

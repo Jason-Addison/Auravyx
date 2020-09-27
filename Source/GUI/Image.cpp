@@ -14,7 +14,7 @@ Image::~Image()
 
 void Image::render()
 {
-	Auravyx::getAuravyx()->getOverlay()->drawImage(x, y, width, height, texture);// , Auravyx::getAuravyx()->getWindow()->getWidth(), Auravyx::getAuravyx()->getWindow()->getHeight());
+	GFX::getOverlay()->drawImage(x, y, width, height, texture);// , WindowManager::getWindow()->getWidth(), WindowManager::getWindow()->getHeight());
 }
 
 void Image::setBounds(float x, float y, float width, float height)

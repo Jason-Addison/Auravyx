@@ -17,7 +17,11 @@ Client::~Client()
 #include <stdio.h>
 #include <stdlib.h>
 #include <cstdlib>
-#include <windows.h>
+#ifdef __linux__ 
+#elif _WIN32
+#include <Windows.h>
+#else
+#endif
 #include <string>
 #pragma comment (lib, "ws2_32.lib")
 /*SOCKET out;

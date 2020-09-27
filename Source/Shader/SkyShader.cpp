@@ -50,12 +50,12 @@ void SkyShader::render()
 	glDisable(GL_CULL_FACE);
 	//glCullFace(GL_BACK);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	Model mesh = *Auravyx::getAuravyx()->getAssets()->getModel("sky");
+	Model mesh = *Assets::getAssets()->getAssets()->getModel("sky");
 
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, Auravyx::getAuravyx()->getAssets()->getTexture("stars")->texture);
-	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glBindTexture(GL_TEXTURE_2D, Assets::getAssets()->getAssets()->getTexture("stars")->texture);
+	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
 	glBindVertexArray(mesh.getVAO());
 	glEnableVertexArrayAttrib(mesh.getVAO(), 0);
