@@ -29,9 +29,9 @@
   * [Creating your own mod](#creating-your-own-mod)
     + [Setting up development environment](#setting-up-development-environment)
     + [Creating basic mod](#creating-basic-mod)
-    + [Custom resources](#temp)
-    + [Custom shaders](#temp)
-    + [Custom server](#temp)
+    + [Custom resources](#custom-resources)
+    + [Custom shaders](#custom-shaders)
+    + [Custom server](#custom-server)
     + [External documentation](#external-documentation)
 - [**Gallery**](#gallery)
   * [Pictures](#pictures)
@@ -47,14 +47,16 @@
 
 [Download latest .zip](https://github.com/Voxol/Voxel/releases/latest)
 
-Extract .zip anywhere you'd like and run the Auravyx.exe
+Extract `.zip` anywhere you'd like and run the `Auravyx.exe`
+
+There may also be a version with two `.exe` files. One will run with the console and one will run without it.
 
 
 ---
 
 #### Change settings
 
-Settings can be changed in settings.txt. 
+Settings can be changed in `settings.txt`. 
 
 | Setting | Description | Value Type | Default Value |
 | --- | --- | --- | --- | 
@@ -142,6 +144,12 @@ This is mod.
 ##### Setting up development environment
 
 ##### Creating basic mod
+
+##### Custom resources
+
+##### Custom shaders
+
+##### Custom server
 
 ##### External documentation
 
