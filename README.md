@@ -54,7 +54,24 @@ Extract .zip anywhere you'd like and run the Auravyx.exe
 
 #### Change settings
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+Settings can be changed in settings.txt. 
+
+| Setting | Description | Value Type | Default Value |
+| --- | --- | --- | --- | 
+| view-distance | Radius of chunks loaded around player. Restricted by size of currently loaded world. Also determines amount of fog. <br>  | `int` | `8` |
+| brightness | Changes the brightness of the overall world. Lower values will make anything not under direct sunlight harder to see. | `float` | `1.0` |
+| load-mods | If true, the game will attempt to load enabled mods. | `bool` | `true` |
+| fps | Sets default FPS target. Can also be changed with commands in-game. | `int` | `144` |
+| vsync | If enabled, reduces screen tearing and caps FPS at 60. Don't use with adaptive screen refresh rates. | `bool` | `false` |
+| ups | Number of general updates per second, 60 is recommended | `int` | `60` |
+| physics-ups | Number of physics updates per second. Higher numbers significantly affect FPS. | `int` | `10` |
+| host | `true` will host a multiplayer session from the game's window, allowing you to play and others to connect. <br> `false` will attempt to connect to the given IP and port. | `bool` | `true` |
+| ip | If host is `false`, game will try to connect to this IP address. | `string` | `127.0.0.1` |
+| port | If host is `false`, game will try to connect to server on this port. | `short` | `54000` |
+| username | Determines your visible name to other players in server chat.  | `string` | `SWAGman` |
+
+Controls can be changed in controls.txt
+
 
 ---
 
