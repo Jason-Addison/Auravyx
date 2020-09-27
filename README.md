@@ -110,6 +110,7 @@ Controls can be changed from `controls.txt`
 | `Right Click` | Remove material from crosshair location (destroy) |
 | `T` | Chat. To use commands start message with `/`  |
 | `Enter` | Send current chat message or command |
+| `Escape` | If chatting, exits chat and returns to game discarding current message. <br> If not chatting, will tab out of game. |
 | `R` | Enable wireframe |
 | `+` | Increase game time |
 | `-` | Decrease game time |
