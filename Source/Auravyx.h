@@ -1,5 +1,4 @@
 #pragma once
-#define GLFW_DLL
 #include "Engine/GameManager.h"
 #include "Graphics/GFX.h"
 #include "Engine/WindowManager.h"
@@ -28,20 +27,6 @@ public:
 
 	SoundManager soundManager;
 
-	SoundManager* getSoundManager();
-
-	Modify* getModify();
-
-	Assets* getAssets();
-
-	Renderer* getRenderer();
-
-	GFX *getOverlay();
-
-	WindowManager* getWindow();
-
-	void draw();
-
 	static Auravyx *getAuravyx();
 
 
@@ -55,8 +40,22 @@ public:
 
 	static void setInstance(Auravyx * a);
 
+	SoundManager* getSoundManager();
+
+	Modify* getModify();
+
+	Assets* getAssets();
+
+	Renderer* getRenderer();
+
+	GFX* getOverlay();
+
+	WindowManager* getWindow();
+
 private:
 
 
 	static Auravyx* instance;
+
+	static void create();
 };

@@ -7,10 +7,13 @@
 class GFX
 {
 public:
+
 	GFX();
+	GFX(GFX *gfx);
 	~GFX();
 
 	double FPS = 144;
+
 
 	Camera CAM = Camera();
 
@@ -20,7 +23,7 @@ public:
 
 	GLuint tileMap = 0;
 
-	int viewDistance = 0;
+	int viewDistance = 12;
 
 	int mipmapBias = 0;
 
@@ -78,5 +81,13 @@ public:
 
 	void disableScissor();
 
+	static GFX* getOverlay();
+
+	GLenum checkForGLError(std::string *s);
+
+	GLenum checkForGLError(std::string* s, int l);
+
+private:
+	static GFX * gfx;
 };
 

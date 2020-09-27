@@ -38,18 +38,18 @@ void GUI::handleResize()
 		}
 	}
 }
-//double lT = Auravyx::getAuravyx()->getWindow()->getTime();
+//double lT = WindowManager::getWindow()->getTime();
 void GUI::refresh()
 {
-	if (Auravyx::getAuravyx()->getWindow()->wasResized())
+	if (WindowManager::getWindow()->wasResized())
 	{
 		resizeEvent();
 		handleResize();
 	}
-	//double currentTime = Auravyx::getAuravyx()->getWindow()->getTime();
+	//double currentTime = WindowManager::getWindow()->getTime();
 	//if ((double) (currentTime - lT) > 1.0 / 20.0)
 	{
-		//lT = Auravyx::getAuravyx()->getWindow()->getTime();
+		//lT = WindowManager::getWindow()->getTime();
 		updateEvent();
 		for (auto i : guis)
 		{

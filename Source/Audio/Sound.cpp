@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "Audio/Sound.h"
-#include "efx.h"
+#include "Library/AL/efx.h"
 #include "Auravyx.h"
 
 Sound::Sound()
@@ -24,7 +24,7 @@ void Sound::create()
 	alSourcei(source, AL_LOOPING, AL_TRUE);
 	alSourcei(source, AL_AIR_ABSORPTION_FACTOR, 100);
 
-	Auravyx::getAuravyx()->getSoundManager()->addSound(source);
+	SoundManager::getSoundManager()->addSound(source);
 }
 
 void Sound::play(WAVE wave)
@@ -92,6 +92,6 @@ void Sound::setTime(ALfloat time)
 
 void Sound::destroy()
 {
-	Auravyx::getAuravyx()->getSoundManager()->removeSound(source);
+	SoundManager::getSoundManager()->removeSound(source);
 	alDeleteSources(1, &source);
 }

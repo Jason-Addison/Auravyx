@@ -5,6 +5,7 @@ class SoundManager
 {
 public:
 	SoundManager();
+	SoundManager(SoundManager *s);
 	~SoundManager();
 
 	std::unordered_set<ALuint> sounds;
@@ -18,5 +19,11 @@ public:
 	void addSound(ALuint source);
 
 	void removeSound(ALuint source);
+
+	static SoundManager* getSoundManager();
+
+private:
+
+	static SoundManager* soundManager;
 };
 

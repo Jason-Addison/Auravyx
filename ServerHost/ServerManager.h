@@ -6,7 +6,6 @@
 #define SERVER "Server"
 #define NORMAL 1
 #define WARNING 2
-//#define ERROR 3
 #define GOOD 4
 
 class ServerManager

@@ -6,10 +6,17 @@ Assets::Assets()
 {
 }
 
+Assets::Assets(Assets* a)
+{
+	assets = a;
+}
+
 
 Assets::~Assets()
 {
 }
+
+Assets* Assets::assets;
 
 void Assets::addTexture(std::string name, Texture texture)
 {
@@ -91,7 +98,7 @@ void Assets::deleteTextures()
 	{
 		t.second->destroy();
 	}
-	GLuint del = Auravyx::getAuravyx()->getOverlay()->terrainMaterials;
+	GLuint del = GFX::getOverlay()->terrainMaterials;
 	glDeleteTextures(1, &del);
 }
 
@@ -109,6 +116,11 @@ void Assets::deleteModels()
 	{
 		m.second->destroy();
 	}
+}
+
+Assets* Assets::getAssets()
+{
+	return assets;
 }
 
 std::shared_ptr<Model> Assets::getModel(std::string name)

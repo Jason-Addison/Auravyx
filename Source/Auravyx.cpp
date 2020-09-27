@@ -1,7 +1,7 @@
 #include "stdafx.h"
-#define GLFW_DLL
+#include "Library/GL/glew.h"
 #include "Auravyx.h"
-#include "GL/glew.h"
+#include "Library/GL/glew.h"
 #include "Utilities/Log.h"
 #include "Audio/Sound.h"
 #include "Utilities/Resource.h"
@@ -32,7 +32,7 @@ auto start = std::chrono::high_resolution_clock::now();
 bool end = false;
 bool updateEnd = false;
 
-Auravyx* Auravyx::instance = new Auravyx();
+Auravyx* Auravyx::instance;
 
 void updater()
 {
@@ -87,17 +87,19 @@ void loop()
 	int time;
 
 	double lastTimeFPSOld = 0;
-	while (!Auravyx::getAuravyx()->getWindow()->closeRequested())
+
+	while (!WindowManager::getWindow()->closeRequested())
 	{
-		double framesPerSecond = 1.0 / Auravyx::getAuravyx()->getOverlay()->FPS;
+		double framesPerSecond = 1.0 / GFX::getOverlay()->FPS;
 		thisTimeFPS = glfwGetTime();
 		deltaRender = thisTimeFPS - lastTimeFPS;
 		lastTimeFPSOld = lastTimeFPS;
 		
-		if (Auravyx::getAuravyx()->getOverlay()->FPS == Auravyx::getAuravyx()->getOverlay()->UNLIMITED_FPS || deltaRender >= framesPerSecond)
+		if (GFX::getOverlay()->FPS == GFX::getOverlay()->UNLIMITED_FPS || deltaRender >= framesPerSecond)
 		{
-			Auravyx::getAuravyx()->getWindow()->update();
+			WindowManager::getWindow()->update();
 			Auravyx::getManager().getCurrentState()->render();
+			
 			//mod.render();
 			lastTimeFPS = thisTimeFPS;
 			GLManager::setFPS(roundf((float)(1.0 / (deltaRender))));
@@ -126,7 +128,7 @@ int main(int argc, char* argv[])
 	GLManager::start();
 	
 	Resource::loadBootAssets();
-	Auravyx::getAuravyx()->getOverlay()->init();
+	GFX::getOverlay()->init();
 	std::thread asyncLoader(loadAssetsAsync);
 
 	Profiler::init();
@@ -143,16 +145,16 @@ int main(int argc, char* argv[])
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			glClearColor(0, 0, 0, 1);
 			Resource::renderProgress();
-			Auravyx::getAuravyx()->getWindow()->update();
+			WindowManager::getWindow()->update();
 		}
 		std::this_thread::sleep_for(timeStep);
 	}
 	Resource::clearPreloadedResources();
-	Auravyx::getAuravyx()->getRenderer()->getShaders()->lineShader->init();
+	Renderer::getRenderer()->getShaders()->lineShader->init();
 	asyncLoader.join();
-	Auravyx::getAuravyx()->getWindow()->hideMouse();
+	WindowManager::getWindow()->hideMouse();
 
-	Auravyx::getAuravyx()->getWindow()->getController()->resetMouse();
+	WindowManager::getWindow()->getController()->resetMouse();
 	loop();
 
 	Resource::cleanupResources();
@@ -204,12 +206,6 @@ WindowManager* Auravyx::getWindow()
 	return &window;
 }
 
-void Auravyx::draw()
-{
-	printf("no");
-	Auravyx::getAuravyx()->getOverlay()->fillRect(0, 0, 50, 500, 1, 0, 1, 1);
-}
-
 Auravyx* Auravyx::getAuravyx()
 {
 	return instance;
@@ -222,6 +218,9 @@ GameManager Auravyx::getManager()
 
 void Auravyx::start()
 {
+	Auravyx *auravyx = new Auravyx();
+	instance = auravyx;
+	create();
 }
 
 void Auravyx::stop()
@@ -231,5 +230,22 @@ void Auravyx::stop()
 
 void Auravyx::setInstance(Auravyx* a)
 {
+	GLenum err = glewInit();
+	if (err != GLEW_OK)
+	{
+		Log::out("OpenGL", "GLEW Error : '" + std::to_string((GLubyte)glewGetErrorString(err)) + "'", RED);
+		system("PAUSE");
+	}
 	instance = a;
+	create();
+}
+
+void Auravyx::create()
+{
+	GFX(instance->getOverlay());
+	Assets(instance->getAssets());
+	WindowManager(instance->getWindow());
+	Renderer(instance->getRenderer());
+	Modify(instance->getModify());
+	SoundManager(instance->getSoundManager());
 }

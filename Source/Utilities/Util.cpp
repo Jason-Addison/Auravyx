@@ -436,7 +436,7 @@ std::string Util::getFile(COMDLG_FILTERSPEC pFilter, LPCWSTR title, LPCWSTR defa
 bool Util::saveFile()
 {
 	/*LPWSTR fileName = L"D:/Music";
-	HWND hwndOwner = Auravyx::getAuravyx()->getWindow()->getHWND();
+	HWND hwndOwner = WindowManager::getWindow()->getHWND();
 	OPENFILENAME ofn = { 0 };
 
 	ofn.lStructSize = sizeof(ofn);

@@ -1,8 +1,14 @@
 #include "Modify/Modify.h"
-#include <Resource.h>
+#include <Utilities/Resource.h>
 #include <Auravyx.h>
 #include <thread>
 #include <filesystem>
+
+#ifdef __linux__ 
+#elif _WIN32
+#include <Windows.h>
+#else
+#endif
 
 void sayHi()
 {
@@ -12,14 +18,28 @@ typedef int(__stdcall* DLLFunc)(Auravyx*);
 typedef int(__stdcall* DLLFunc2)();
 DLLFunc funci;
 DLLFunc2 funci2;
+
+Modify* Modify::modify;
+
+Modify::Modify()
+{
+}
+Modify::~Modify()
+{
+}
+Modify::Modify(Modify* m)
+{
+    modify = m;
+}
 void Modify::loadAllMods()
 {
     std::vector<std::string> mods = FileIO::listDirectory(Resource::DIR + "\\Mods\\enabled\\");
     for (auto m : mods)
     {
-        if (std::filesystem::is_directory(m))
+
+        ////if (std::filesystem::is_directory(m))
         {
-            std::vector<std::string> confFiles = FileIO::listDirectory(m, "conf");
+            /*std::vector<std::string> confFiles = FileIO::listDirectory(m, "conf");
             std::vector<std::string> dllFiles = FileIO::listDirectory(m, "dlls");
             std::vector<std::string> soFiles = FileIO::listDirectory(m, "so");
             std::string modName = "? Mod Name ?";
@@ -51,8 +71,9 @@ void Modify::loadAllMods()
                 {
                     modName = FileIO::getFileNameNoEXT(dllFiles.at(0));
                 }
-            }
-            /*HINSTANCE hGetProcIDDLL = LoadLibrary((LPCSTR)m.c_str());
+            }*/
+            std::cout << "Loaded!";
+            HINSTANCE hGetProcIDDLL = LoadLibrary((LPCSTR)m.c_str());
 
             if (!hGetProcIDDLL)
             {
@@ -69,9 +90,9 @@ void Modify::loadAllMods()
             if (!funci2)
             {
                 std::cout << "could not locate the function" << m << " " << std::endl;
-            }*/
-
-            //Auravyx::getAuravyx()->getModify()->enabledModCount++;
+            }
+            
+            //Modify::getModify()->enabledModCount++;
         //funci(Auravyx::getAuravyx());
         }
     }
@@ -79,15 +100,7 @@ void Modify::loadAllMods()
 
 void Modify::render()
 {
-    //funci(Auravyx::getAuravyx());
-    if (Auravyx::getAuravyx()->getWindow()->getController()->isKeyDown(GLFW_KEY_1))
-    {
-        //printf("down");
-    }
-    else
-    {
-
-    }
+    funci(Auravyx::getAuravyx());
 }
 
 int Modify::getEnabledModCount()
@@ -98,5 +111,10 @@ int Modify::getEnabledModCount()
 int Modify::getDisabledModCount()
 {
     return disabledModCount;
+}
+
+Modify* Modify::getModify()
+{
+    return modify;
 }
 

@@ -7,15 +7,23 @@
 #include "Utilities/Assets.h"
 #include "Engine/Clock.h"
 #include "Auravyx.h"
+#include "Library/GL/glew.h"
 
 GFX::GFX()
 {
+}
+
+GFX::GFX(GFX * gfx)
+{
+	GFX::gfx = gfx;
 }
 
 
 GFX::~GFX()
 {
 }
+
+GFX* GFX::gfx;
 
 void GFX::drawImage(float x, float y, float width, float height, float rotation, int texture, int xScale, int yScale)
 {
@@ -27,8 +35,8 @@ void GFX::drawImage(float x, float y, float width, float height, float rotation,
 	Matrix4f transformation = M::createTransformationMatrix(0, 0, 0, width / (float)xScale * 2, height / (float)yScale * 2, 1, 0, 0, 0);
 	
 	transformation.translate(-1 + (x / (float)xScale * 2), -1 + (y / (float)yScale * 2), 0);
-	Auravyx::getAuravyx()->getRenderer()->getShaders()->imageShader->start();
-	Auravyx::getAuravyx()->getRenderer()->getShaders()->imageShader->loadTransformation(transformation);
+	Renderer::getRenderer()->getShaders()->imageShader->start();
+	Renderer::getRenderer()->getShaders()->imageShader->loadTransformation(transformation);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, texture);
 
@@ -50,7 +58,7 @@ void GFX::drawImage(float x, float y, float xVel, float yVel, float width, float
 
 void GFX::drawString(std::string string, float x, float y, float size, float r, float g, float b, float a)
 {
-	Font font = *Auravyx::getAuravyx()->getAssets()->getFont("font_plain");
+	Font font = *Assets::getAssets()->getAssets()->getFont("font_plain");
 	size *= 1 / (font.largestValue / size) * 2;
 
 	glDisable(GL_DEPTH_TEST);
@@ -61,9 +69,9 @@ void GFX::drawString(std::string string, float x, float y, float size, float r, 
 	glDisable(GL_CULL_FACE);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_BLEND);
-	Auravyx::getAuravyx()->getRenderer()->getShaders()->fontShader->start();
-	Auravyx::getAuravyx()->getRenderer()->getShaders()->fontShader->loadThickness(0.53, 0.5 / (0.5 * size));
-	Auravyx::getAuravyx()->getRenderer()->getShaders()->fontShader->loadColour(r, g, b, a);
+	Renderer::getRenderer()->getShaders()->fontShader->start();
+	Renderer::getRenderer()->getShaders()->fontShader->loadThickness(0.53, 0.5 / (0.5 * size));
+	Renderer::getRenderer()->getShaders()->fontShader->loadColour(r, g, b, a);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, font.texture.texture);
 	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
@@ -78,15 +86,15 @@ void GFX::drawString(std::string string, float x, float y, float size, float r, 
 		//
 		if (fchar.width != -1)
 		{
-			float newX = -1 + ((x) / Auravyx::getAuravyx()->getWindow()->getWidth() * 2) + ((totalX) / Auravyx::getAuravyx()->getWindow()->getWidth() * 2);
-			float newY = 1 - ((y + (fchar.yOffset - 12) * (size / font.size)) / Auravyx::getAuravyx()->getWindow()->getHeight() * 2);
-			float newWidth = (size / font.size) / Auravyx::getAuravyx()->getWindow()->getWidth() * 2;
-			float newHeight = (size / font.size) / Auravyx::getAuravyx()->getWindow()->getHeight() * 2;
+			float newX = -1 + (x + totalX) / WindowManager::getWindow()->getWidth() * 2;
+			float newY = 1 - ((y + (fchar.yOffset) * (size / font.size)) / WindowManager::getWindow()->getHeight() * 2);
+			float newWidth = (size / font.size) / WindowManager::getWindow()->getWidth() * 2;
+			float newHeight = (size / font.size) / WindowManager::getWindow()->getHeight() * 2;
 
 			transformation = M::createTransformationMatrix(newX, newY, 0, newWidth, newHeight, 1, 0, 0, 0);
-			Auravyx::getAuravyx()->getRenderer()->getShaders()->fontShader->loadTransformation(transformation);
-			totalX += ((float)fchar.xAdvance) * (size / font.size) * 0.6; //////////////////////////////////////////////////////////
-
+			Renderer::getRenderer()->getShaders()->fontShader->loadTransformation(transformation);
+			totalX += ((float)fchar.xAdvance) * (size / font.size) * 0.8; //////////////////////////////////////////////////////////
+			
 			glBindVertexArray(fchar.vaoID);
 			glEnableVertexArrayAttrib(fchar.vaoID, 0);
 			glEnableVertexArrayAttrib(fchar.vaoID, 1);
@@ -107,13 +115,13 @@ void GFX::drawStringBG(std::string string, float x, float y, float size, float r
 void GFX::drawStringBGR(std::string string, float x, float y, float size, float r, float g, float b, float a, float xB, float yB, float xSB, float ySB, float rB, float gB, float bB, float aB)
 {
 	float width = stringWidth(string, size) + 7;
-	fillRect(Auravyx::getAuravyx()->getWindow()->getWidth() - width - x + xB, y + yB, width + xSB, size + ySB, rB, gB, bB, aB);
+	fillRect(WindowManager::getWindow()->getWidth() - width - x + xB, y + yB, width + xSB, size + ySB, rB, gB, bB, aB);
 	drawStringR(string, x, y, size, r, g, b, a);
 }
 
 void GFX::drawStringR(std::string string, float x, float y, float size, float r, float g, float b, float a)
 {
-	drawString(string, Auravyx::getAuravyx()->getWindow()->getWidth() - stringWidth(string, size) - x - 7, y, size, r, g, b, a);
+	drawString(string, WindowManager::getWindow()->getWidth() - stringWidth(string, size) - x - 7, y, size, r, g, b, a);
 }
 
 void GFX::drawStringC(std::string string, float x, float y, float size, float width, float r, float g, float b, float a)
@@ -131,7 +139,7 @@ void GFX::drawStringBGC(std::string string, float x, float y, float size, float 
 
 float GFX::stringWidth(std::string string, float size)
 {
-	Font font = *Auravyx::getAuravyx()->getAssets()->getFont("font_plain");
+	Font font = *Assets::getAssets()->getAssets()->getFont("font_plain");
 	size *= 1 / (font.largestValue / size) * 2;
 
 	float totalX = 0;
@@ -145,35 +153,35 @@ float GFX::stringWidth(std::string string, float size)
 
 		if (fchar.width != -1)
 		{
-			float newX = -1 + ((x) / Auravyx::getAuravyx()->getWindow()->getWidth() * 2) + ((totalX) / Auravyx::getAuravyx()->getWindow()->getWidth() * 2);
-			float newY = 1 - ((y + (fchar.yOffset - 12) * (size / font.size)) / Auravyx::getAuravyx()->getWindow()->getHeight() * 2);
-			float newWidth = (size / font.size) / Auravyx::getAuravyx()->getWindow()->getWidth() * 2;
-			float newHeight = (size / font.size) / Auravyx::getAuravyx()->getWindow()->getHeight() * 2;
+			float newX = -1 + ((x) / WindowManager::getWindow()->getWidth() * 2) + ((totalX) / WindowManager::getWindow()->getWidth() * 2);
+			float newY = 1 - ((y + (fchar.yOffset - 12) * (size / font.size)) / WindowManager::getWindow()->getHeight() * 2);
+			float newWidth = (size / font.size) / WindowManager::getWindow()->getWidth() * 2;
+			float newHeight = (size / font.size) / WindowManager::getWindow()->getHeight() * 2;
 
-			totalX += ((float)fchar.xAdvance) * (size / font.size) * 0.6;
+			totalX += ((float)fchar.xAdvance) * (size / font.size) * 0.8;
 		}
 	}
 	return totalX;
-	return -1 + ((x) / Auravyx::getAuravyx()->getWindow()->getWidth() * 2) + ((totalX) / Auravyx::getAuravyx()->getWindow()->getWidth() * 2);
+	return -1 + ((x) / WindowManager::getWindow()->getWidth() * 2) + ((totalX) / WindowManager::getWindow()->getWidth() * 2);
 }
 
 void GFX::renderModel(float x, float y, float z, float xScale, float yScale, 
 	float zScale, float xRot, float yRot, float zRot, Model* m, Camera* c, Matrix4f* projection, Texture *tex)
 {
-	Auravyx::getAuravyx()->getRenderer()->getShaders()->modelShader->start();
-	Auravyx::getAuravyx()->getRenderer()->getShaders()->modelShader->loadCamera(c->getViewMatrix());
-	Auravyx::getAuravyx()->getRenderer()->getShaders()->modelShader->loadProjectionMatrix(*projection);
+	Renderer::getRenderer()->getShaders()->modelShader->start();
+	Renderer::getRenderer()->getShaders()->modelShader->loadCamera(c->getViewMatrix());
+	Renderer::getRenderer()->getShaders()->modelShader->loadProjectionMatrix(*projection);
 	Matrix4f t = M::createTransformationMatrix(x, y, z, xScale, yScale, zScale, xRot, yRot, zRot);
-	Auravyx::getAuravyx()->getRenderer()->getShaders()->modelShader->loadTransformationMatrix(t);
-	Auravyx::getAuravyx()->getRenderer()->getShaders()->modelShader->loadCamera(c->x, c->y, c->z, viewDistance * 128);
+	Renderer::getRenderer()->getShaders()->modelShader->loadTransformationMatrix(t);
+	Renderer::getRenderer()->getShaders()->modelShader->loadCamera(c->x, c->y, c->z, viewDistance * 128);
 	glEnable(GL_DEPTH_TEST);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glDisable(GL_CULL_FACE);
 
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, tex->texture);
-	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
@@ -184,7 +192,7 @@ void GFX::renderModel(float x, float y, float z, float xScale, float yScale,
 	glDrawArrays(GL_TRIANGLES, 0, m->getCount());
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
-	Auravyx::getAuravyx()->getRenderer()->getShaders()->modelShader->stop();
+	Renderer::getRenderer()->getShaders()->modelShader->stop();
 }
 
 void GFX::fillRect(float x, float y, float width, float height, float xScale, float yScale, float r, float g, float b, float a)
@@ -192,9 +200,9 @@ void GFX::fillRect(float x, float y, float width, float height, float xScale, fl
 	glDisable(GL_DEPTH_TEST);
 	Matrix4f transformation = M::createTransformationMatrix(0, 0, 0, width / (float)xScale * 2, height / (float)yScale * 2, 1, 0, 0, 0);
 	transformation.translate(-1 + (x / (float)xScale * 2), -1 + (y / (float)yScale * 2), 0);
-	Auravyx::getAuravyx()->getRenderer()->getShaders()->rectShader->start();
-	Auravyx::getAuravyx()->getRenderer()->getShaders()->rectShader->loadTransformation(transformation);
-	Auravyx::getAuravyx()->getRenderer()->getShaders()->rectShader->loadColour(r, g, b, a);
+	Renderer::getRenderer()->getShaders()->rectShader->start();
+	Renderer::getRenderer()->getShaders()->rectShader->loadTransformation(transformation);
+	Renderer::getRenderer()->getShaders()->rectShader->loadColour(r, g, b, a);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_BLEND);
 	glBindVertexArray(quad.getVAO());
@@ -207,16 +215,16 @@ void GFX::fillRect(float x, float y, float width, float height, float xScale, fl
 
 void GFX::fillRect(float x, float y, float xScale, float yScale, float r, float g, float b, float a)
 {
-	fillRect(x, Auravyx::getAuravyx()->getWindow()->getHeight() - y, xScale, -yScale, Auravyx::getAuravyx()->getWindow()->getWidth(), Auravyx::getAuravyx()->getWindow()->getHeight(), r, g, b, a);
+	fillRect(x, WindowManager::getWindow()->getHeight() - y, xScale, -yScale, WindowManager::getWindow()->getWidth(), WindowManager::getWindow()->getHeight(), r, g, b, a);
 }
 
 void GFX::drawImage(float x, float y, float width, float height, int texture)
 {
-	drawImage(x, y, width, height, 0, texture, Auravyx::getAuravyx()->getWindow()->getWidth(), Auravyx::getAuravyx()->getWindow()->getHeight());
+	drawImage(x, y, width, height, 0, texture, WindowManager::getWindow()->getWidth(), WindowManager::getWindow()->getHeight());
 }
 void GFX::drawImage(float x, float y, float width, float height, float rot, int texture)
 {
-	drawImage(x, y, width, height, rot, texture, Auravyx::getAuravyx()->getWindow()->getWidth(), Auravyx::getAuravyx()->getWindow()->getHeight());
+	drawImage(x, y, width, height, rot, texture, WindowManager::getWindow()->getWidth(), WindowManager::getWindow()->getHeight());
 }
 /*void GFX::drawImage(float x, float y, float width, float height, int texture, int xScale, int yScale)
 {
@@ -235,11 +243,39 @@ void GFX::setFPS(double fps)
 
 void GFX::enableScissor(float x, float y, float width, float height)
 {
-	glScissor(x, Auravyx::getAuravyx()->getWindow()->getHeight() - y - height, width, height);
+	glScissor(x, WindowManager::getWindow()->getHeight() - y - height, width, height);
 	glEnable(GL_SCISSOR_TEST);
 }
 
 void GFX::disableScissor()
 {
 	glDisable(GL_SCISSOR_TEST);
+}
+
+GFX* GFX::getOverlay()
+{
+	return gfx;
+}
+
+int x = 0;
+GLenum GFX::checkForGLError(std::string* s)
+{
+	GLenum errorCode;
+	while ((errorCode = glGetError()) != GL_NO_ERROR)
+	{
+		std::cout << "[OpenGL] Error code: " << errorCode << " [" << -1 << "] [" << x << "] [" << *s << "]" << "\n";
+	}
+	x = 0;
+	return GLenum();
+}
+
+GLenum GFX::checkForGLError(std::string* s, int l)
+{
+	GLenum errorCode;
+	while ((errorCode = glGetError()) != GL_NO_ERROR)
+	{
+		std::cout << "[OpenGL] Error code: " << errorCode << " [" << l << "] [" << x << "] [" << *s << "]" << "\n";
+	}
+	x = 0;
+	return GLenum();
 }

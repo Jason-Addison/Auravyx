@@ -21,7 +21,7 @@ Control::~Control()
 
 int Control::active(int key)
 {
-	if (glfwGetKey(Auravyx::getAuravyx()->getWindow()->window, key) == GLFW_PRESS)
+	if (glfwGetKey(WindowManager::getWindow()->window, key) == GLFW_PRESS)
 	{
 		return true;
 	}

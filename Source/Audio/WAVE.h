@@ -7,6 +7,12 @@ public:
 
 	ALuint buffer;
 	ALenum format;
+
+	ALuint lengthInSamples;
+	ALuint frequency;
+
+	float duration = 0;
+
 	unsigned char* buf;
 
 	WAVE(const char* path);

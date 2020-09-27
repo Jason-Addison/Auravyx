@@ -276,6 +276,9 @@
     <ClCompile Include="Source\Graphics\Renderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Modify\Mod.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Engine\Action.h">
@@ -551,6 +554,9 @@
     <ClInclude Include="Source\Graphics\Renderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Modify\Mod.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Auravyx.rc">
@@ -622,6 +628,9 @@
     </None>
     <None Include="x64\Release\Shaders\Regular\Model.vert">
       <Filter>Shaders</Filter>
+    </None>
+    <None Include="README.md">
+      <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>
 </Project>

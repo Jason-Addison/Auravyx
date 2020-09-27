@@ -1,5 +1,4 @@
 #include "Utilities/Profiler.h"
-#include "windows.h"
 #ifdef _WIN32
 #include <windows.h>
 #elif MACOS

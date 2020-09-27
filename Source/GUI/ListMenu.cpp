@@ -67,12 +67,12 @@ void ListMenu::update()
 
 void ListMenu::render()
 {
-	//Auravyx::getAuravyx()->getOverlay()->fillRect(x, y, width, height, Theme::BACKGROUND.x, Theme::BACKGROUND.y, Theme::BACKGROUND.z, Theme::BACKGROUND.w);
+	//GFX::getOverlay()->fillRect(x, y, width, height, Theme::BACKGROUND.x, Theme::BACKGROUND.y, Theme::BACKGROUND.z, Theme::BACKGROUND.w);
 	for (auto & gui : guis)
 	{
-		Auravyx::getAuravyx()->getOverlay()->enableScissor(x, y, width, height);
+		GFX::getOverlay()->enableScissor(x, y, width, height);
 		gui->render();
-		Auravyx::getAuravyx()->getOverlay()->disableScissor();
+		GFX::getOverlay()->disableScissor();
 	}
 	if (mode == SCROLL)
 	{

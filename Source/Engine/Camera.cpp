@@ -28,61 +28,61 @@ void Camera::getPlayerInput()
 	zVel = 0;
 	if (!Chat::isChatting)
 	{
-		if (!f3Lock && Auravyx::getAuravyx()->getWindow()->getController()->isKeyDown(GLFW_KEY_F3))
+		if (!f3Lock && WindowManager::getWindow()->getController()->isKeyDown(GLFW_KEY_F3))
 		{
 			f3Lock = true;
 			Profiler::showAdvancedDebugInfo = !Profiler::showAdvancedDebugInfo;
 		}
-		else if (!Auravyx::getAuravyx()->getWindow()->getController()->isKeyDown(GLFW_KEY_F3))
+		else if (!WindowManager::getWindow()->getController()->isKeyDown(GLFW_KEY_F3))
 		{
 			f3Lock = false;
 		}
-		if (!f5Lock && Auravyx::getAuravyx()->getWindow()->getController()->isKeyDown(GLFW_KEY_F5))
+		if (!f5Lock && WindowManager::getWindow()->getController()->isKeyDown(GLFW_KEY_F5))
 		{
 			f5Lock = true;
 			Profiler::showChunkMetrics = !Profiler::showChunkMetrics;
 		}
-		else if (!Auravyx::getAuravyx()->getWindow()->getController()->isKeyDown(GLFW_KEY_F5))
+		else if (!WindowManager::getWindow()->getController()->isKeyDown(GLFW_KEY_F5))
 		{
 			f5Lock = false;
 		}
-		if (Auravyx::getAuravyx()->getWindow()->getController()->isKeyDown(GLFW_KEY_E))
+		if (WindowManager::getWindow()->getController()->isKeyDown(GLFW_KEY_E))
 		{
 			speed *= 10;
 		}
-		if (Auravyx::getAuravyx()->getWindow()->getController()->isKeyDown(GLFW_KEY_W))
+		if (WindowManager::getWindow()->getController()->isKeyDown(GLFW_KEY_W))
 		{
 			xVel -= sin(M::toRadians(yRot)) * Clock::get(speed);
 			zVel -= cos(M::toRadians(yRot)) * Clock::get(speed);
 		}
-		if (Auravyx::getAuravyx()->getWindow()->getController()->isKeyDown(GLFW_KEY_S))
+		if (WindowManager::getWindow()->getController()->isKeyDown(GLFW_KEY_S))
 		{
 			xVel += sin(M::toRadians(yRot)) * Clock::get(speed);
 			zVel += cos(M::toRadians(yRot)) * Clock::get(speed);
 		}
-		if (Auravyx::getAuravyx()->getWindow()->getController()->isKeyDown(GLFW_KEY_A))
+		if (WindowManager::getWindow()->getController()->isKeyDown(GLFW_KEY_A))
 		{
 			xVel -= cos(M::toRadians(yRot)) * Clock::get(speed);
 			zVel += sin(M::toRadians(yRot)) * Clock::get(speed);
 		}
-		if (Auravyx::getAuravyx()->getWindow()->getController()->isKeyDown(GLFW_KEY_D))
+		if (WindowManager::getWindow()->getController()->isKeyDown(GLFW_KEY_D))
 		{
 			xVel += cos(M::toRadians(yRot)) * Clock::get(speed);
 			zVel -= sin(M::toRadians(yRot)) * Clock::get(speed);
 		}
-		if (Auravyx::getAuravyx()->getWindow()->getController()->isKeyDown(GLFW_KEY_SPACE))
+		if (WindowManager::getWindow()->getController()->isKeyDown(GLFW_KEY_SPACE))
 		{
 			yVel += Clock::get(speed);
 		}
-		if (Auravyx::getAuravyx()->getWindow()->getController()->isKeyDown(GLFW_KEY_LEFT_SHIFT))
+		if (WindowManager::getWindow()->getController()->isKeyDown(GLFW_KEY_LEFT_SHIFT))
 		{
 			yVel -= Clock::get(speed);
 		}
 		xVel *= speedMultiplier;
 		yVel *= speedMultiplier;
 		zVel *= speedMultiplier;
-		xRot += (double)Auravyx::getAuravyx()->getWindow()->getController()->getMouseDY() * (double) 0.3;
-		yRot += (double)Auravyx::getAuravyx()->getWindow()->getController()->getMouseDX() * (double)0.3;
+		xRot += (double)WindowManager::getWindow()->getController()->getMouseDY() * (double) 0.3;
+		yRot += (double)WindowManager::getWindow()->getController()->getMouseDX() * (double)0.3;
 	}
 
 	x += xVel;

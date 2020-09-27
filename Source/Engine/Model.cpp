@@ -1,4 +1,8 @@
+#ifdef __linux__ 
+#elif _WIN32
 #include <Windows.h>
+#else
+#endif
 #include "Engine/Model.h"
 #include "Engine/Model.h"
 #include <iostream>

@@ -70,6 +70,7 @@
     <ClCompile Include="Source\GUI\ListMenu.cpp" />
     <ClCompile Include="Source\GUI\ScrollBar.cpp" />
     <ClCompile Include="Source\GUI\TextBox.cpp" />
+    <ClCompile Include="Source\Modify\Mod.cpp" />
     <ClCompile Include="Source\Modify\Modify.cpp" />
     <ClCompile Include="Source\pch.cpp" />
     <ClCompile Include="Source\Physics\Physics.cpp" />
@@ -163,6 +164,7 @@
     <ClInclude Include="Source\GUI\ListMenu.h" />
     <ClInclude Include="Source\GUI\ScrollBar.h" />
     <ClInclude Include="Source\GUI\TextBox.h" />
+    <ClInclude Include="Source\Modify\Mod.h" />
     <ClInclude Include="Source\Modify\Modify.h" />
     <ClInclude Include="Source\pch.h" />
     <ClInclude Include="Source\Physics\Physics.h" />
@@ -215,6 +217,7 @@
     <Image Include="coin.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="README.md" />
     <None Include="x64\Release\Shaders\Base\2DImage.frag" />
     <None Include="x64\Release\Shaders\Base\2DImage.vert" />
     <None Include="x64\Release\Shaders\Base\Font.frag" />
@@ -332,15 +335,16 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Auravyx\Source\Modify;C:\Auravyx\ServerHost;C:\Auravyx\Source\Server;C:\Auravyx\Source\World\Debris;C:\Auravyx\Source\World\Tiles;C:\Auravyx\Source\Graphics;C:\Auravyx\Source\Audio;C:\Auravyx\Source\Engine;C:\Auravyx\Source\GUI;C:\Auravyx\Source\Shader;C:\Auravyx\Source\Utilities;C:\Auravyx\Source\World;C:\Auravyx\Source;C:\Auravyx\Library\SOIL\soil-master\include;C:\Auravyx\Library\GLFW\glfw-3.2.1\include;C:\Auravyx\Library\OpenAL 1.1 SDK\include;C:\Auravyx\Library\OpenAL\alut\include;C:\Auravyx\Library\GLEW\glew-2.1.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Auravyx\ServerHost;C:\Auravyx\Source</AdditionalIncludeDirectories>
       <CompileAs>CompileAsCpp</CompileAs>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>C:\Auravyx\Source\Library;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>OpenAL32.lib;ALut.lib;glew32.lib;opengl32.lib;glfw3.lib;SOIL.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glew32s.lib;OpenAL32.lib;ALut.lib;opengl32.lib;glfw3.lib;SOIL.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -350,15 +354,16 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Auravyx\Source\Modify;C:\Auravyx\ServerHost;C:\Auravyx\Source\Server;C:\Auravyx\Source\World\Debris;C:\Auravyx\Source\World\Tiles;C:\Auravyx\Source\Graphics;C:\Auravyx\Source\Audio;C:\Auravyx\Source\Engine;C:\Auravyx\Source\GUI;C:\Auravyx\Source\Shader;C:\Auravyx\Source\Utilities;C:\Auravyx\Source\World;C:\Auravyx\Source;C:\Auravyx\Library\SOIL\soil-master\include;C:\Auravyx\Library\GLFW\glfw-3.2.1\include;C:\Auravyx\Library\OpenAL 1.1 SDK\include;C:\Auravyx\Library\OpenAL\alut\include;C:\Auravyx\Library\GLEW\glew-2.1.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Auravyx\ServerHost;C:\Auravyx\Source</AdditionalIncludeDirectories>
       <CompileAs>CompileAsCpp</CompileAs>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>C:\Auravyx\Source\Library;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>OpenAL32.lib;ALut.lib;glew32.lib;opengl32.lib;glfw3.lib;SOIL.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glew32s.lib;OpenAL32.lib;ALut.lib;opengl32.lib;glfw3.lib;SOIL.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -372,9 +377,10 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Auravyx\Source\Modify;C:\Auravyx\Source\Physics;C:\Auravyx\ServerHost;C:\Auravyx\Source\Server;C:\Auravyx\Source\World\Debris;C:\Auravyx\Source\World\Tiles;C:\Auravyx\Source\Graphics;C:\Auravyx\Source\Audio;C:\Auravyx\Source\Engine;C:\Auravyx\Source\GUI;C:\Auravyx\Source\Shader;C:\Auravyx\Source\Utilities;C:\Auravyx\Source\World;C:\Auravyx\Source;C:\Auravyx\Library\SOIL\soil-master\include;C:\Auravyx\Library\GLFW\glfw-3.2.1\include;C:\Auravyx\Library\OpenAL\OpenAL-Soft\include\AL;C:\Auravyx\Library\OpenAL\alut\include;C:\Auravyx\Library\GLEW\glew-2.1.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Auravyx\ServerHost;C:\Auravyx\Source</AdditionalIncludeDirectories>
       <CompileAs>CompileAsCpp</CompileAs>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -382,7 +388,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>C:\Auravyx\Source\Library;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>OpenAL32.lib;ALut.lib;glew32.lib;opengl32.lib;glfw3.lib;SOIL.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glew32s.lib;OpenAL32.lib;ALut.lib;opengl32.lib;glfw3.lib;SOIL.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release (Verbose)|Win32'">
@@ -396,9 +402,10 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Auravyx\Source\Modify;C:\Auravyx\Source\Physics;C:\Auravyx\ServerHost;C:\Auravyx\Source\Server;C:\Auravyx\Source\World\Debris;C:\Auravyx\Source\World\Tiles;C:\Auravyx\Source\Graphics;C:\Auravyx\Source\Audio;C:\Auravyx\Source\Engine;C:\Auravyx\Source\GUI;C:\Auravyx\Source\Shader;C:\Auravyx\Source\Utilities;C:\Auravyx\Source\World;C:\Auravyx\Source;C:\Auravyx\Library\SOIL\soil-master\include;C:\Auravyx\Library\GLFW\glfw-3.2.1\include;C:\Auravyx\Library\OpenAL\OpenAL-Soft\include\AL;C:\Auravyx\Library\OpenAL\alut\include;C:\Auravyx\Library\GLEW\glew-2.1.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Auravyx\ServerHost;C:\Auravyx\Source</AdditionalIncludeDirectories>
       <CompileAs>CompileAsCpp</CompileAs>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -406,7 +413,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>C:\Auravyx\Source\Library;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>OpenAL32.lib;ALut.lib;glew32.lib;opengl32.lib;glfw3.lib;SOIL.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glew32s.lib;OpenAL32.lib;ALut.lib;opengl32.lib;glfw3.lib;SOIL.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -420,9 +427,10 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Auravyx\Source\Modify;C:\Auravyx\Source\Physics;C:\Auravyx\ServerHost;C:\Auravyx\Source\Server;C:\Auravyx\Source\World\Debris;C:\Auravyx\Source\World\Tiles;C:\Auravyx\Source\Graphics;C:\Auravyx\Source\Audio;C:\Auravyx\Source\Engine;C:\Auravyx\Source\GUI;C:\Auravyx\Source\Shader;C:\Auravyx\Source\Utilities;C:\Auravyx\Source\World;C:\Auravyx\Source;C:\Auravyx\Library\SOIL\soil-master\include;C:\Auravyx\Library\GLFW\glfw-3.2.1\include;C:\Auravyx\Library\OpenAL\OpenAL-Soft\include\AL;C:\Auravyx\Library\OpenAL\alut\include;C:\Auravyx\Library\GLEW\glew-2.1.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Auravyx\ServerHost;C:\Auravyx\Source</AdditionalIncludeDirectories>
       <CompileAs>CompileAsCpp</CompileAs>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -430,7 +438,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>C:\Auravyx\Source\Library;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>OpenAL32.lib;ALut.lib;glew32.lib;opengl32.lib;glfw3.lib;SOIL.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glew32s.lib;OpenAL32.lib;ALut.lib;opengl32.lib;glfw3.lib;SOIL.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release (Verbose)|x64'">
@@ -444,9 +452,10 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Auravyx\Source\Modify;C:\Auravyx\Source\Physics;C:\Auravyx\ServerHost;C:\Auravyx\Source\Server;C:\Auravyx\Source\World\Debris;C:\Auravyx\Source\World\Tiles;C:\Auravyx\Source\Graphics;C:\Auravyx\Source\Audio;C:\Auravyx\Source\Engine;C:\Auravyx\Source\GUI;C:\Auravyx\Source\Shader;C:\Auravyx\Source\Utilities;C:\Auravyx\Source\World;C:\Auravyx\Source;C:\Auravyx\Library\SOIL\soil-master\include;C:\Auravyx\Library\GLFW\glfw-3.2.1\include;C:\Auravyx\Library\OpenAL\OpenAL-Soft\include\AL;C:\Auravyx\Library\OpenAL\alut\include;C:\Auravyx\Library\GLEW\glew-2.1.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Auravyx\ServerHost;C:\Auravyx\Source</AdditionalIncludeDirectories>
       <CompileAs>CompileAsCpp</CompileAs>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -454,7 +463,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>C:\Auravyx\Source\Library;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>OpenAL32.lib;ALut.lib;glew32.lib;opengl32.lib;glfw3.lib;SOIL.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glew32s.lib;OpenAL32.lib;ALut.lib;opengl32.lib;glfw3.lib;SOIL.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

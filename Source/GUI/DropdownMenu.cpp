@@ -30,7 +30,7 @@ DropdownMenu::DropdownMenu(std::string text)
 		}
 		else
 		{
-			if (!Util::pointAABB(Auravyx::getAuravyx()->getWindow()->getController()->getMouseX(), Auravyx::getAuravyx()->getWindow()->getController()->getMouseY(), list->x, list->y, list->width, list->height))
+			if (!Util::pointAABB(WindowManager::getWindow()->getController()->getMouseX(), WindowManager::getWindow()->getController()->getMouseY(), list->x, list->y, list->width, list->height))
 			{
 				active = false;
 				list->visible = false;
@@ -48,7 +48,7 @@ DropdownMenu::DropdownMenu(std::string text)
 				i->update();
 				i->render();
 			}
-			Auravyx::getAuravyx()->getOverlay()->fillRect(0, 0, 50, 50, 0, 1, 0, 1);
+			GFX::getOverlay()->fillRect(0, 0, 50, 50, 0, 1, 0, 1);
 		}
 	};
 }
