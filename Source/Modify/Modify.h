@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
-#include "Utilities/FileIO.h"
+#include "Modify/Mod.h"
+#include <vector>
 class Modify
 {
 public:
@@ -9,7 +10,16 @@ public:
 	~Modify();
 	Modify(Modify* m);
 
+	std::vector<std::shared_ptr<Mod>> loadedMods;
+
+	std::vector<std::shared_ptr<Mod>> unloadedMods;
+
 	void loadAllMods();
+
+	void loadMod(std::string dir);
+
+	void unloadMod(int id);
+
 	void render();
 
 	int enabledModCount = 0;

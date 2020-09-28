@@ -1,28 +1,48 @@
 #include "pch.h"
 #include "Mod.h"
 #include <stdio.h>
+#include "Auravyx.h"
 
-void Mod::start()
+Mod::Mod()
 {
-	printf("Loading a mod!");
-}
-void Mod::progr()
-{
-}
-void render(void (*f)(float, float, float, float, float, float, float, float))
-{
-	f(10, 10, 50, 50, 1, 1, 0, 1);
-}
-void Mod::stop()
-{
-	printf("Stopping a mod!");
+
 }
 
+Mod::~Mod()
+{
+
+}
+
+int Mod::start()
+{
+	return 0;
+}
+int Mod::stop()
+{
+	return 0;
+}
+
+int Mod::load()
+{
+	return 0;
+}
+
+int Mod::unload()
+{
+	return 0;
+}
 extern "C"
 {
-
-	EXPORT void epic()
+	MOD void setInstance(Auravyx* auravyx)
 	{
-		printf("wow so epic!!!");
+		Auravyx::setInstance(auravyx);
+	}
+	MOD void setContext()
+	{
+		GLenum err = glewInit();
+		if (err != GLEW_OK)
+		{
+			printf("[Mod] GLEW Error : %s\n", glewGetErrorString(err));
+		}
 	}
 }
