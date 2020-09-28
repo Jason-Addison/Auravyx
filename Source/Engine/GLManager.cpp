@@ -22,6 +22,20 @@ void glfwErrorCallback(int error, const char* description)
 	errorCodeString.append(description);
 	Log::out("OpenGL", "GLFW Error : " + errorCodeString + " " + description, LBLUE);
 }
+void GLAPIENTRY
+MessageCallback(GLenum source,
+	GLenum type,
+	GLuint id,
+	GLenum severity,
+	GLsizei length,
+	const GLchar* message,
+	const void* userParam)
+{
+	fprintf(stderr, "GL CALLBACK: %s type = 0x%x, severity = 0x%x, message = %s\n",
+		(type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : ""),
+		type, severity, message);
+}
+
 void GLManager::start()
 {
 	if (!glfwInit())
@@ -43,6 +57,8 @@ void GLManager::start()
 		Log::out("OpenGL", "GLEW Error : '" + std::to_string((GLubyte) glewGetErrorString(err)) + "'", RED);
 		system("PAUSE");
 	}
+	//glEnable(GL_DEBUG_OUTPUT);
+	//glDebugMessageCallback(MessageCallback, 0);
 	std::string glVersion = (char*)glGetString(GL_VERSION);
 	std::string glVendor = (char*)glGetString(GL_VENDOR);
 	std::string glRenderer = (char*)glGetString(GL_RENDERER);

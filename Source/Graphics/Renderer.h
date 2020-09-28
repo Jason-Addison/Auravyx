@@ -1,5 +1,7 @@
 #pragma once
 #include "Shader/Shaders.h"
+#include <vector>
+#include <functional>
 class Renderer
 {
 public:
@@ -12,7 +14,13 @@ public:
 
 	Shaders* getShaders();
 
+	std::vector<std::function<void()>> renderFunctions;
+
 	static Renderer* getRenderer();
+
+	std::vector<std::function<void()>>* getRenderFunctions();
+
+	void addRenderFunction(void (*f)());
 
 private:
 

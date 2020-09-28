@@ -18,7 +18,6 @@
 #include <wtypes.h>
 #include <Engine/Controller.h>
 #include <Engine/GameState.h>
-#include <Modify/Modify.h>
 double thisFrame = 0;
 double nextFrame = 0;
 
@@ -233,8 +232,7 @@ void Auravyx::setInstance(Auravyx* a)
 	GLenum err = glewInit();
 	if (err != GLEW_OK)
 	{
-		Log::out("OpenGL", "GLEW Error : '" + std::to_string((GLubyte)glewGetErrorString(err)) + "'", RED);
-		system("PAUSE");
+		printf("[OpenGL] GLEW Error: %s\n", glewGetErrorString(err));
 	}
 	instance = a;
 	create();

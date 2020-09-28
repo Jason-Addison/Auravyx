@@ -23,7 +23,7 @@ public:
 
 	GLuint tileMap = 0;
 
-	int viewDistance = 12;
+	int viewDistance = 8;
 
 	int mipmapBias = 0;
 
