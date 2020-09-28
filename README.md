@@ -108,6 +108,7 @@ Controls can be changed from `controls.txt`
 | `Space` | Move up / jump |
 | `Left Click` | Add material to crosshair location (build) |
 | `Right Click` | Remove material from crosshair location (destroy) |
+| `Mouse Button 4` | Zoom in camera |
 | `T` | Chat. To use commands start message with `/`  |
 | `Enter` | Send current chat message or command |
 | `Escape` | If chatting, exits chat and returns to game discarding current message. <br> If not chatting, will tab out of game. |
@@ -219,29 +220,6 @@ How to play: Extract lastest release zip folder and run the .exe, if this fails 
 ->Since chunk streaming is disabled, I included a small (2gb) world, which loads on startup. There are some snowy mountains in the distance, a tunnel at spawn and a brick pillar coming out of the ground.
 
 Visit my site if you want to chat: www.jasonaddison.dev
-
-Default Controls (edit controls.txt to change)
----------------
-WASD - Movement
-
-T - Chat/Commands
-
-R - Wireframe
-
--/+ - Time back/forward
-
-
-F1 - Screenshot (saves to [exe dir]/Screenshots
-
-F3 - Extra debug info / View color buffers
-
-F5 - View chunk metrics
-
--Disabled for now-
-
-Left-click - creates sphere of material at crosshair raycast position. ID is set by /id and size is set by /size
-
-Right-click - removes an area defined by size
 
 Commands
 --------
