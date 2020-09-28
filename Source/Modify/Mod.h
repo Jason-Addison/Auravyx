@@ -1,40 +1,52 @@
-#include "pch.h"
 #pragma once
+#include "pch.h"
+#include <string>
+#define COMPILING_THE_DLL 
 #if defined _WIN32 || defined __CYGWIN__ || defined __MINGW32__
-	#ifdef COMPILING_THE_DLL
-		#ifdef __GNUC__
-			#define EXPORT __attribute__ ((dllexport))
-		#else
-			#define EXPORT __declspec(dllexport)
-		#endif
-	#else
-		#ifdef __GNUC__
-			#define EXPORT __attribute__ ((dllimport))
-		#else
-			#define EXPORT __declspec(dllexport) //todo import
-		#endif
-	#endif
-	#define NO_EXPORT
+#ifdef COMPILING_THE_DLL
+#ifdef __GNUC__
+#define MOD __attribute__ ((dllexport))
 #else
-	#if __GNUC__ >= 4
-		#define EXPORT __attribute__ ((visibility ("default")))
-		#define NO_EXPORT  __attribute__ ((visibility ("hidden")))
-	#else
-		#define EXPORT
-		#define NO_EXPORT
-	#endif
+#define MOD __declspec(dllexport)
+#endif
+#else
+#ifdef __GNUC__
+#define MOD __attribute__ ((dllimport))
+#else
+#define MOD __declspec(dllimport) 
+#endif
+#endif
+#define NON_MOD
+#else
+#if __GNUC__ >= 4
+#define MOD __attribute__ ((visibility ("default")))
+#define NON_MOD  __attribute__ ((visibility ("hidden")))
+#else
+#define MOD
+#define NON_MOD
+#endif
 #endif
 
-class EXPORT Mod
+class Auravyx;
+
+class Mod
 {
 public:
 
-	int x;
+	Mod();
 
-	void start();
+	Mod* mod;
 
-	void progr();
+	virtual ~Mod();
 
-	void stop();
+	virtual int start();
+
+	virtual int stop();
+
+	virtual int load();
+
+	virtual int unload();
+		
+	std::string modDirectory = "-|-";
 };
 
