@@ -248,7 +248,7 @@ void world()
 	int fov = GFX::getOverlay()->CAM.fov;
 	if (glfwGetMouseButton(WindowManager::getWindow()->window, GLFW_MOUSE_BUTTON_4) == GLFW_PRESS)
 	{
-		fov = 30;
+		fov /= 3.6666;
 	}
 	m4.createProjectionMatrix(WindowManager::getWindow()->getWidth(), WindowManager::getWindow()->getHeight(), GFX::getOverlay()->viewDistance * 1000, 0.1, fov);
 
@@ -406,7 +406,13 @@ void GameState::render()
 	}
 	chat.render();
 	//Auravyx::getAuravyx()->draw();
-	Modify::getModify()->render();
+	std::vector<std::function<void()>>* functions = Renderer::getRenderer()->getRenderFunctions();
+
+	for (int i = 0; i < functions->size(); i++)
+	{
+		std::function<void()> s = functions->at(i);
+		s();
+	}
 }
 void startChunkLoader()
 {
@@ -426,6 +432,7 @@ void physicsCallback(std::string s)
 {
 	std::cout << s;
 }
+
 void GameState::start()
 {
 	ChunkIO c;

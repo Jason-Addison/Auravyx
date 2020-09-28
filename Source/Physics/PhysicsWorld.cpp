@@ -25,7 +25,7 @@ void PhysicsWorld::update()
 			if (o->getY() < 0)
 			{
 				o->setYVelocity(abs(o->getYVelocity()) + 0.1);
-				o->setPosition(0, 0, 0);
+				o->setPosition(o->getX(), 0, o->getZ());
 			}
 		}
 	}

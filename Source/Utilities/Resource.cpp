@@ -604,13 +604,13 @@ void Resource::loadAllMods()
 	whatIsLoadingPrimary = "Loading mods";
 
 	Log::out("Modify", "Loading all mods...", LIGHT_GRAY);
-	std::vector<std::string> mods = FileIO::listDirectory(Resource::DIR + "\\Mods\\enabled\\");
+	std::vector<std::string> mods = FileIO::listDirectory(Resource::DIR + "\\Mods\\Enabled\\");
 	for (auto m : mods)
 	{
 		if (std::filesystem::is_directory(m))
 		{
 			std::vector<std::string> confFiles = FileIO::listDirectory(m, "conf");
-			std::vector<std::string> dllFiles = FileIO::listDirectory(m, "dlls");
+			std::vector<std::string> dllFiles = FileIO::listDirectory(m, "dll");
 			std::vector<std::string> soFiles = FileIO::listDirectory(m, "so");
 			std::string modName = "? Mod Name ?";
 			std::string modVersion = "? Mod Version ?";
@@ -643,28 +643,15 @@ void Resource::loadAllMods()
 					modName = FileIO::getFileNameNoEXT(dllFiles.at(0));
 				}
 			}
-			/*HINSTANCE hGetProcIDDLL = LoadLibrary((LPCSTR)m.c_str());
-
-			if (!hGetProcIDDLL)
+			if (dllFiles.size() > 0)
 			{
-				std::cout << "could not load the dynamic library" << std::endl;
+				Modify::getModify()->loadMod(dllFiles.at(0));
+				std::cout << "         - " << modName << " [v" << modVersion << "] for game version " << gameVersion << "\n";
 			}
-
-			funci = (DLLFunc)GetProcAddress(hGetProcIDDLL, "begin");// ? start@TestMod@@AEAAXXZ");
-			//funci2 = (DLLFunc2)GetProcAddress(hGetProcIDDLL, "epic");// ? start@TestMod@@AEAAXXZ");
-			//funci2 = (DLLFunc)GetProcAddress(hGetProcIDDLL, "poop");
-			if (!funci)
+			else
 			{
-				std::cout << "could not locate the function" << m << " " << std::endl;
+				std::cout << "         - [No DLL Found!] " << modName << " [v" << modVersion << "] for game version " << gameVersion << "\n";
 			}
-			if (!funci2)
-			{
-				std::cout << "could not locate the function" << m << " " << std::endl;
-			}*/
-
-			//Modify::getModify()->enabledModCount++;
-		//funci(Auravyx::getAuravyx());
-			std::cout << "         - " << modName << " [v" << modVersion << "] for game version " << gameVersion << "\n";
 		}
 	}
 	Log::out("Modify", "Done.", LIGHT_GRAY);

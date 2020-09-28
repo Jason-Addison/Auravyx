@@ -14,7 +14,6 @@
 #include <iostream>
 #include <Auravyx.h>
 FBO fbo;
-
 std::vector<std::string> fboStrings;
 
 std::shared_ptr<PhysicsSphere>s1(new PhysicsSphere());
@@ -376,8 +375,8 @@ void World::test()
 {
 	physicsWorld.addObject(s1);
 	s1->addImpulse(0, 1, 0);
-	s1->setPosition(300, 0, 100);
-	s2->setPosition(200, 0, 100);
+	s1->setPosition(50, 0, 50);
+	s2->setPosition(20, 0, 10);
 	physicsWorld.addObject(s2);
 }
 
