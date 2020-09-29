@@ -23,8 +23,6 @@
 #define POSITION 5
 #define SERVER_NAME "Test Server"
 
-#pragma comment (lib, "ws2_32.lib")
-
 
 ServerManager::ServerManager()
 {

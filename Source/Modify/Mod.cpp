@@ -31,18 +31,36 @@ int Mod::unload()
 {
 	return 0;
 }
+GLContext* Mod::getRenderContext()
+{
+	return &context;
+}
+void contextFunction()
+{
+	WindowManager::getWindow()->setContext();
+	GLenum error = glewInit();
+	if (error != GLEW_OK)
+	{
+		printf("[Mod] GLEW Error : %s\n", glewGetErrorString(error));
+	}
+}
+void Mod::setRenderContext()
+{
+	this->context.set = contextFunction;
+}
 extern "C"
 {
-	MOD void setInstance(Auravyx* auravyx)
+	EXPORT void setInstance(Auravyx* auravyx)
 	{
 		Auravyx::setInstance(auravyx);
 	}
-	MOD void setContext()
+	EXPORT void setContext()
 	{
-		GLenum err = glewInit();
-		if (err != GLEW_OK)
+		WindowManager::getWindow()->setContext();
+		GLenum error = glewInit();
+		if (error != GLEW_OK)
 		{
-			printf("[Mod] GLEW Error : %s\n", glewGetErrorString(err));
+			printf("[Mod] GLEW Error : %s\n", glewGetErrorString(error));
 		}
 	}
 }

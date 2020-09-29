@@ -209,6 +209,11 @@ void WindowManager::setWindowTitle(std::string title)
 	glfwSetWindowTitle(window, title.c_str());
 }
 
+void WindowManager::setContext()
+{
+	glfwMakeContextCurrent(window);
+}
+
 Controller* WindowManager::getController()
 {
 	return &controller;

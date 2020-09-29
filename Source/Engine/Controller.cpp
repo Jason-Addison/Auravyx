@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "Engine/Controller.h"
 #include <Auravyx.h>
-
 Controller::Controller()
 {
 }

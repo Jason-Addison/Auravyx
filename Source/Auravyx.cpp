@@ -229,13 +229,14 @@ void Auravyx::stop()
 
 void Auravyx::setInstance(Auravyx* a)
 {
+	instance = a;
+	create();
+	WindowManager::getWindow()->setContext();
 	GLenum err = glewInit();
 	if (err != GLEW_OK)
 	{
 		printf("[OpenGL] GLEW Error: %s\n", glewGetErrorString(err));
 	}
-	instance = a;
-	create();
 }
 
 void Auravyx::create()

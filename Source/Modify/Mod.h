@@ -1,31 +1,36 @@
 #pragma once
 #include "pch.h"
 #include <string>
+#include <Graphics\GLContext.h>
 #define COMPILING_THE_DLL 
 #if defined _WIN32 || defined __CYGWIN__ || defined __MINGW32__
 #ifdef COMPILING_THE_DLL
 #ifdef __GNUC__
-#define MOD __attribute__ ((dllexport))
+#define EXPORT __attribute__ ((dllexport))
 #else
-#define MOD __declspec(dllexport)
+#define EXPORT __declspec(dllexport)
 #endif
 #else
 #ifdef __GNUC__
-#define MOD __attribute__ ((dllimport))
+#define EXPORT __attribute__ ((dllimport))
 #else
-#define MOD __declspec(dllimport) 
+#define EXPORT __declspec(dllimport) 
 #endif
 #endif
-#define NON_MOD
+#define NO_EXPORT
 #else
 #if __GNUC__ >= 4
-#define MOD __attribute__ ((visibility ("default")))
-#define NON_MOD  __attribute__ ((visibility ("hidden")))
+#define EXPORT __attribute__ ((visibility ("default")))
+#define NO_EXPORT  __attribute__ ((visibility ("hidden")))
 #else
-#define MOD
-#define NON_MOD
+#define EXPORT
+#define NO_EXPORT
 #endif
 #endif
+
+
+#define MOD_DEFINE extern "C" { EXPORT Mod* getMod() { Mod* mod = new
+#define MOD (); mod->setRenderContext(); return mod; } }
 
 class Auravyx;
 
@@ -36,6 +41,7 @@ public:
 	Mod();
 
 	Mod* mod;
+	GLContext context;
 
 	virtual ~Mod();
 
@@ -48,5 +54,9 @@ public:
 	virtual int unload();
 		
 	std::string modDirectory = "-|-";
+
+	GLContext* getRenderContext();
+
+	void setRenderContext();
 };
 

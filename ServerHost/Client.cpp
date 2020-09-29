@@ -23,7 +23,6 @@ Client::~Client()
 #else
 #endif
 #include <string>
-#pragma comment (lib, "ws2_32.lib")
 /*SOCKET out;
 sockaddr_in server;
 void u()

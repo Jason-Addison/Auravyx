@@ -10,6 +10,7 @@
 #else
 #endif
 #include <Utilities\FileIO.h>
+#include <Utilities\Log.h>
 
 void sayHi()
 {
@@ -38,40 +39,44 @@ void Modify::loadAllMods()
        
     }
 }
-Mod* e;
 void Modify::loadMod(std::string dir)
 {
-    std::cout << dir;
     HINSTANCE hGetProcIDDLL = LoadLibrary((LPCSTR)dir.c_str());
-
     if (!hGetProcIDDLL)
     {
         std::cout << "could not load the dynamic library" << std::endl;
     }
-
     Mod* (__stdcall * getMod)() = (Mod * (__stdcall *)())GetProcAddress(hGetProcIDDLL, "getMod");
 
     int* (__stdcall * setInstance)(Auravyx*) = (int* (__stdcall *)(Auravyx*))GetProcAddress(hGetProcIDDLL, "setInstance");
 
     void* (__stdcall * setContext)() = (void* (__stdcall*)())GetProcAddress(hGetProcIDDLL, "setContext");
 
+    bool errorFlag = false;
+
     if (!getMod)
     {
-        std::cout << "could not locate the function" << dir << " " << std::endl;
+        errorFlag = true;
+        Log::out("Modify", "Could not find getMod!", LIGHT_GRAY);
     }
     if (!setInstance)
     {
-        std::cout << "could not locate the function 2" << dir << " " << std::endl;
+        errorFlag = true;
+        Log::out("Modify", "Could not find setInstance!", LIGHT_GRAY);
     }
     if (!setContext)
     {
-        std::cout << "could not locate the function 3" << dir << " " << std::endl;
+        errorFlag = true;
+        Log::out("Modify", "Could not find setContext!", LIGHT_GRAY);
+    }
+    if (errorFlag)
+    {
+        Log::out("Modify", "Loading mod aborted!", LIGHT_GRAY);
+        return;
     }
     Mod* mod = getMod();
     setInstance(Auravyx::getAuravyx());
-    //funci2(Auravyx::getAuravyx());
     mod->start();
-    //Modify::getModify()->enabledModCount++;
 }
 
 void Modify::unloadMod(int id)
