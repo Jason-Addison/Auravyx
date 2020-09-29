@@ -29,6 +29,8 @@
   * [Creating your own mod](#creating-your-own-mod)
     + [Setting up development environment](#setting-up-development-environment)
     + [Creating basic mod](#creating-basic-mod)
+    + [Adding to game](#adding-to-game)
+    + [Mod configuration file](#mod-configuration-file)
     + [Custom resources](#custom-resources)
     + [Custom shaders](#custom-shaders)
     + [Custom server](#custom-server)
@@ -179,9 +181,13 @@ Setting up project
 
 ##### Creating basic mod
 
+Next we will create a basic mod that print to console, draw a string on the screen and play an audio track.
+
+---
+
 `MyMod.h`
 
-```
+```C++
 #include "Modify/Mod.h"
 
 class MyMod : public Mod
@@ -208,9 +214,11 @@ public:
 };
 ```
 
+---
+
 `MyMod.cpp`
 
-```
+```C++
 #include "pch.h"
 #include "TestMod.h"
 #include <stdio.h>
@@ -224,7 +232,7 @@ void myFunction()
 {
     GFX::getOverlay()->drawString("Hello world!", 100, 100, 50, 1, 0, 0, 1);
 }
-int TestMod::start()
+int MyMod::start()
 {
     std::cout << "My mod loaded! :)\n";
     Sound mySound;
@@ -234,6 +242,49 @@ int TestMod::start()
 }
 ```
 
+---
+
+Now lets compile into a shared library `.dll` file.
+
+Make sure your mod is set to `Release` and `x64` and then run it.
+
+If all is well, you should get a message thats says "Windows can't run DLL files" which means it worked!
+
+If you go in `MyMod\x64\Release` you will now see `MyMod.dll`, this is your mod!
+
+##### Adding to game
+
+Now its time to test your new mod in game. 
+
+1.  Create a new folder, call it `MyMod`.
+2.  Inside, copy and paste your `MyMod.dll`.
+3.  Optional step [Custom configuration file](#custom-configuration-file).
+4.  Now move your new mod folder into `Auravyx\Mods\Enabled`.
+5.  Run Auravyx and test out your new mod!
+
+If you want to disable a mod, just move it into the disabled folder.
+
+##### Custom configuration file
+
+A configuration file is a human readable .conf file which allows you to give tags to your mod, some of which will be used by the game to know things like version, name, author, etc. All tags are treated as strings.
+
+Here is an example:
+
+`MyMod.conf`
+
+```c
+#This is a commented line
+mod-name=The very best mod there is!
+mod-version=1.0.0
+game-version=1.0.0
+```
+
+| Tag | Description |
+| -- | -- |
+| mod-name | Visible mod name which should be displayed in game. |
+| mod-version | The version of your mod. |
+| game-version | Recommended game version which your mod runs on. <br> If the game version is higher, it will warn player about unexpected behaviour. |
+| author | Mod author |
 ##### Custom resources
 
 ##### Custom shaders
