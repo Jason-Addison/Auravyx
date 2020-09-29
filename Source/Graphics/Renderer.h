@@ -2,6 +2,7 @@
 #include "Shader/Shaders.h"
 #include <vector>
 #include <functional>
+#include "Graphics/GLContext.h"
 class Renderer
 {
 public:
@@ -14,13 +15,13 @@ public:
 
 	Shaders* getShaders();
 
-	std::vector<std::function<void()>> renderFunctions;
+	std::vector<std::pair<std::function<void()>, GLContext*>> renderFunctions;
 
 	static Renderer* getRenderer();
 
-	std::vector<std::function<void()>>* getRenderFunctions();
+	std::vector<std::pair<std::function<void()>, GLContext*>>* getRenderFunctions();
 
-	void addRenderFunction(void (*f)());
+	void addRenderFunction(void (*f)(), GLContext* c);
 
 private:
 

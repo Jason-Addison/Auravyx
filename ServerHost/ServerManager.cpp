@@ -1,12 +1,10 @@
-﻿
-#include "pch.h"
+﻿#include "pch.h"
 #include "ServerManager.h"
 
 #include <thread>
 #include "Server.h"
 #include "Utilities/Log.h"
 #include <ctime>
-//#include "PacketWorld/Chunk.h"
 #include "LogType.h"
 #include "World/World.h"
 #include "PacketTileChange.h"
@@ -21,7 +19,7 @@
 #define POSITION 5
 #define SERVER_NAME "Test Server"
 
-#pragma comment (lib, "ws2_32.lib")
+#pragma comment(lib, "ws2_32.lib")
 
 std::atomic<bool> ServerManager::ready = false;
 std::atomic<bool> ServerManager::done = false;

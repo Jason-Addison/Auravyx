@@ -44,6 +44,8 @@ public:
 
 	void setWindowTitle(std::string title);
 
+	void setContext();
+
 	Controller* getController();
 
 	static WindowManager* getWindow();

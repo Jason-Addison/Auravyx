@@ -22,7 +22,6 @@
 #include "Packet.h"
 #include <Auravyx.h>
 //#include "PacketWorld/Chunk.h"
-#pragma comment (lib, "ws2_32.lib")
 
 bool host = false;
 ClientManager::ClientManager()

@@ -258,13 +258,13 @@ Now its time to test your new mod in game.
 
 1.  Create a new folder, call it `MyMod`.
 2.  Inside, copy and paste your `MyMod.dll`.
-3.  Optional step [Custom configuration file](#custom-configuration-file).
+3.  Optional step [Custom configuration file](#mod-configuration-file).
 4.  Now move your new mod folder into `Auravyx\Mods\Enabled`.
 5.  Run Auravyx and test out your new mod!
 
 If you want to disable a mod, just move it into the disabled folder.
 
-##### Custom configuration file
+##### Mod configuration file
 
 A configuration file is a human readable .conf file which allows you to give tags to your mod, some of which will be used by the game to know things like version, name, author, etc. All tags are treated as strings.
 

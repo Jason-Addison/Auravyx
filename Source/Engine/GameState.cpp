@@ -406,12 +406,12 @@ void GameState::render()
 	}
 	chat.render();
 	//Auravyx::getAuravyx()->draw();
-	std::vector<std::function<void()>>* functions = Renderer::getRenderer()->getRenderFunctions();
+	std::vector<std::pair<std::function<void()>, GLContext*>>* functions = Renderer::getRenderer()->getRenderFunctions();
 
 	for (int i = 0; i < functions->size(); i++)
 	{
-		std::function<void()> s = functions->at(i);
-		s();
+		functions->at(i).second->set();
+		functions->at(i).first();
 	}
 }
 void startChunkLoader()
