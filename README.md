@@ -161,13 +161,78 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
 
 #### Creatng your own mod
 
-This is mod.
+The following tutorial will show how to create a custom mod in Visual Studio on Windows. A proper Linux version should come soon but key concepts should be largely the same.
 
 ---
 
 ##### Setting up development environment
 
+Setting up project
+
+1.  Open Visual Studio and create new empty project.
+2.  Add `Auravyx.lib` and `AuravyxLib.lib` from `Mods\Libraries` to your project's directory.
+3.  Right click on your project in solution view and click `Properties`.
+4.  In `Properties -> General` set Configuration Type to library.
+5.  In `Properties -> Linker -> Additional Dependencies` add  `Auravyx.lib` and `AuravyxLib.lib`.
+6.  Press Apply and close window.
+7.  Right click on your project and click `Add -> Class` and create a class with your mod's name.
+
 ##### Creating basic mod
+
+`MyMod.h`
+
+```
+#include "Modify/Mod.h"
+
+class MyMod : public Mod
+{
+public:
+
+    MyMod();
+    ~MyMod();
+
+    //Entry point of your mod
+    int start();
+
+    ///// OPTIONAL FUNCTIONS ////
+
+    //Use load() for loading async assets. This will be slightly faster than start().
+    int load();
+
+    //Use unload() to define what happens when mod is unloaded from game or when game is shutdown.
+    int unload();
+
+    //Use stop() to define what happens when mod is disabled but still loaded in memory.
+    int stop();
+
+};
+```
+
+`MyMod.cpp`
+
+```
+#include "pch.h"
+#include "TestMod.h"
+#include <stdio.h>
+#include "Graphics/GFX.h"
+#include "Utilities/Assets.h"
+#include "Audio/Sound.h"
+
+MOD_DEFINE MyMod MOD
+
+void myFunction()
+{
+    GFX::getOverlay()->drawString("Hello world!", 100, 100, 50, 1, 0, 0, 1);
+}
+int TestMod::start()
+{
+    std::cout << "My mod loaded! :)\n";
+    Sound mySound;
+    mySound.play(Assets::getAssets()->getAudio("song"));
+    Renderer::getRenderer()->addRenderFunction(myFunction);
+    return 0;
+}
+```
 
 ##### Custom resources
 
