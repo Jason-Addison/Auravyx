@@ -6,6 +6,7 @@
 #include "Utilities\Assets.h"
 #include "Modify\Modify.h"
 #include "Audio/SoundManager.h"
+#include "Utilities/Resource.h"
 
 class Auravyx
 {
@@ -27,8 +28,9 @@ public:
 
 	SoundManager soundManager;
 
-	static Auravyx *getAuravyx();
+	Resource resources;
 
+	static Auravyx *getAuravyx();
 
 	static GameManager gameManager;
 
@@ -39,6 +41,8 @@ public:
 	static void stop();
 
 	static void setInstance(Auravyx * a);
+
+	Resource* getResources();
 
 	SoundManager* getSoundManager();
 

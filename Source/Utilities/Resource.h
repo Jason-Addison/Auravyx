@@ -7,41 +7,46 @@ class Resource
 {
 public:
 	Resource();
+	Resource(Resource* r);
 	~Resource();
 
-	static bool loadAllResources();
+	bool loadAllResources();
 
-	static std::map<std::string, std::string> loadShaders(std::string dir);
+	std::map<std::string, std::string> loadShaders(std::string dir);
 
-	static std::string DIR;
+	std::string DIR;
 
-	static void loadBootAssets();
+	void loadBootAssets();
 
-	static int loadTexture(std::string dir);
+	int loadTexture(std::string dir);
 
-	static void loadTextureSilent(std::string texture);
+	void loadTextureSilent(std::string texture);
 
-	static void loadAllAsyncAssets();
+	void loadAllAsyncAssets();
 
-	static void renderProgress();
+	void renderProgress();
 
-	static void clearPreloadedResources();
+	void clearPreloadedResources();
 
-	static void printLoadingMessage(std::vector<std::string> lines, double delay, std::vector<Vec3f> colours);
+	void printLoadingMessage(std::vector<std::string> lines, double delay, std::vector<Vec3f> colours);
 
-	static void cleanupResources();
+	void cleanupResources();
+
+	static Resource* getResources();
 
 private:
 
-	static void loadAllTextures();
+	static Resource* resource;
 
-	static void loadAllTerrainTextures();
+	void loadAllTextures();
 
-	static void loadAllModels();
+	void loadAllTerrainTextures();
 
-	static void loadAllAudio();
+	void loadAllModels();
 
-	static void loadAllMods();
+	void loadAllAudio();
+
+	void loadAllMods();
 
 };
 
