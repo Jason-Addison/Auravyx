@@ -21,7 +21,7 @@ bool WindowManager::resized = true;
 HWND hwnd;
 GLFWwindowrefreshfun windowUpdateCallback()
 {
-	GLFWwindow* w;// = window;
+	GLFWwindow* w = nullptr;
 	int width, height;
 	glfwGetWindowSize(w, &width, &height);
 	glViewport(0, 0, width, height);
@@ -59,7 +59,7 @@ void WindowManager::create()
 	glfwSetWindowPos(window, (mode->width - width) / 2, (mode->height - height) / 2);
 
 	GLFWimage icons[1];
-	std::string str = Resource::DIR + "\\Assets\\Textures\\coin.png";
+	std::string str = Resource::getResources()->DIR + "\\Assets\\Textures\\coin.png";
 	icons[0].pixels = SOIL_load_image(str.c_str(), &icons[0].width, &icons[0].height, 0, SOIL_LOAD_RGBA);
 	glfwSetWindowIcon(window, 1, icons);
 	SOIL_free_image_data(icons[0].pixels);

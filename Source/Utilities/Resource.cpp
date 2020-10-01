@@ -19,6 +19,11 @@ Resource::Resource()
 {
 }
 
+Resource::Resource(Resource* r)
+{
+	resource = r;
+}
+
 
 Resource::~Resource()
 {
@@ -61,7 +66,10 @@ std::vector<preloadTexture> preloadedTerrainTextures;
 std::map<std::string, std::string> preloadShaders;
 
 static bool logShaders = true;
-std::string Resource::DIR;
+
+Resource* Resource::resource;
+
+std::string DIR;
 
 std::atomic_bool shadersLoaded = false;
 std::atomic_bool audioLoaded = false;
@@ -274,7 +282,7 @@ void Resource::loadAllAsyncAssets()
 	shadersLoaded = true;
 	SoundManager::getSoundManager()->start();
 	Log::out("Loader", "Loading settings...", YELLOW);
-	Settings::settings = FileIO::readConfig(Resource::DIR + "\\settings.txt");
+	Settings::settings = FileIO::readConfig(Resource::getResources()->DIR + "\\settings.txt");
 	Log::out("Loader", "Loading controller...", YELLOW);
 
 	WindowManager::getWindow()->getController()->init();
@@ -376,14 +384,18 @@ void Resource::cleanupResources()
 	Log::out("Cleanup", "Cleaning up models...", LIGHT_GRAY);
 	Assets::getAssets()->getAssets()->deleteModels();
 }
+Resource* Resource::getResources()
+{
+	return resource;
+}
 void Resource::loadBootAssets()
 {
 	Renderer::getRenderer()->getShaders()->initBootShaders(Resource::loadShaders("\\Shaders\\Base"));
-	//loadTextureSilent(Resource::DIR + "\\Assets\\Boot\\font.png");
-	///loadTextureSilent(Resource::DIR + "\\Assets\\Boot\\font_plain-.png");
-	//FontLoader::loadFont(Resource::DIR + "\\Assets\\font.fnt");
-	loadTextureSilent(Resource::DIR + "\\Assets\\Boot\\font_plain.png");
-	FontLoader::loadFont(Resource::DIR + "\\Assets\\Boot\\font_plain.fnt");
+	//loadTextureSilent(Resource::getResources()->DIR + "\\Assets\\Boot\\font.png");
+	///loadTextureSilent(Resource::getResources()->DIR + "\\Assets\\Boot\\font_plain-.png");
+	//FontLoader::loadFont(Resource::getResources()->DIR + "\\Assets\\font.fnt");
+	loadTextureSilent(Resource::getResources()->DIR + "\\Assets\\Boot\\font_plain.png");
+	FontLoader::loadFont(Resource::getResources()->DIR + "\\Assets\\Boot\\font_plain.fnt");
 	GFX::getOverlay()->checkForGLError(&bootDebug);
 }
 
@@ -604,7 +616,7 @@ void Resource::loadAllMods()
 	whatIsLoadingPrimary = "Loading mods";
 
 	Log::out("Modify", "Loading all mods...", LIGHT_GRAY);
-	std::vector<std::string> mods = FileIO::listDirectory(Resource::DIR + "\\Mods\\Enabled\\");
+	std::vector<std::string> mods = FileIO::listDirectory(Resource::getResources()->DIR + "\\Mods\\Enabled\\");
 	for (auto m : mods)
 	{
 		if (std::filesystem::is_directory(m))

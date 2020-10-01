@@ -204,9 +204,9 @@ void Chat::render()
 		auto t = std::time(nullptr);
 		auto tm = *std::localtime(&t);
 		f1Lock = true;
-		std::string outFile = Resource::DIR + "//Screenshots//";
+		std::string outFile = Resource::getResources()->DIR + "//Screenshots//";
 		std::stringstream ss;
-		ss << Resource::DIR + "//Screenshots//";
+		ss << Resource::getResources()->DIR + "//Screenshots//";
 		ss << std::put_time(&tm, "%d-%m-%Y %H-%M-%S");
 		ss << ".png";
 		int save_result = SOIL_save_screenshot

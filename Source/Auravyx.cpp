@@ -15,6 +15,7 @@
 #include <iostream>
 #include <Engine/GameManager.h>
 #include <Engine/GLManager.h>
+#include <cstdio>
 #include <wtypes.h>
 #include <Engine/Controller.h>
 #include <Engine/GameState.h>
@@ -117,16 +118,16 @@ void loop()
 
 void loadAssetsAsync()
 {
-	Resource::loadAllAsyncAssets();
+	Resource::getResources()->loadAllAsyncAssets();
 }
 
 int main(int argc, char* argv[])
 {
 	Auravyx::start();
-	Resource::DIR = std::string(argv[0]) + "\\..";
+	Resource::getResources()->DIR = std::string(argv[0]) + "\\..";
 	GLManager::start();
 	
-	Resource::loadBootAssets();
+	Resource::getResources()->loadBootAssets();
 	GFX::getOverlay()->init();
 	std::thread asyncLoader(loadAssetsAsync);
 
@@ -135,7 +136,7 @@ int main(int argc, char* argv[])
 	double last = 0;
 	double now = 0;
 
-	while (!Resource::loadAllResources())
+	while (!Resource::getResources()->loadAllResources())
 	{
 		now = glfwGetTime();
 		if (now - last > 1.0 / 144.0)
@@ -143,12 +144,12 @@ int main(int argc, char* argv[])
 			last = now;
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			glClearColor(0, 0, 0, 1);
-			Resource::renderProgress();
+			Resource::getResources()->renderProgress();
 			WindowManager::getWindow()->update();
 		}
 		std::this_thread::sleep_for(timeStep);
 	}
-	Resource::clearPreloadedResources();
+	Resource::getResources()->clearPreloadedResources();
 	Renderer::getRenderer()->getShaders()->lineShader->init();
 	asyncLoader.join();
 	WindowManager::getWindow()->hideMouse();
@@ -156,7 +157,7 @@ int main(int argc, char* argv[])
 	WindowManager::getWindow()->getController()->resetMouse();
 	loop();
 
-	Resource::cleanupResources();
+	Resource::getResources()->cleanupResources();
 	Auravyx::stop();
 	glfwTerminate();
 	return 0;
@@ -231,12 +232,11 @@ void Auravyx::setInstance(Auravyx* a)
 {
 	instance = a;
 	create();
-	WindowManager::getWindow()->setContext();
-	GLenum err = glewInit();
-	if (err != GLEW_OK)
-	{
-		printf("[OpenGL] GLEW Error: %s\n", glewGetErrorString(err));
-	}
+}
+
+Resource* Auravyx::getResources()
+{
+	return &resources;
 }
 
 void Auravyx::create()
@@ -247,4 +247,5 @@ void Auravyx::create()
 	Renderer(instance->getRenderer());
 	Modify(instance->getModify());
 	SoundManager(instance->getSoundManager());
+	Resource(instance->getResources());
 }

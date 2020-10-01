@@ -385,7 +385,7 @@ void GameState::render()
 		, 0, dim * (rdi++), 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3);
 
 	GFX::getOverlay()->drawStringBGR("mods active: " + std::to_string(Modify::getModify()->getEnabledModCount()) +
-		" / " + std::to_string(Modify::getModify()->getDisabledModCount())
+		" / " + std::to_string(Modify::getModify()->getEnabledModCount())
 		, 0, dim* (rdi++), 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3);
 
 	GFX::getOverlay()->drawStringBGR("view distance: " + std::to_string(GFX::getOverlay()->viewDistance) + " (" +

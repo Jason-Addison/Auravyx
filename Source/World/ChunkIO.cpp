@@ -17,7 +17,7 @@ bool verboseChunkIO = false;
 void ChunkIO::saveArea()
 {
 	
-	std::string dir = Resource::DIR + "\\Saves\\m.txt";
+	std::string dir = Resource::getResources()->DIR + "\\Saves\\m.txt";
 
 	FILE* chunkOutput = fopen(dir.c_str(), "rb+");
 	if (!chunkOutput)
@@ -46,7 +46,7 @@ void ChunkIO::saveArea()
 
 void ChunkIO::saveChunk(std::shared_ptr<Chunk> chunk, std::string name)
 {
-	std::string dir = Resource::DIR + "\\Saves\\" + name + "\\data\\c" +
+	std::string dir = Resource::getResources()->DIR + "\\Saves\\" + name + "\\data\\c" +
 		std::to_string(chunk->x) + "." + std::to_string(chunk->y) + "." + std::to_string(chunk->z) + ".voxc";
 
 	FILE* chunkOutput = fopen(dir.c_str(), "wb");
@@ -76,7 +76,7 @@ std::shared_ptr<Chunk> ChunkIO::readChunk(int x, int y, int z, std::string name)
 {
 	std::shared_ptr<Chunk> chunk(new Chunk);
 
-	std::string dir = Resource::DIR + "\\Saves\\" + name + "\\data\\c" +
+	std::string dir = Resource::getResources()->DIR + "\\Saves\\" + name + "\\data\\c" +
 		std::to_string(x) + "." + std::to_string(y) + "." + std::to_string(z) + ".voxc";
 
 	FILE* chunkInput = fopen(dir.c_str(), "rb");

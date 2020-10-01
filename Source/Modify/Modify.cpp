@@ -32,7 +32,7 @@ Modify::Modify(Modify* m)
 }
 void Modify::loadAllMods()
 {
-    std::vector<std::string> mods = FileIO::listDirectory(Resource::DIR + "\\Mods\\enabled\\");
+    std::vector<std::string> mods = FileIO::listDirectory(Resource::getResources()->DIR + "\\Mods\\enabled\\");
     for (auto m : mods)
     {
 
@@ -74,6 +74,7 @@ void Modify::loadMod(std::string dir)
         Log::out("Modify", "Loading mod aborted!", LIGHT_GRAY);
         return;
     }
+    enabledModCount++;
     Mod* mod = getMod();
     setInstance(Auravyx::getAuravyx());
     mod->start();
