@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 #include "shtypes.h"    // for COMDLG_FILTERSPEC
-#include "xstring"      // for string
+#include <string>
 #include <minwindef.h>  // for LPCWSTR
 #include <stddef.h>     // for size_t
 

@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "Utilities/Matrix4f.h"
-#include <math.h>
+#include <cmath>
 Matrix4f::Matrix4f()
 {
 	setIdentity();

@@ -657,12 +657,18 @@ void Resource::loadAllMods()
 			}
 			if (dllFiles.size() > 0)
 			{
-				Modify::getModify()->loadMod(dllFiles.at(0));
-				std::cout << "         - " << modName << " [v" << modVersion << "] for game version " << gameVersion << "\n";
+				if (!Modify::getModify()->loadMod(dllFiles.at(0)))
+				{
+					std::cout << "         - " << modName << " [v" << modVersion << "] for game version " << gameVersion << "\n";
+				}
+				else
+				{
+					Log::out("         - [!] Can't load : " + modName + " [v" + modVersion + "] for game version " + gameVersion, RED);
+				}
 			}
 			else
 			{
-				std::cout << "         - [No DLL Found!] " << modName << " [v" << modVersion << "] for game version " << gameVersion << "\n";
+				Log::out("         - [!] DLL missing : " + modName + " [v" + modVersion + "] for game version " + gameVersion, RED);
 			}
 		}
 	}
