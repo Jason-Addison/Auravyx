@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Utilities/M.h"
 #include <random>
+#include <cmath>
 M::M()
 {
 }
