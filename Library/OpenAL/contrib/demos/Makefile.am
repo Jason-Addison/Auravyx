@@ -1,1 +1,0 @@
-SUBDIRS = panning2d
