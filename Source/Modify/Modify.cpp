@@ -39,12 +39,13 @@ void Modify::loadAllMods()
        
     }
 }
-void Modify::loadMod(std::string dir)
+int Modify::loadMod(std::string dir)
 {
     HINSTANCE hGetProcIDDLL = LoadLibrary((LPCSTR)dir.c_str());
     if (!hGetProcIDDLL)
     {
-        std::cout << "could not load the dynamic library" << std::endl;
+        Log::out("         - [!] Could not load mod library.", RED);
+        return 1;
     }
     Mod* (__stdcall * getMod)() = (Mod * (__stdcall *)())GetProcAddress(hGetProcIDDLL, "getMod");
 
@@ -57,27 +58,27 @@ void Modify::loadMod(std::string dir)
     if (!getMod)
     {
         errorFlag = true;
-        Log::out("Modify", "Could not find getMod!", LIGHT_GRAY);
+        Log::out("         - [!] Could not find getMod.", RED);
     }
     if (!setInstance)
     {
         errorFlag = true;
-        Log::out("Modify", "Could not find setInstance!", LIGHT_GRAY);
+        Log::out("         - [!] Could not find setInstance.", RED);
     }
     if (!setContext)
     {
         errorFlag = true;
-        Log::out("Modify", "Could not find setContext!", LIGHT_GRAY);
+        Log::out("         - [!] Could not find setContext.", RED);
     }
     if (errorFlag)
     {
-        Log::out("Modify", "Loading mod aborted!", LIGHT_GRAY);
-        return;
+        return 1;
     }
     enabledModCount++;
     Mod* mod = getMod();
     setInstance(Auravyx::getAuravyx());
     mod->start();
+    return 0;
 }
 
 void Modify::unloadMod(int id)

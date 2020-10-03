@@ -16,7 +16,7 @@ public:
 
 	void loadAllMods();
 
-	void loadMod(std::string dir);
+	int loadMod(std::string dir);
 
 	void unloadMod(int id);
 
