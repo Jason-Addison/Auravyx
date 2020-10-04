@@ -15,6 +15,8 @@ Global
 		Release (Verbose)|x86 = Release (Verbose)|x86
 		Release|x64 = Release|x64
 		Release|x86 = Release|x86
+		Test|x64 = Test|x64
+		Test|x86 = Test|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{4FFA2C0E-8AC8-4EA1-ACF4-B916E4EA3358}.Debug (R)|x64.ActiveCfg = Debug (R)|x64
@@ -33,6 +35,10 @@ Global
 		{4FFA2C0E-8AC8-4EA1-ACF4-B916E4EA3358}.Release|x64.Build.0 = Release|x64
 		{4FFA2C0E-8AC8-4EA1-ACF4-B916E4EA3358}.Release|x86.ActiveCfg = Release|Win32
 		{4FFA2C0E-8AC8-4EA1-ACF4-B916E4EA3358}.Release|x86.Build.0 = Release|Win32
+		{4FFA2C0E-8AC8-4EA1-ACF4-B916E4EA3358}.Test|x64.ActiveCfg = Test|x64
+		{4FFA2C0E-8AC8-4EA1-ACF4-B916E4EA3358}.Test|x64.Build.0 = Test|x64
+		{4FFA2C0E-8AC8-4EA1-ACF4-B916E4EA3358}.Test|x86.ActiveCfg = Test|Win32
+		{4FFA2C0E-8AC8-4EA1-ACF4-B916E4EA3358}.Test|x86.Build.0 = Test|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
