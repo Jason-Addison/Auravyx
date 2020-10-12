@@ -177,7 +177,6 @@ void Controller::resetMouse()
 }
 void in(GLFWwindow* window, unsigned int codepoint)
 {
-	//std::cout << (char) codepoint;
 
 }
 

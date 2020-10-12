@@ -48,7 +48,7 @@ std::shared_ptr<Texture> Assets::getTexture(std::string name)
 	}
 	catch (std::out_of_range e)
 	{
-		Log::out("Asset Fetch", "Texture '" + name + "' was not found!", RED, RED);
+		Log::error("[Asset Fetch] Texture '" + name + "' was not found!");
 	}
 	return NULL;
 }
@@ -61,7 +61,7 @@ std::shared_ptr<Font> Assets::getFont(std::string name)
 	}
 	catch (std::out_of_range e)
 	{
-		Log::out("Asset Fetch", "Font '" + name + "' was not found!", RED, RED);
+		Log::error("[Asset Fetch] Font '" + name + "' was not found!");
 	}
 	return NULL;
 }
@@ -74,7 +74,7 @@ std::shared_ptr<WAVE> Assets::getAudio(std::string name)
 	}
 	catch (std::out_of_range e)
 	{
-		Log::out("Asset Fetch", "Audio '" + name + "' was not found!", RED, RED);
+		Log::error("[Asset Fetch] Audio '" + name + "' was not found!");
 	}
 	return NULL;
 }
@@ -131,7 +131,7 @@ std::shared_ptr<Model> Assets::getModel(std::string name)
 	}
 	catch (std::out_of_range e)
 	{
-		Log::out("Asset Fetch", "Model '" + name + "' was not found!", RED, RED);
+		Log::error("[Asset Fetch] Model '" + name + "' was not found!");
 	}
 	return NULL;
 }

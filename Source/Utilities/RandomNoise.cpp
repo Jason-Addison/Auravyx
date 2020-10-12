@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "Utilities/RandomNoise.h"
-
+#include <iostream>
 #define PI 3.1415956
 
 RandomNoise::RandomNoise()
@@ -25,7 +25,7 @@ void RandomNoise::setSeed(int seed)
 	this->seed = seed;
 }
 
-double RandomNoise::getSmoothNoise(int x, int y, int z)
+double RandomNoise::getSmoothNoise(double x, double y, double z)
 {
 	double corners = (createNoise(x - 1, y, z - 1) + createNoise(x + 1, y, z - 1) + createNoise(x - 1, y, z + 1) + createNoise(x + 1, y, z + 1)) / 16;
 	double sides = (createNoise(x - 1, y, z) + createNoise(x, y, z - 1) + createNoise(x, y, z + 1) + createNoise(x + 1, y, z)) / 8;
@@ -40,10 +40,11 @@ double RandomNoise::costerp(double a, double b, double blend)
 	return a * (1 - f) + b * f;
 }
 
-double RandomNoise::createNoise(int x, int y, int z)
+double RandomNoise::createNoise(double x, double y, double z)
 {
-	random.seed(x * 32 + y * 35 + z * 33 + seed);
-	return (((double) random() / (double) 0xfffffffffffffff) * 2 - 1) / 32.0;
+	//std::cout << x << " " << z << "\n";
+	random.seed((unsigned long long) ((x * 3.0) + (int) ((int) y * 35.0) + (int) (z * 3.1)) + seed);
+	return (double) (((double) random() / (double) 0xfffffffffffffff) * 2 - 1) / 32.0;
 }
 
 double interp(double a, double b, double amt)

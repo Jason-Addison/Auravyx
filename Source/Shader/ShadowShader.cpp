@@ -85,7 +85,7 @@ void ShadowShader::render(World &world, ShadowMap &shadowMap, Camera &camera, Ve
 	}*/
 	loadDepthMVP(depthMVP);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	for (auto c : world.overworld)
+	for (auto &c : world.overworld)
 	{
 		//glDisable(GL_CULL_FACE);
 		if (c->ready)

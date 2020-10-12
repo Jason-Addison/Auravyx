@@ -7,9 +7,9 @@ public:
 
 	int x;
 	int z;
-	int *heightmap = new int[16384];
+	float *heightmap = new float[16384];
 
-	int getHeight(int x, int z);
+	float getHeight(int x, int z);
 
 	void generate(int xC, int zC);
 };

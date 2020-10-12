@@ -30,7 +30,9 @@ public:
 
 	void printLoadingMessage(std::vector<std::string> lines, double delay, std::vector<Vec3f> colours);
 
-	void cleanupResources();
+	void cleanupPrimaryResources();
+
+	void cleanupRemainingResources();
 
 	static Resource* getResources();
 

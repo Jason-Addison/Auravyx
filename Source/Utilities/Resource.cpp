@@ -121,14 +121,14 @@ bool Resource::loadAllResources()
 					SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_COMPRESS_TO_DXT);
 				if (tex == 0)
 				{
-					std::cout << "[SOIL] Error code: " << SOIL_last_result() << " at " << pt.name << "\n";
+					Log::out("[SOIL] Error code: " + std::string(SOIL_last_result()) + " at " + pt.name);
 				}
 				
 				SOIL_free_image_data(pt.tex);
 
 				if (tex == 0)
 				{
-					std::cout << "[SOIL] Error code: " << SOIL_last_result() << " at " << pt.name << "\n";
+					Log::out("[SOIL] Error code: " + std::string(SOIL_last_result()) + " at " + pt.name);
 				}
 
 				Texture t(tex, pt.width, pt.height);
@@ -190,7 +190,7 @@ bool Resource::loadAllResources()
 				SOIL_free_image_data(pt.tex);
 				if (pt.tex == 0)
 				{
-					std::cout << "[SOIL] Error code: " << SOIL_last_result() << " at " << pt.name << "\n";
+					Log::out("[SOIL] Error code: " + std::string(SOIL_last_result()) + " at " + pt.name);
 				}
 				GFX::getOverlay()->checkForGLError(&ttDebug, 1007);
 			}
@@ -235,7 +235,7 @@ void Resource::loadAllTextures()
 		unsigned char* pixels = SOIL_load_image(texture.c_str(), &width, &height, &channel, SOIL_LOAD_AUTO);
 		if (pixels == 0)
 		{
-			std::cout << "[SOIL] Error code: " << SOIL_last_result() << " at "<< "\n";
+			Log::out("[SOIL] Error code: " + std::string(SOIL_last_result()) + " at " + texture);
 		}
 		if (pixels)
 		{
@@ -251,12 +251,12 @@ void Resource::loadAllTextures()
 			preloadedTextures.emplace_back(pt);
 			if (printEachAssetLoad)
 			{
-				std::cout << "         - " << textureName << " (" << width << " x " << height << ")\n";
+				Log::out("         - " + textureName + " (" + std::to_string(width) + " x " + std::to_string(height) + ")");
 			}
 		}
 		else
 		{
-			std::cout << "ERORR";
+			Log::out("Error!");
 		}
 	}
 	texturesLoaded = true;
@@ -305,7 +305,7 @@ void Resource::renderProgress()
 {
 	lastP = nowP;
 	nowP = glfwGetTime();
-	GFX::getOverlay()->fillRect(0, 0, (float) WindowManager::getWindow()->getWidth(), (float) WindowManager::getWindow()->getHeight() / 4, 1, 1, 1, 1);
+	//GFX::getOverlay()->fillRect(0, 0, (float) WindowManager::getWindow()->getWidth(), (float) WindowManager::getWindow()->getHeight() / 4, 1, 1, 1, 1);
 	//progress = now - last;
 	progress -= (nowP - lastP) * (double) 3;
 	float a = (float) sin((progress) * 3.14);
@@ -319,18 +319,22 @@ void Resource::renderProgress()
 	float loadingX = 10;
 	float loadingY = WindowManager::getWindow()->getHeight() - squareSize * 2 - spacingSize - loadingX;
 
-	GFX::getOverlay()->fillRect(loadingX, loadingY, squareSize, squareSize, 1, 1, 1, a);
-	GFX::getOverlay()->fillRect(loadingX + squareSize + spacingSize, loadingY, squareSize, squareSize, 1, 1, 1, b);
-	GFX::getOverlay()->fillRect(loadingX, loadingY + squareSize + spacingSize, squareSize, squareSize, 1, 1, 1, d);
-	GFX::getOverlay()->fillRect(loadingX + squareSize + spacingSize, loadingY + squareSize + spacingSize, squareSize, squareSize, 1, 1, 1, c);
+	float rR = 1;
+	float gG = 1;
+	float bB = 1;
 
-	GFX::getOverlay()->fillRect(WindowManager::getWindow()->getWidth() - loadingX - squareSize * 2 - spacingSize, loadingY, squareSize, squareSize, 1, 1, 1, b);
-	GFX::getOverlay()->fillRect(WindowManager::getWindow()->getWidth() - loadingX - squareSize * 2 - spacingSize + squareSize + spacingSize, loadingY, squareSize, squareSize, 1, 1, 1, a);
-	GFX::getOverlay()->fillRect(WindowManager::getWindow()->getWidth() - loadingX - squareSize * 2 - spacingSize, loadingY + squareSize + spacingSize, squareSize, squareSize, 1, 1, 1, c);
-	GFX::getOverlay()->fillRect(WindowManager::getWindow()->getWidth() - loadingX - squareSize * 2 - spacingSize + squareSize + spacingSize, loadingY + squareSize + spacingSize, squareSize, squareSize, 1, 1, 1, d);
+	GFX::getOverlay()->fillRect(loadingX, loadingY, squareSize, squareSize, rR, gG, bB, a);
+	GFX::getOverlay()->fillRect(loadingX + squareSize + spacingSize, loadingY, squareSize, squareSize, rR, gG, bB, b);
+	GFX::getOverlay()->fillRect(loadingX, loadingY + squareSize + spacingSize, squareSize, squareSize, rR, gG, bB, d);
+	GFX::getOverlay()->fillRect(loadingX + squareSize + spacingSize, loadingY + squareSize + spacingSize, squareSize, squareSize, rR, gG, bB, c);
 
-	GFX::getOverlay()->drawStringC(whatIsLoadingPrimary, 0, (float)WindowManager::getWindow()->getHeight() - 45, 30, (float) WindowManager::getWindow()->getWidth(), 1, 1, 1, 1);
-	GFX::getOverlay()->drawStringC(whatIsLoadingSecondary, 0, (float)WindowManager::getWindow()->getHeight() - 20, 25, (float)WindowManager::getWindow()->getWidth(), 1, 1, 1, 1);
+	GFX::getOverlay()->fillRect(WindowManager::getWindow()->getWidth() - loadingX - squareSize * 2 - spacingSize, loadingY, squareSize, squareSize, rR, gG, bB, b);
+	GFX::getOverlay()->fillRect(WindowManager::getWindow()->getWidth() - loadingX - squareSize * 2 - spacingSize + squareSize + spacingSize, loadingY, squareSize, squareSize, rR, gG, bB, a);
+	GFX::getOverlay()->fillRect(WindowManager::getWindow()->getWidth() - loadingX - squareSize * 2 - spacingSize, loadingY + squareSize + spacingSize, squareSize, squareSize, rR, gG, bB, c);
+	GFX::getOverlay()->fillRect(WindowManager::getWindow()->getWidth() - loadingX - squareSize * 2 - spacingSize + squareSize + spacingSize, loadingY + squareSize + spacingSize, squareSize, squareSize, rR, gG, bB, d);
+
+	GFX::getOverlay()->drawStringC(whatIsLoadingPrimary, 0, (float)WindowManager::getWindow()->getHeight() - 45, 30, (float) WindowManager::getWindow()->getWidth(), rR, gG, bB, 1);
+	GFX::getOverlay()->drawStringC(whatIsLoadingSecondary, 0, (float)WindowManager::getWindow()->getHeight() - 20, 25, (float)WindowManager::getWindow()->getWidth(), rR, gG, bB, 1);
 
 	if (loadingMessages.size() > 0)
 	{
@@ -349,7 +353,7 @@ void Resource::renderProgress()
 		}
 		GFX::getOverlay()->drawString("Message ends in " + Util::removeDecimal(remainingTime, 1) + "s", 5,
 			loadingMessages.at(0).sourceLines.size() * 15 + WindowManager::getWindow()->getHeight() / 4 + (float) (l++) * 15, 25,
-			1, 1, 1, 1);
+			rR, gG, bB, 1);
 	}
 }
 void Resource::clearPreloadedResources()
@@ -372,17 +376,18 @@ void Resource::printLoadingMessage(std::vector<std::string> lines, double delay,
 	
 	loadingMessages.emplace_back(lm);
 }
-void Resource::cleanupResources()
+void Resource::cleanupPrimaryResources()
 {
-	Log::out("Cleanup", "Cleaning up audio...", LIGHT_GRAY);
-	SoundManager::getSoundManager()->stop();
 	Assets::getAssets()->getAssets()->deleteAudio();
+	Log::out("Cleanup", "Cleaning up models...", LIGHT_GRAY);
+	Assets::getAssets()->getAssets()->deleteModels();
+}
+void Resource::cleanupRemainingResources()
+{
 	Log::out("Cleanup", "Cleaning up textures...", LIGHT_GRAY);
 	Assets::getAssets()->getAssets()->deleteTextures();
 	Log::out("Cleanup", "Cleaning up fonts...", LIGHT_GRAY);
 	Assets::getAssets()->getAssets()->deleteFonts();
-	Log::out("Cleanup", "Cleaning up models...", LIGHT_GRAY);
-	Assets::getAssets()->getAssets()->deleteModels();
 }
 Resource* Resource::getResources()
 {
@@ -404,7 +409,7 @@ int Resource::loadTexture(std::string dir)
 	unsigned int tex = SOIL_load_OGL_texture(dir.c_str(), SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_INVERT_Y);
 	if (tex == 0)
 	{
-		std::cout << "[SOIL] Error code: " << SOIL_last_result() << " at " << dir<< "\n";
+		Log::out("[SOIL] Error code: " + std::string(SOIL_last_result()) + " at " +dir);
 	}
 	int width = 0, height = 0;
 	
@@ -493,7 +498,7 @@ void Resource::loadAllModels()
 		std::string fileName = FileIO::getFileName(model);
 		if (printEachAssetLoad)
 		{
-			std::cout << "         - " << fileName << "\n";
+			Log::out("         - " + fileName);
 		}
 		fileName = fileName.substr(0, fileName.length() - 4);
 
@@ -524,7 +529,7 @@ void Resource::loadAllAudio()
 		Assets::getAssets()->getAssets()->addAudio(audioName, wave);
 		if (printEachAssetLoad)
 		{
-			std::cout << "         - " << audioName << "\n";
+			Log::out("         - " + audioName);
 		}
 
 		whatIsLoadingSecondary = audioName;
@@ -555,7 +560,7 @@ std::map<std::string, std::string> Resource::loadShaders(std::string dir)
 		whatIsLoadingSecondary = shaderName;
 		if (printEachAssetLoad)
 		{
-			std::cout << "         - " << shaderName << "\n";
+			Log::out("         - " + shaderName);
 		}
 		shaders.emplace(shaderName, FileIO::readTextFile(path));
 		pass++;
@@ -569,7 +574,7 @@ std::map<std::string, std::string> Resource::loadShaders(std::string dir)
 		whatIsLoadingSecondary = shaderName;
 		if (printEachAssetLoad)
 		{
-			std::cout << "         - " << shaderName << "\n";
+			Log::out("         - " + shaderName);
 		}
 		shaders.emplace(shaderName, FileIO::readTextFile(path));
 		pass++;
@@ -659,7 +664,7 @@ void Resource::loadAllMods()
 			{
 				if (!Modify::getModify()->loadMod(dllFiles.at(0)))
 				{
-					std::cout << "         - " << modName << " [v" << modVersion << "] for game version " << gameVersion << "\n";
+					Log::out("         - " + modName + " [v" + modVersion + "] for game version " + gameVersion);
 				}
 				else
 				{

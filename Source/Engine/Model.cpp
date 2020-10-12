@@ -57,8 +57,11 @@ std::vector<OBJMaterial> Model::getMaterials()
 
 void Model::destroy()
 {
-	glDeleteBuffers(attributes.size(), &attributes.front());
-	glDeleteVertexArrays(1, &vao);
+	if (attributes.size() > 0)
+	{
+		glDeleteBuffers(attributes.size(), &attributes.front());
+		glDeleteVertexArrays(1, &vao);
+	}
 }
 
 void Model::setTexture(int index, Texture texture)

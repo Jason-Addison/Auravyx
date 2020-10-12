@@ -4,6 +4,7 @@
 #include "Utilities/M.h"
 #include <chrono>
 #include "Utilities/RandomNoise.h"
+#include <Utilities\Log.h>
 Chunk::Chunk()
 {
 	zeroNeighbours();
@@ -23,7 +24,7 @@ Chunk::~Chunk()
 
 }
 
-int Chunk::CHUNK_SIZE = 128;
+int Chunk::CHUNK_SIZE = 64;
 
 void addN(Vec3f n, std::vector<float>* vec)
 {
@@ -125,29 +126,31 @@ Voxel* Chunk::at(int x, int y, int z)
 	return &v[x + size * (y + size * z)];
 }
 
-float Chunk::relativeDensity(int x, int y, int z)
+int Chunk::relativeDensity(int x, int y, int z)
 {
 	x -= 1;
 	y -= 1;
 	z -= 1;
-	int cX = x >> 7;
-	int cY = y >> 7;
-	int cZ = z >> 7;
+	int cX = x >> 6;
+	int cY = y >> 6;
+	int cZ = z >> 6;
 
 	if (cX == 0 && cY == 0 && cZ == 0)
 	{
-		int rX = x - (cX << 7);
-		int rY = y - (cY << 7);
-		int rZ = z - (cZ << 7);
-		return getDensity(rX, rY, rZ);
+		int rX = x - (cX << 6);
+		int rY = y - (cY << 6);
+		int rZ = z - (cZ << 6);
+
+		return getVoxel(rX, rY, rZ);
 	}
 	if (neighbours[cX + 1][cY + 1][cZ + 1] != nullptr && !neighbours[cX + 1][cY + 1][cZ + 1]->emptyChunk)
 	{
-		int rX = x - (cX << 7);
-		int rY = y - (cY << 7);
-		int rZ = z - (cZ << 7);
-		return neighbours[cX + 1][cY + 1][cZ + 1]->getDensity(rX, rY, rZ);
+		int rX = x - (cX << 6);
+		int rY = y - (cY << 6);
+		int rZ = z - (cZ << 6);
+		return neighbours[cX + 1][cY + 1][cZ + 1]->getVoxel(rX, rY, rZ);
 	}
+	//std::cout << x << " " << y << " " << z << " " << (neighbours[cX + 1][cY + 1][cZ + 1] != nullptr) << "\n";
 	return -1;
 }
 
@@ -167,10 +170,18 @@ void Chunk::zeroNeighbours()
 
 int positionInArray = 0;
 
-float Chunk::getDensity(int x, int y, int z)
+unsigned short Chunk::getDensity(int x, int y, int z)
+{
+	return getVoxel(x, y, z) & 0x00ff;
+}
+unsigned short Chunk::getVoxelID(int x, int y, int z)
+{
+	return getVoxel(x, y, z) >> 8;
+}
+unsigned short Chunk::getVoxel(int x, int y, int z)
 {
 	positionInArray = x + CHUNK_SIZE * (y + CHUNK_SIZE * z);
-	if (positionInArray >= 0 && positionInArray < 2097152)
+	if (positionInArray >= 0 && positionInArray < 262144)
 	{
 		return density[positionInArray];
 	}
@@ -180,8 +191,8 @@ float Chunk::calcDensity(int x, int y, int z, int xX, int yY, int zZ)
 {
 	//////CODE FOR EVEN SMOOTHER TERRAIN///////
 
-	/*float d1 = 0;
-	float d2 = 0;
+	float d1 = -1;
+	float d2 = -1;
 	x *= lod;
 	y *= lod;
 	z *= lod;
@@ -189,30 +200,26 @@ float Chunk::calcDensity(int x, int y, int z, int xX, int yY, int zZ)
 	xX *= lod;
 	yY *= lod;
 	zZ *= lod;
-	if (x >= 0 && y >= 0 && z >= 0 &&
-		x < BASE_SIZE&& y < BASE_SIZE && z < BASE_SIZE)
-	{
-		d1 = relativeDensity(x, y, z);
-	}
-	if (xX >= 0 && yY >= 0 && zZ >= 0 &&
-		xX < BASE_SIZE&& yY < BASE_SIZE && zZ < BASE_SIZE)
-	{
-		d2 = relativeDensity(xX, yY, zZ);
-	}
-	float interp = (d1 + d2) / 2;
+
+	d1 = (float) (relativeDensity(x, y, z) & 0x00ff) / (float) 255;
+	d2 = (float) (relativeDensity(xX, yY, zZ) & 0x00ff) / (float) 255;
+	
+	float interp = (d1 + d2);
 	if (d1 < d2)
 	{
 		interp = 1 - interp;
 	}
-	interp = 0.5;*/
-	return 0.5;
+	return interp;
 }
 int offX = 0;
 int offY = 0;
 int offZ = 0;
 
-float fdA = 0;
-float fdB = 0;
+int fdA = 0;
+int fdB = 0;
+
+int fiA = 0;
+int fiB = 0;
 
 int Chunk::scan(int x, int y, int z, int axis, int axisA, int axisB, int &material)
 {
@@ -231,21 +238,28 @@ int Chunk::scan(int x, int y, int z, int axis, int axisA, int axisB, int &materi
 	offZ *= lod;
 	if (axisA >= 0 && axisB >= 0)
 	{
-		fdA = relativeDensity(x, y, z);
-		fdB = relativeDensity(x + offX, y + offY, z + offZ);
-		if (fdA < 0 && fdB < 0)
+		fiA = relativeDensity(x, y, z);
+		fiB = relativeDensity(x + offX, y + offY, z + offZ);
+		
+		fdA = fiA & 0x00ff;
+		fdB = fiB & 0x00ff;
+
+		fiA = fiA >> 8;
+		fiB = fiB >> 8;
+
+		if (fiA < 0 && fiB < 0)
 		{
 			return -1;
 		}
-		if ((fdA == 0 && fdB) != 0)
+		if ((fiA == 0 && fiB) != 0)
 		{
-			material = fdB;
-			return (int) fdB;
+			material = fiB;
+			return (int) fiB;
 		}
-		if (fdA != 0 && fdB == 0)
+		if (fiA != 0 && fiB == 0)
 		{
-			material = fdA;
-			return (int) fdA;
+			material = fiA;
+			return (int)fiA;
 		}
 	}
 	return 0;
@@ -269,38 +283,27 @@ void Chunk::refresh()
 	}
 	
 }
-void Chunk::sphere(float xP, float yP, float zP, float radius, float power)
+void Chunk::sphere(float xP, float yP, float zP, float radius, int id)
 {
-	for (int x = (int) floor(-radius / 2); x < (int) ceil(radius / 2); x++)
+	for (int x = (int) floor(-radius); x < (int) ceil(radius); x++)
 	{
-		for (int z = (int) floor(-radius / 2); z < (int) ceil(radius / 2); z++)
+		for (int z = (int) floor(-radius); z < (int) ceil(radius); z++)
 		{
-			for (int y = (int) floor(-radius / 2); y < (int) ceil(radius / 2); y++)
+			for (int y = (int) floor(-radius); y < (int) ceil(radius); y++)
 			{
 				int nX = x + xP;
 				int nY = y + yP;
 				int nZ = z + zP;
 				float distance = abs(M::distance(Vec3f(xP, yP, zP), Vec3f(nX, nY, nZ)));
 
-				if (distance < radius / 2)
+				if (distance < radius)
 				{
-					if (nX >= 0 && nY >= 0 && nZ >= 0 &&
-						nX < CHUNK_SIZE && nY < CHUNK_SIZE && nZ < CHUNK_SIZE)
-					{
-						this->density[nX + CHUNK_SIZE * (nY + CHUNK_SIZE * nZ)] += power * 0.01 * (((((radius - distance) / radius))));
-						if (this->density[nX + CHUNK_SIZE * (nY + CHUNK_SIZE * nZ)] > 1)
-						{
-							this->density[nX + CHUNK_SIZE * (nY + CHUNK_SIZE * nZ)] = 1;
-						}
-						else if (this->density[nX + CHUNK_SIZE * (nY + CHUNK_SIZE * nZ)] < 0)
-						{
-							this->density[nX + CHUNK_SIZE * (nY + CHUNK_SIZE * nZ)] = 0;
-						}
-						if (this->density[nX + CHUNK_SIZE * (nY + CHUNK_SIZE * nZ)] < 0.1 && power < 0)
-						{
-							this->density[nX + CHUNK_SIZE * (nY + CHUNK_SIZE * nZ)] = 0;
-						}
-					}
+					setDensity(nX, nY, nZ, 6, ((distance) - (float) (int) (distance)) * 255);
+					//std::cout << (((distance)-(float)(int)(distance)) * 255) << "\n";
+				}
+				if (distance <= radius - 0.75)
+				{
+					setDensity(nX, nY, nZ, 5, 255);
 				}
 			}
 		}
@@ -331,7 +334,7 @@ void Chunk::sendDeleteNotification()
 		}
 	}
 }
-void Chunk::addNeighbour(std::shared_ptr<Chunk> c, std::shared_ptr<Chunk> localChunk)
+void Chunk::addNeighbour(Chunk* c, Chunk* localChunk)
 {
 	int cX = c->x - this->x;
 	int cY = c->y - this->y;
@@ -348,7 +351,7 @@ bool Chunk::neighboursLoaded()
 		{
 			for (int z = 0; z < 3; z++)
 			{
-				if (!(x == 1 && y == 1 && z == 1) && neighbours[x][y][z] == nullptr)
+				if (!(x == 1 && y == 1 && z == 1) && (neighbours[x][y][z] == nullptr || !neighbours[x][y][z]->dataLoaded))
 				{
 					return false;
 				}
@@ -359,14 +362,82 @@ bool Chunk::neighboursLoaded()
 }
 void Chunk::setDensity(int x, int y, int z, float density)
 {
-	if (x + CHUNK_SIZE * (y + CHUNK_SIZE * z) >= 0 && x + CHUNK_SIZE * (y + CHUNK_SIZE * z) < 2097152)
+	setDensity(x, y, z, density, 255);
+}
+void Chunk::setDensity(int x, int y, int z, unsigned short id, unsigned short density)
+{
+	unsigned short value = (id << 8) + density;
+	if (x + CHUNK_SIZE * (y + CHUNK_SIZE * z) >= 0 && x + CHUNK_SIZE * (y + CHUNK_SIZE * z) < 262144)
 	{
-		this->density[x + CHUNK_SIZE * (y + CHUNK_SIZE * z)] = density;
+		this->density[x + CHUNK_SIZE * (y + CHUNK_SIZE * z)] = value;
 	}
 }
+
 void Chunk::clearDensity()
 {
 	delete[] density;
+}
+bool Chunk::threadSafe()
+{
+	return isThreadSafe;
+}
+void Chunk::fill(int x, int y, int z, int nx, int ny, int nz, int id, int density)
+{
+	Log::out("Filling at : " + std::to_string(x) + " / " + std::to_string(y) + " / " + std::to_string(z));
+	for (int xx = x; xx < nx; xx++)
+	{
+		for (int yy = y; yy < ny; yy++)
+		{
+			for (int zz = z; zz < nz; zz++)
+			{
+				if (getRelativeVoxelID(xx - 1, yy, zz) == 0 || getRelativeVoxelID(xx + 1, yy, zz) == 0 || getRelativeVoxelID(xx, yy - 1, zz) == 0 ||
+					getRelativeVoxelID(xx, yy + 1, zz) == 0 || getRelativeVoxelID(xx, yy, zz - 1) == 0 || getRelativeVoxelID(xx, yy, zz + 1) == 0)
+				{
+					int d = relativeDensity(xx, yy, zz) & 0x00ff;
+					d -= 3;
+					int id = relativeDensity(xx, yy, zz) >> 8;
+					if (d < 0)
+					{
+						d = 0;
+						id = 0;
+					}
+					setRelativeVoxel(xx, yy, zz, id, d);
+				}
+			}
+		}
+	}
+}
+void Chunk::setRelativeVoxel(int x, int y, int z, int id, int density)
+{
+	x -= 1;
+	y -= 1;
+	z -= 1;
+	int cX = x >> 6;
+	int cY = y >> 6;
+	int cZ = z >> 6;
+
+	if (cX == 0 && cY == 0 && cZ == 0)
+	{
+		int rX = x - (cX << 6);
+		int rY = y - (cY << 6);
+		int rZ = z - (cZ << 6);
+
+		setDensity(rX, rY, rZ, id, density);
+	}
+	if (neighbours[cX + 1][cY + 1][cZ + 1] != nullptr && !neighbours[cX + 1][cY + 1][cZ + 1]->emptyChunk)
+	{
+		int rX = x - (cX << 6);
+		int rY = y - (cY << 6);
+		int rZ = z - (cZ << 6);
+		neighbours[cX + 1][cY + 1][cZ + 1]->chunkUpdate = true;
+		neighbours[cX + 1][cY + 1][cZ + 1]->priorityLoad = true;
+		neighbours[cX + 1][cY + 1][cZ + 1]->loaded = false;
+		return neighbours[cX + 1][cY + 1][cZ + 1]->setDensity(rX, rY, rZ, id, density);
+	}
+}
+int Chunk::getRelativeVoxelID(int x, int y, int z)
+{
+	return relativeDensity(x, y, z) >> 8;
 }
 RandomNoise ran;
 std::vector<std::vector<float>> Chunk::generate()
@@ -376,7 +447,6 @@ std::vector<std::vector<float>> Chunk::generate()
 		return std::vector<std::vector<float>>();
 	}
 	auto start = std::chrono::high_resolution_clock::now();
-
 	std::vector<float> vertices;
 	std::vector<unsigned int> materials;
 	std::vector<float> normals;
@@ -385,10 +455,9 @@ std::vector<std::vector<float>> Chunk::generate()
 
 	lod = 1;
 	
-	size = 128.0 / lod + 6;
+	size = 64 / lod + 6;
 	//lod = 2;
 	int s = size;
-
 	std::vector<char> flips;
 	Voxel* voxels = new Voxel[s * s * s];
 	v = voxels;
@@ -402,7 +471,11 @@ std::vector<std::vector<float>> Chunk::generate()
 	float yy = 0;
 	float zz = 0;
 
-	for (int i = 0; i < s * s * s; i++)
+	int cubicSize = s * s * s;
+
+	Voxel* voxel;
+
+	for (int i = 0; i < cubicSize; i++)
 	{
 		int x = i % s;
 		int y = (i / s) % s;
@@ -410,9 +483,10 @@ std::vector<std::vector<float>> Chunk::generate()
 		float rX = x - 1;
 		float rY = y - 1;
 		float rZ = z - 1;
-		at(x, y, z)->x = rX;
-		at(x, y, z)->y = rY;
-		at(x, y, z)->z = rZ;
+		voxel = &v[x + size * (y + size * z)];
+		voxel->x = rX;
+		voxel->y = rY;
+		voxel->z = rZ;
 		if (scan(x, y, z, 0, rY, rZ, material) > 0)
 		{
 			interp = calcDensity(rX, rY, rZ, rX + 1, rY, rZ);
@@ -422,24 +496,24 @@ std::vector<std::vector<float>> Chunk::generate()
 			at(x, y - 1, z - 1)->addAverage(xx, yy, zz);
 			at(x, y, z - 1)->addAverage(xx, yy, zz);
 			at(x, y - 1, z)->addAverage(xx, yy, zz);
-			at(x, y, z)->addAverage(xx, yy, zz);
+			voxel->addAverage(xx, yy, zz);
 
 			at(x, y - 1, z - 1)->addMaterial(material);
 			at(x, y, z - 1)->addMaterial(material);
 			at(x, y - 1, z)->addMaterial(material);
-			at(x, y, z)->addMaterial(material);
+			voxel->addMaterial(material);
 
 			axis.emplace_back(0);
 
-			if (relativeDensity(rX, rY, rZ) == 0)
+			if ((relativeDensity(rX, rY, rZ) >> 8) == 0)
 			{
-				at(x, y, z)->flipX = true;
+				voxel->flipX = true;
 			}
 
-			if (at(x, y, z)->flipX)
+			if (voxel->flipX)
 			{
 				flips.emplace_back(0);
-				edges.emplace_back(at(x, y, z));
+				edges.emplace_back(voxel);
 				edges.emplace_back(at(x, y, z - 1));
 				edges.emplace_back(at(x, y - 1, z));
 				edges.emplace_back(at(x, y - 1, z - 1));
@@ -450,7 +524,7 @@ std::vector<std::vector<float>> Chunk::generate()
 				edges.emplace_back(at(x, y - 1, z - 1));
 				edges.emplace_back(at(x, y, z - 1));
 				edges.emplace_back(at(x, y - 1, z));
-				edges.emplace_back(at(x, y, z));
+				edges.emplace_back(voxel);
 			}
 		}
 		if (scan(x, y, z, 1, rX, rZ, material) > 0)
@@ -462,24 +536,24 @@ std::vector<std::vector<float>> Chunk::generate()
 			at(x - 1, y, z - 1)->addAverage(xx, yy, zz);
 			at(x, y, z - 1)->addAverage(xx, yy, zz);
 			at(x - 1, y, z)->addAverage(xx, yy, zz);
-			at(x, y, z)->addAverage(xx, yy, zz);
+			voxel->addAverage(xx, yy, zz);
 
 			at(x - 1, y, z - 1)->addMaterial(material);
 			at(x, y, z - 1)->addMaterial(material);
 			at(x - 1, y, z)->addMaterial(material);
-			at(x, y, z)->addMaterial(material);
+			voxel->addMaterial(material);
 
 			axis.emplace_back(1);
 
-			if (relativeDensity(rX, rY, rZ) != 0)
+			if ((relativeDensity(rX, rY, rZ) >> 8) != 0)
 			{
-				at(x, y, z)->flipY = true;
+				voxel->flipY = true;
 			}
 
-			if (at(x, y, z)->flipY)
+			if (voxel->flipY)
 			{
 				flips.emplace_back(2);
-				edges.emplace_back(at(x, y, z));
+				edges.emplace_back(voxel);
 				edges.emplace_back(at(x, y, z - 1));
 				edges.emplace_back(at(x - 1, y, z));
 				edges.emplace_back(at(x - 1, y, z - 1));
@@ -490,7 +564,7 @@ std::vector<std::vector<float>> Chunk::generate()
 				edges.emplace_back(at(x - 1, y, z - 1));
 				edges.emplace_back(at(x, y, z - 1));
 				edges.emplace_back(at(x - 1, y, z));
-				edges.emplace_back(at(x, y, z));
+				edges.emplace_back(voxel);
 			}
 		}
 		if (scan(x, y, z, 2, rX, rY, material) > 0)
@@ -502,24 +576,24 @@ std::vector<std::vector<float>> Chunk::generate()
 			at(x - 1, y - 1, z)->addAverage(xx, yy, zz);
 			at(x - 1, y, z)->addAverage(xx, yy, zz);
 			at(x, y - 1, z)->addAverage(xx, yy, zz);
-			at(x, y, z)->addAverage(xx, yy, zz);
+			voxel->addAverage(xx, yy, zz);
 
 			at(x - 1, y - 1, z)->addMaterial(material);
 			at(x - 1, y, z)->addMaterial(material);
 			at(x, y - 1, z)->addMaterial(material);
-			at(x, y, z)->addMaterial(material);
+			voxel->addMaterial(material);
 
 			axis.emplace_back(2);
 
-			if (relativeDensity(rX, rY, rZ) != 0)
+			if ((relativeDensity(rX, rY, rZ) >> 8) != 0)
 			{
-				at(x, y, z)->flipZ = true;
+				voxel->flipZ = true;
 			}
 
-			if (at(x, y, z)->flipZ)
+			if (voxel->flipZ)
 			{
 				flips.emplace_back(4);
-				edges.emplace_back(at(x, y, z));
+				edges.emplace_back(voxel);
 				edges.emplace_back(at(x - 1, y, z));
 				edges.emplace_back(at(x, y - 1, z));
 				edges.emplace_back(at(x - 1, y - 1, z));
@@ -530,7 +604,7 @@ std::vector<std::vector<float>> Chunk::generate()
 				edges.emplace_back(at(x - 1, y - 1, z));
 				edges.emplace_back(at(x - 1, y, z));
 				edges.emplace_back(at(x, y - 1, z));
-				edges.emplace_back(at(x, y, z));
+				edges.emplace_back(voxel);
 			}
 		}
 	}
@@ -543,7 +617,6 @@ std::vector<std::vector<float>> Chunk::generate()
 		edges.at(i)->getAverage();
 		edges.at(i)->findMostCommonMaterial();
 	}
-
 	int axisType = 0;
 	for (auto e : edges)
 	{
@@ -640,7 +713,6 @@ std::vector<std::vector<float>> Chunk::generate()
 
 		addNormalFace(aV, bV, cV, dV, &normals, axis.at(i), !flipXLock, !flipYLock, !flipZLock, faceNormal, faceNormalB);
 	}
-
 	for (int i = 0; i < edges.size(); i++)
 	{
 		edges.at(i)->fn.normalize();
@@ -652,6 +724,13 @@ std::vector<std::vector<float>> Chunk::generate()
 		Voxel * bV = edges.at(i * 4 + 1);
 		Voxel * cV = edges.at(i * 4 + 2);
 		Voxel * dV = edges.at(i * 4 + 3);
+
+		/////For low poly 
+		/*Vec3f vc((aV->fn.x + bV->fn.x + cV->fn.x + dV->fn.x), 
+			(aV->fn.y + bV->fn.y + cV->fn.y + dV->fn.y),
+			(aV->fn.z + bV->fn.z + cV->fn.z + dV->fn.z));
+
+		vc.normalize();*/
 
 		if (validEdges.at(i * 4 + 0) && validEdges.at(i * 4 + 1) && validEdges.at(i * 4 + 2) && validEdges.at(i * 4 + 3))
 		{
@@ -741,10 +820,13 @@ std::vector<std::vector<float>> Chunk::generate()
 	this->chunkInfo.emplace_back(std::vector<float>());
 	std::vector<float> meta;
 	meta.emplace_back((double)std::chrono::duration_cast<std::chrono::nanoseconds>(finish - start).count());
+
+	//std::cout << "loaded : " << ((double)std::chrono::duration_cast<std::chrono::nanoseconds>(finish - start).count() * 0.000000001) << "\n";
 	this->chunkInfo.emplace_back(meta);
 	loaded = true;
 	return data;
 }
+
 void Chunk::generateTerrain(std::shared_ptr<ChunkHeight> heights)
 {
 	bool air = false;
@@ -754,44 +836,66 @@ void Chunk::generateTerrain(std::shared_ptr<ChunkHeight> heights)
 		for (int z = 0; z < BASE_SIZE; z++)
 		{
 			float density = 0;
-			float height = (int) heights->getHeight(x, z);
+			float height = heights->getHeight(x, z);
+			float excess = ((height)-(float)((int)(height))) * 255;
 			if (height < -1)
 			{
-				height = -1;
+				//height = -1;
 			}
 			for (int y = 0; y < BASE_SIZE; y++)
 			{
-				this->density[x + BASE_SIZE * (y + BASE_SIZE * z)] = 0;
+				setDensity(x, y, z, 0, 0);
 
 				if (y + this->y * CHUNK_SIZE < height)
 				{
-					this->density[x + BASE_SIZE * (y + BASE_SIZE * z)] = 11;
+					if ((this->x % 2 == 0) == (this->z % 2 == 0))
+					{
+						setDensity(x, y, z, 7, excess);
+					}
+					else
+					{
+						setDensity(x, y, z, 5, excess);
+					}
+				}
+				if (y + this->y * CHUNK_SIZE < (int) (height))
+				{
+					if ((this->x % 2 == 0) == (this->z % 2 == 0))
+					{
+						setDensity(x, y, z, 7, 255);
+					}
+					else
+					{
+						setDensity(x, y, z, 5, 255);
+					}
+				}
+				/*if (y + this->y * CHUNK_SIZE < height)
+				{
+					setDensity(x, y, z, 11);
 					
 					if (y + this->y * CHUNK_SIZE < 7)
 					{
-						this->density[x + BASE_SIZE * (y + BASE_SIZE * z)] = 6;
+						setDensity(x, y, z, 6);
 					}
 					if (y + this->y * CHUNK_SIZE < -10)
 					{
-						this->density[x + BASE_SIZE * (y + BASE_SIZE * z)] = 8;
+						setDensity(x, y, z, 8);
 					}
 					if (y + this->y * CHUNK_SIZE < 0)
 					{
-						this->density[x + BASE_SIZE * (y + BASE_SIZE * z)] = 4;
+						setDensity(x, y, z, 4);
 					}
-					
 					else if (y + this->y * CHUNK_SIZE > 170)
 					{
-						this->density[x + BASE_SIZE * (y + BASE_SIZE * z)] = 12;
+						setDensity(x, y, z, 12);
 					}
 					if (y + this->y * CHUNK_SIZE <= -1)
 					{
-						this->density[x + BASE_SIZE * (y + BASE_SIZE * z)] = 13;
+						setDensity(x, y, z, 13);
 					}
 				}
 				if (y + this->y * CHUNK_SIZE < height - 1)
 				{
-					this->density[x + BASE_SIZE * (y + BASE_SIZE * z)] = 3;
+					setDensity(x, y, z, 3);
 				}
 				float zz = z + this->z * CHUNK_SIZE;
 				if (zz < -250)
@@ -804,18 +908,18 @@ void Chunk::generateTerrain(std::shared_ptr<ChunkHeight> heights)
 				}
 				if (M::distance(Vec3f(x + this->x * CHUNK_SIZE, y + this->y * CHUNK_SIZE, z + this->z * CHUNK_SIZE), Vec3f(70, zz, zz)) < 9)
 				{
-					this->density[x + BASE_SIZE * (y + BASE_SIZE * z)] = 5;
+					setDensity(x, y, z, 5);
 				}
 				if (M::distance(Vec3f(x + this->x * CHUNK_SIZE, y + this->y * CHUNK_SIZE, z + this->z * CHUNK_SIZE), Vec3f(60, (z + this->z * CHUNK_SIZE) / 3, z + this->z * CHUNK_SIZE)) < 7)
 				{
-					this->density[x + BASE_SIZE * (y + BASE_SIZE * z)] = 0;
-				}
+					setDensity(x, y, z, 0);
+				}*/
 
-				if (this->density[x + BASE_SIZE * (y + BASE_SIZE * z)] < 1)
+				if (getVoxelID(x,y,z) < 1)
 				{
 					air = true;
 				}
-				else if (this->density[x + BASE_SIZE * (y + size * z)])
+				else if (getVoxelID(x, y, z))
 				{
 					solid = true;
 				}
@@ -826,7 +930,13 @@ void Chunk::generateTerrain(std::shared_ptr<ChunkHeight> heights)
 	if (solid != air)
 	{
 		emptyChunk = true;
+
 	}
+	else
+	{
+
+	}
+	dataLoaded = true;
 }
 void Chunk::render(Camera camera, Matrix4f projectionMatrix)
 {

@@ -43,6 +43,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ConsoleMessage.cpp" />
+    <ClCompile Include="OutputConsole.cpp" />
     <ClCompile Include="ServerHost\Client.cpp" />
     <ClCompile Include="ServerHost\Packet.cpp" />
     <ClCompile Include="ServerHost\PacketMsg.cpp" />
@@ -69,6 +71,7 @@
     <ClCompile Include="Source\Engine\OBJMaterial.cpp" />
     <ClCompile Include="Source\Engine\State.cpp" />
     <ClCompile Include="Source\Engine\Texture.cpp" />
+    <ClCompile Include="Source\Engine\ThreadManager.cpp" />
     <ClCompile Include="Source\Engine\WindowManager.cpp" />
     <ClCompile Include="Source\Auravyx.cpp" />
     <ClCompile Include="Source\Graphics\Font.cpp" />
@@ -163,8 +166,10 @@
     <ClInclude Include="Source\Engine\Model.h" />
     <ClInclude Include="Source\Engine\Mouse.h" />
     <ClInclude Include="Source\Engine\OBJMaterial.h" />
+    <ClInclude Include="Source\Engine\OutputConsole.h" />
     <ClInclude Include="Source\Engine\State.h" />
     <ClInclude Include="Source\Engine\Texture.h" />
+    <ClInclude Include="Source\Engine\ThreadManager.h" />
     <ClInclude Include="Source\Engine\WindowManager.h" />
     <ClInclude Include="Source\Graphics\Font.h" />
     <ClInclude Include="Source\Graphics\FontChar.h" />
@@ -208,6 +213,7 @@
     <ClInclude Include="Source\targetver.h" />
     <ClInclude Include="Source\Utilities\Assets.h" />
     <ClInclude Include="Source\Utilities\Clipboard.hpp" />
+    <ClInclude Include="Source\Utilities\ConsoleMessage.h" />
     <ClInclude Include="Source\Utilities\FileIO.h" />
     <ClInclude Include="Source\Utilities\Log.h" />
     <ClInclude Include="Source\Utilities\Matrix.h" />
@@ -439,7 +445,7 @@
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -514,7 +520,7 @@
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>

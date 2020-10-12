@@ -21,14 +21,6 @@ std::shared_ptr<PhysicsSphere>s2(new PhysicsSphere());
 PhysicsWorld physicsWorld;
 World::World()
 {
-	fboStrings.emplace_back("albedo");
-	fboStrings.emplace_back("normal");
-	fboStrings.emplace_back("specular");
-	fboStrings.emplace_back("glow");
-	//fboStrings.emplace_back("-");
-	//fboStrings.emplace_back("-");
-	//fboStrings.emplace_back("-");
-	fboStrings.emplace_back("position");
 }
 
 
@@ -110,7 +102,7 @@ void World::render(Camera* cam, Matrix4f* projectionMatrix)
 	Renderer::getRenderer()->getShaders()->voxelShader->start();
 	Renderer::getRenderer()->getShaders()->voxelShader->loadProjectionMatrix(*projectionMatrix); // *projectionMatrix);
 	Renderer::getRenderer()->getShaders()->voxelShader->loadCamera(cam->getViewMatrix());
-	Renderer::getRenderer()->getShaders()->voxelShader->loadCamera(cam->x, cam->y, cam->z, GFX::getOverlay()->viewDistance * 128);
+	Renderer::getRenderer()->getShaders()->voxelShader->loadCamera(cam->x, cam->y, cam->z, GFX::getOverlay()->viewDistance * 64);
 
 	std::vector<int> toRemove;
 	int distance;
@@ -201,7 +193,7 @@ void World::render(Camera* cam, Matrix4f* projectionMatrix)
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D_ARRAY, GFX::getOverlay()->terrainMaterials);
 	
-	for (auto c : overworld)
+	for (auto &c : overworld)
 	{
 		if (c != nullptr && c->ready)
 		{
@@ -232,7 +224,7 @@ void World::render(Camera* cam, Matrix4f* projectionMatrix)
 	Renderer::getRenderer()->getShaders()->deferredShader->loadDepthMVP(shadowMap.depthMVP);
 	//Renderer::getRenderer()->getShaders()->deferredShader->loadPointLights(lights);
 	Renderer::getRenderer()->getShaders()->deferredShader->loadSunDirection(cos(M::toRadians(m)), -sin(M::toRadians(m)), 0);
-	Renderer::getRenderer()->getShaders()->deferredShader->loadCamera(cam->x, cam->y, cam->z, GFX::getOverlay()->viewDistance * 128, cam->getViewMatrix());
+	Renderer::getRenderer()->getShaders()->deferredShader->loadCamera(cam->x, cam->y, cam->z, GFX::getOverlay()->viewDistance * 64, cam->getViewMatrix());
 	double lightFactor = (1 - 1) * 0.9 + 0.1;
 	   
 	double step = (double)(getOverworldTime() % getOverworldDayCycle()) / (double)getOverworldDayCycle();
@@ -287,22 +279,23 @@ bool ny;
 int xP;
 int yP;
 
-void World::addChunk(std::shared_ptr<Chunk> chunk)
+void World::addChunk(Chunk chunk)
 {
 	//if (getChunk(chunk->x, chunk->y) == nullptr)
 	{
-		overworld.emplace_back(chunk);
-		std::shared_ptr<Chunk> c = nullptr;
+		overworld.emplace_back(new Chunk(chunk));
+		Chunk* newChunk = overworld.at(overworld.size() - 1).get();
+		Chunk* c = nullptr;
 		for (int x = 0; x < 3; x++)
 		{
 			for (int y = 0; y < 3; y++)
 			{
 				for (int z = 0; z < 3; z++)
 				{
-					c = getChunk(chunk->x + x - 1, chunk->y + y - 1, chunk->z + z - 1);
+					c = getChunk(chunk.x + x - 1, chunk.y + y - 1, chunk.z + z - 1);
 					if (c != nullptr)
 					{
-						c->addNeighbour(chunk, c);
+						c->addNeighbour(newChunk, c);
 					}
 				}
 			}
@@ -310,13 +303,13 @@ void World::addChunk(std::shared_ptr<Chunk> chunk)
 	}
 }
 
-std::shared_ptr<Chunk> World::getChunk(int x, int y, int z)
+Chunk* World::getChunk(int x, int y, int z)
 {
-	for (auto c : overworld)
+	for (auto &c : overworld)
 	{
 		if (c != nullptr && c->x == x && c->y == y && c->z == z)
 		{
-			return c;
+			return c.get();
 		}
 	}
 	return nullptr;
@@ -346,7 +339,7 @@ std::shared_ptr<World> World::getOverworld()
 
 void World::setVoxel(int x, int y, int z, int type, float density)
 {
-	std::shared_ptr<Chunk> c = getChunk(((float) x / (float) c->CHUNK_SIZE) * 2, (float)y / (float)c->CHUNK_SIZE * 2, (float)z / (float) c->CHUNK_SIZE * 2);
+	Chunk* c = getChunk(((float) x / (float) c->CHUNK_SIZE) * 2, (float)y / (float)c->CHUNK_SIZE * 2, (float)z / (float) c->CHUNK_SIZE * 2);
 	if (c != nullptr)
 	{
 		//std::cout << x - (c->x * c->CHUNK_SIZE / 2) << " " << c->x << "  " << (y - c->y * c->CHUNK_SIZE) * 2 << "  " << (z - c->z * c->CHUNK_SIZE) * 2 << "\n";
@@ -380,9 +373,31 @@ void World::test()
 	physicsWorld.addObject(s2);
 }
 
+Chunk* World::getChunk(int i)
+{
+	return overworld.at(i).get();
+}
+
+void World::setup()
+{
+	fboStrings = std::vector<std::string>();
+	overworld = std::vector<std::unique_ptr<Chunk>>();
+	fboStrings.emplace_back("albedo");
+	fboStrings.emplace_back("normal");
+	fboStrings.emplace_back("specular");
+	fboStrings.emplace_back("glow");
+	fboStrings.emplace_back("glow");
+	fboStrings.emplace_back("glow");
+	fboStrings.emplace_back("glow");
+	//fboStrings.emplace_back("-");
+	//fboStrings.emplace_back("-");
+	//fboStrings.emplace_back("-");
+	fboStrings.emplace_back("position");
+}
+
 void World::sphere(float xP, float yP, float zP, float radius, float power)
 {
-	std::shared_ptr<Chunk> c = nullptr;
+	Chunk* c = nullptr;
 	for (int x = floor(-radius / 2); x < ceil(radius / 2); x++)
 	{
 		for (int z = floor(-radius / 2); z < ceil(radius / 2); z++)

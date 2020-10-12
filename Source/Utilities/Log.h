@@ -39,6 +39,12 @@ public:
 
 	static void out(std::string msg, int colour);
 
+	static void warn(std::string msg);
+
+	static void error(std::string msg);
+
+	static void criticalError(std::string msg);
+
 	static void outNNL(std::string msg, int colour);
 
 	static void outNNL(std::string msg);

@@ -1,11 +1,7 @@
 #include "stdafx.h"
 #include "Utilities/Log.h"
 #include <iostream>
-#ifdef __linux__ 
-#elif _WIN32
-#include <Windows.h>
-#else
-#endif
+#include <Engine\OutputConsole.h>
 
 Log::Log()
 {
@@ -28,33 +24,31 @@ void Log::out(std::string who, std::wstringstream& msg, int lvl)
 void Log::out(std::wstringstream &msg)
 {
 	std::string converted_str = std::string(msg.str().begin(), msg.str().end());
-	std::cout << converted_str << "\n";
+	OutputConsole::getConsole()->message(converted_str, 0);
 }
-static HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
-
 void Log::out(std::string msg, int colour)
 {
-	if (1)
-	{
-		SetConsoleTextAttribute(console, colour);
-		std::cout << msg << std::endl;
-		SetConsoleTextAttribute(console, WHITE);
-	}
-	else
-	{
-		std::cout << "Unsupported OS!";
-	}
+	OutputConsole::getConsole()->message(msg, 0);
+}
+void Log::warn(std::string msg)
+{
+	OutputConsole::getConsole()->message(msg, ConsoleMessage::Type::WARNING_MESSAGE);
 }
 void Log::outNNL(std::string msg)
 {
-	SetConsoleTextAttribute(console, WHITE);
-	std::cout << msg;
+	OutputConsole::getConsole()->message(msg, 0);
+}
+void Log::error(std::string msg)
+{
+	OutputConsole::getConsole()->message(msg, ConsoleMessage::Type::ERROR_MESSAGE);
+}
+void Log::criticalError(std::string msg)
+{
+	OutputConsole::getConsole()->message(msg, ConsoleMessage::Type::CRITICAL_ERROR_MESSAGE);
 }
 void Log::outNNL(std::string msg, int colour)
 {
-	SetConsoleTextAttribute(console, colour);
-	std::cout << msg;
-	SetConsoleTextAttribute(console, WHITE);
+	OutputConsole::getConsole()->message(msg, 0);
 }
 void Log::out(std::string src, std::string msg)
 {
@@ -62,22 +56,17 @@ void Log::out(std::string src, std::string msg)
 }
 void Log::out(std::string src, std::string msg, int colour)
 {
-	outNNL("[");
-	outNNL(src, colour);
-	outNNL("] : " + msg + "\n");
+	outNNL("[" + src + "] : " + msg + "\n");
 }
 
 void Log::out(std::string src, std::string msg, int colourA, int colourB)
 {
-	outNNL("[");
-	outNNL(src, colourA);
-	outNNL("] : ");
-	outNNL(msg + "\n", colourB);
+	outNNL("[" + src + "] : " + msg + "\n", colourB);
 }
 
 void Log::out(std::string msg)
 {
-	std::cout << msg << '\n';
+	OutputConsole::getConsole()->message(msg, 0);
 }
 
 void Log::update()

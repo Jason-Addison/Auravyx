@@ -49,7 +49,7 @@ const ALCchar* list_audio_devices(const ALCchar *devices)
 		Log::out("OpenAL", std::to_string(listedDevices.size()) + " devices detected, if device is missing, make sure it is enabled.", GREEN);
 		for (auto d : listedDevices)
 		{
-			std::cout << "         - " << d << "\n";
+			Log::out("         - " + d);
 		}
 	}
 	else
@@ -65,20 +65,20 @@ void SoundManager::start()
 	enumeration = alcIsExtensionPresent(NULL, "ALC_ENUMERATION_EXT");
 	if (enumeration == AL_FALSE)
 	{
-		std::cout << "No enumeration extension\n";
+		Log::out("[OpenAL] No enumeration extension");
 	}
 	device = alcOpenDevice(NULL);
 
 	if (!device)
 	{
-		std::cout << "[OpenAL] Error with device [" << alGetError() << "]\n";
+		Log::out("[OpenAL] Error with device [" + std::to_string(alGetError()) + "]");
 		system("pause");
 	}
 
 	context = alcCreateContext(device, NULL);
 	if (!alcMakeContextCurrent(context))
 	{
-		printf("Error with context\n");
+		Log::out("[OpenAL] Error with context");
 	}
 	ALfloat listenerOri[] = { 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f };
 	

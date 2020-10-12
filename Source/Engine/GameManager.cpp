@@ -8,6 +8,7 @@ double GameManager::UPS = 60;
 
 GameManager::GameManager()
 {
+
 }
 
 

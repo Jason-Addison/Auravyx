@@ -4,6 +4,8 @@
 #include <Library\SOIL\SOIL.h>
 #include "Utilities/Resource.h"
 #include <Auravyx.h>
+#include <thread>
+#include <Utilities\Log.h>
 WindowManager::WindowManager()
 {
 }
@@ -40,22 +42,25 @@ void WindowManager::displayResizeCallback(GLFWwindow* _window, int _width, int _
 
 void WindowManager::errorCallback(int error, const char* description)
 {
-	std::cout << "[Error] " << error << " " << description << "\n";
+	Log::out("[GLFW] Error : " + std::to_string(error) + " : " + std::string(description));
 }
-
 void WindowManager::create()
 {
 	std::string title = "Auravyx";//Polyvox | Ver " + std::string(1.3) + " | FPS : " + std::to_string(Display::frameRate);
+	//func();
+	//output = std::thread(func);
+	
 	glfwDefaultWindowHints();
 	//glfwWindowHint(GLFW_DECORATED, 0);
 	GLFWmonitor* monitor = glfwGetPrimaryMonitor();
 	const GLFWvidmode* mode = glfwGetVideoMode(monitor);
 
 	//2300 1300
-	width = mode->width * 0.7;
-	height = mode->height * 0.7;
+	width = mode->width * 0.6;
+	height = mode->height * 0.6;
 
 	window = glfwCreateWindow(width, height, title.c_str(), NULL, NULL);
+	glfwMakeContextCurrent(window);
 	glfwSetWindowPos(window, (mode->width - width) / 2, (mode->height - height) / 2);
 
 	GLFWimage icons[1];
