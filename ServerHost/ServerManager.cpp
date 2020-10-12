@@ -185,7 +185,7 @@ void ServerManager::loopServer()
 			//c->generate();
 			//c->x = x;
 			//c->y = y;
-			GameManager::world.overworld.emplace_back(c);
+			/////////////////////////////////////////////////////////////////////GameManager::world.overworld.emplace_back(c);
 		}
 	}
 	while (running)
