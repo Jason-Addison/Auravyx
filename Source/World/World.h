@@ -11,7 +11,7 @@ public:
 	World();
 	~World();
 
-	std::vector<std::shared_ptr<Chunk>> overworld;
+	std::vector<std::unique_ptr<Chunk>> overworld;
 
 	std::vector<std::shared_ptr<ChunkHeight>> overworldHeightmap;
 
@@ -27,9 +27,9 @@ public:
 
 	void render(Camera * cam, Matrix4f* projectionMatrix);
 	
-	void addChunk(std::shared_ptr<Chunk> chunk);
+	void addChunk(Chunk chunk);
 
-	std::shared_ptr<Chunk> getChunk(int x, int y, int z);
+	Chunk* getChunk(int x, int y, int z);
 
 	std::shared_ptr<ChunkHeight> getChunkHeightmap(int x, int z);
 
@@ -51,11 +51,14 @@ public:
 
 	void test();
 
+	Chunk *getChunk(int i);
+
+	void setup();
+
 private:
 
 	long long int overworldDayCycle = 240000;
 
 	long long int overworldTime = (long long int) (240000.0 * 10.2);
-
 };
 

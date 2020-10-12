@@ -123,7 +123,7 @@ void Shader::createShader(std::map<std::string, std::string> shaders)
 	}
 	catch (std::out_of_range e)
 	{
-		std::cout << "Error loading vertex shader : " << shader << "!\n";
+		Log::out("[OpenGL] Error loading vertex shader : " + shader);
 	}
 	try
 	{
@@ -131,7 +131,7 @@ void Shader::createShader(std::map<std::string, std::string> shaders)
 	}
 	catch (std::out_of_range e)
 	{
-		std::cout << "Error loading frag shader : " << shader << "!\n";
+		Log::out("[OpenGL] Error loading fragment shader : " + shader);
 	}
 	const char* cVert = vert.c_str();
 	const char* cFrag = frag.c_str();

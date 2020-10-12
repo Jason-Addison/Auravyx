@@ -85,7 +85,7 @@ void chatKeyCallback(GLFWwindow* window, int key, int scancode, int action, int 
 				}
 				catch (CExceptionXX& e) 
 				{
-					std::cout << e.what() << std::endl;
+					Log::out(e.what());
 				}
 			}
 			if (key == 86 && mods == 2)
@@ -103,7 +103,7 @@ void chatKeyCallback(GLFWwindow* window, int key, int scancode, int action, int 
 				}
 				catch (CExceptionXX & e)
 				{
-					std::cout << e.what() << std::endl;
+					Log::out(e.what());
 				}
 			}
 		}
@@ -274,9 +274,9 @@ void Chat::command(std::string cmd)
 	{
 		Log::out("Command", "Saving...", RED);
 		ChunkIO io;
-		for (auto c : w->overworld)
+		for (auto &c : w->overworld)
 		{
-			io.saveChunk(c, "myworld");
+			io.saveChunk(c.get(), "myworld");
 		}
 		Log::out("Command", "Save complete.", RED);
 	}

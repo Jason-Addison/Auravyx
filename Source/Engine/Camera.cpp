@@ -148,7 +148,6 @@ Matrix4f Camera::getViewMatrix()
 {
 	Matrix4f matrix;
 	matrix.createViewMatrix(x, y, z, xRot, yRot, zRot);
-	//std::cout << x << " " << y << " " << z << " " << yRot << "\n";
 	return matrix;
 }
 

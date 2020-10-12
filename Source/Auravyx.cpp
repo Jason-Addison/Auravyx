@@ -19,6 +19,7 @@
 #include <wtypes.h>
 #include <Engine/Controller.h>
 #include <Engine/GameState.h>
+#include <Engine\OutputConsole.h>
 double thisFrame = 0;
 double nextFrame = 0;
 
@@ -36,6 +37,7 @@ Auravyx* Auravyx::instance;
 
 void updater()
 {
+	ThreadManager::getThreadManager()->registerThread(std::this_thread::get_id(), "Updater");
 	double lerp = 0;
 	double updatesPerSecond = 1 / GameManager::getUPS();
 	double lastTimeUPS = -1;
@@ -85,10 +87,11 @@ void loop()
 	double deltaRender = 0;
 	float lastFpsCounter = 0;
 	int time;
-
+	std::vector<int> aa;
+	//aa.at(342);
 	double lastTimeFPSOld = 0;
 
-	while (!WindowManager::getWindow()->closeRequested())
+	while ((!WindowManager::getWindow()->closeRequested() && !OutputConsole::getConsole()->shutdown))
 	{
 		double framesPerSecond = 1.0 / GFX::getOverlay()->FPS;
 		thisTimeFPS = glfwGetTime();
@@ -110,31 +113,51 @@ void loop()
 			std::this_thread::sleep_for(std::chrono::milliseconds(time));
 		}
 	}
+	if (WindowManager::getWindow()->closeRequested())
+	{
+		Log::out("Closing main window because it was requested.");
+	}
+	if (OutputConsole::getConsole()->shutdown)
+	{
+		Log::out("Closing main window because of console shutdown.");
+	}
 	end = true;
-	
 	Auravyx::getManager().getCurrentState()->stop();
 	updater.join();
 }
 
 void loadAssetsAsync()
 {
+	ThreadManager::getThreadManager()->registerThread(std::this_thread::get_id(), "Async Loader");
 	Resource::getResources()->loadAllAsyncAssets();
 }
-
 int main(int argc, char* argv[])
 {
 	Auravyx::start();
+	ThreadManager::getThreadManager()->registerThread(std::this_thread::get_id(), "Main");
 	Resource::getResources()->DIR = std::string(argv[0]) + "\\..";
-	GLManager::start();
+	#ifdef NDEBUG
+	#else
+	Log::out("[Debug] : [!] Auravyx is running in debug mode, expect very slow world generation!", RED);
+	#endif
+	GameManager::world.setup();
 	
-	Resource::getResources()->loadBootAssets();
-	GFX::getOverlay()->init();
+
+	OutputConsole::getConsole()->start();
+
+	while (!OutputConsole::getConsole()->isReady())
+	{
+
+	}
+	GLManager::start();
 	std::thread asyncLoader(loadAssetsAsync);
-
+	GFX::getOverlay()->init();
+	Resource::getResources()->loadBootAssets();
 	Profiler::init();
-
 	double last = 0;
 	double now = 0;
+	
+	WindowManager::getWindow()->update();
 
 	while (!Resource::getResources()->loadAllResources())
 	{
@@ -143,7 +166,7 @@ int main(int argc, char* argv[])
 		{
 			last = now;
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-			glClearColor(0, 0, 0, 1);
+			glClearColor(0.1, 0.1, 0.1, 1);
 			Resource::getResources()->renderProgress();
 			WindowManager::getWindow()->update();
 		}
@@ -155,9 +178,14 @@ int main(int argc, char* argv[])
 	WindowManager::getWindow()->hideMouse();
 
 	WindowManager::getWindow()->getController()->resetMouse();
+	
 	loop();
 
-	Resource::getResources()->cleanupResources();
+	Log::out("Cleanup", "Cleaning up audio...", LIGHT_GRAY);
+	SoundManager::getSoundManager()->stop();
+	Resource::getResources()->cleanupPrimaryResources();
+	OutputConsole::getConsole()->cleanup();
+	Resource::getResources()->cleanupRemainingResources();
 	Auravyx::stop();
 	glfwTerminate();
 	return 0;
@@ -206,6 +234,16 @@ WindowManager* Auravyx::getWindow()
 	return &window;
 }
 
+OutputConsole* Auravyx::getConsole()
+{
+	return &outputConsole;
+}
+
+ThreadManager* Auravyx::getThreadManager()
+{
+	return &threadManager;
+}
+
 Auravyx* Auravyx::getAuravyx()
 {
 	return instance;
@@ -248,4 +286,6 @@ void Auravyx::create()
 	Modify(instance->getModify());
 	SoundManager(instance->getSoundManager());
 	Resource(instance->getResources());
+	OutputConsole(instance->getConsole());
+	ThreadManager(instance->getThreadManager());
 }

@@ -1,6 +1,7 @@
 #pragma once
 #include "Utilities/Settings.h"
 #include <iostream>
+#include <Utilities\Log.h>
 Settings::Settings()
 {
 }
@@ -17,7 +18,7 @@ std::string Settings::getSetting(std::string setting)
 	}
 	catch (std::out_of_range e)
 	{
-		std::cout << "Setting not found\n";
+		Log::out("Setting not found");
 	}
 	return std::string("Error : Setting not found");
 }
@@ -37,7 +38,7 @@ bool Settings::getBool(std::string setting)
 	{
 		return false;
 	}
-	std::cout << "Get Bool setting error!\n";
+	Log::out("Get Bool setting error!");
 	return false;
 }
 std::map<std::string, std::string> Settings::settings;

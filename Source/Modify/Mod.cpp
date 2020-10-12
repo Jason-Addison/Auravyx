@@ -2,6 +2,7 @@
 #include "Mod.h"
 #include <stdio.h>
 #include "Auravyx.h"
+#include "Utilities/Log.h"
 
 Mod::Mod()
 {
@@ -41,7 +42,8 @@ void contextFunction()
 	GLenum error = glewInit();
 	if (error != GLEW_OK)
 	{
-		printf("[Mod] GLEW Error : %s\n", glewGetErrorString(error));
+		char* glewError = (char*) glewGetErrorString(error);
+		Log::out("GLEW Error : " + std::string(glewError));
 	}
 }
 void Mod::setRenderContext()
@@ -53,6 +55,8 @@ extern "C"
 	EXPORT void setInstance(Auravyx* auravyx)
 	{
 		Auravyx::setInstance(auravyx);
+		static int i = 0;
+		ThreadManager::getThreadManager()->registerThread(std::this_thread::get_id(), "Mod [" + std::to_string(i++) + "]");
 	}
 	EXPORT void setContext()
 	{
@@ -60,7 +64,8 @@ extern "C"
 		GLenum error = glewInit();
 		if (error != GLEW_OK)
 		{
-			printf("[Mod] GLEW Error : %s\n", glewGetErrorString(error));
+			char* glewError = (char*)glewGetErrorString(error);
+			Log::out("GLEW Error : " + std::string(glewError));
 		}
 	}
 }

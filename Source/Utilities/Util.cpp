@@ -5,19 +5,12 @@
 #include <sstream>
 #include <filesystem>
 #include <fstream>
+#include <Utilities\Log.h>
 static HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
 
 void Util::logNNL(int colour, std::string text)
 {
-	if (1)
-	{
-		SetConsoleTextAttribute(console, colour);
-		std::cout << text;
-	}
-	else
-	{
-		std::cout << "Unsupported OS!";
-	}
+	Log::out(text);
 }
 
 void Util::logNNL(int colour, std::string who, std::string message)
@@ -30,15 +23,7 @@ void Util::logNNL(int colour, std::string who, std::string message)
 
 void Util::log(int colour, std::string text)
 {
-	if (1)
-	{
-		SetConsoleTextAttribute(console, colour);
-		std::cout << text << std::endl;
-	}
-	else
-	{
-		std::cout << "Unsupported OS!";
-	}
+	Log::out(text);
 }
 
 void Util::log(std::string text)
@@ -168,8 +153,7 @@ bool Util::isCommentedLine(std::string line)
 	{
 		if (line.at(i) == '/')
 		{
-			std::cout << line.at(i) << "|\n";
-
+			//std::cout << line.at(i) << "|\n";
 		}
 		if (isspace(line.at(i)))
 		{

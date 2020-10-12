@@ -26,6 +26,8 @@
 #include <mutex>
 #include "Modify/Modify.h"
 #include <Auravyx.h>
+#include <stdexcept>
+#include <Utilities\Log.h>
 GameState::GameState()
 {
 }
@@ -38,7 +40,6 @@ std::vector<Chunk> chunks;
 Chat chat;
 //ClientManager c;
 
-std::vector<std::shared_ptr<Chunk>> chunksToLoad;
 std::shared_ptr<Chunk> nextChunk;
 std::atomic_int lock = false;
 bool loading = false;
@@ -98,11 +99,11 @@ void chunkLoading(int xC, int yC, int zC)
 					cX = z;
 					cZ = -(z - x);
 				}
-				//std::shared_ptr<ChunkHeight> ch = w.getChunkHeightmap(cX, cZ);
-				//if (ch == nullptr)
+				std::shared_ptr<ChunkHeight> ch = w.getChunkHeightmap(cX, cZ);
+				if (ch == nullptr)
 				{
-					//	ch = std::shared_ptr<ChunkHeight>(new ChunkHeight());
-						//ch->generate(cX, cZ);
+						ch = std::shared_ptr<ChunkHeight>(new ChunkHeight());
+						ch->generate(cX, cZ);
 				}
 				for (int y = -2; y < 4; y++)
 				{
@@ -126,16 +127,17 @@ void chunkLoading(int xC, int yC, int zC)
 						{
 							//nextChunk.release();
 							//chunksToLoad.emplace_back(std::unique_ptr<Chunk>(new Chunk(c)));
+							//nextChunk = cio.readChunk(cX, cY, cZ, "myworld");// new Chunk(cX, cY, cZ);
 
-							std::shared_ptr<Chunk> c = cio.readChunk(cX, cY, cZ, "myworld");// new Chunk(cX, cY, cZ);
+							std::shared_ptr<Chunk> c (new Chunk(cX, cY, cZ));
+							c->generateTerrain(ch);
 
-							//std::shared_ptr<Chunk> c (new Chunk(cX, cY, cZ));
-							//c->generateTerrain(ch);
+							nextChunk = c;
 
 							//std::shared_ptr<Chunk> c (new Chunk(cX, cY, cZ));
 							//c->generateTerrain(ch)
 
-							if (c)
+							if (nextChunk)
 							{
 								/*if (GFX::getOverlay()->CAM.cX == c->x && GFX::getOverlay()->CAM.cY == c->z)
 								{
@@ -152,8 +154,6 @@ void chunkLoading(int xC, int yC, int zC)
 										}
 									}
 								}*/
-								nextChunk = c;
-
 								lock = true;
 							}
 						}
@@ -171,32 +171,30 @@ void chunkLoading(int xC, int yC, int zC)
 	//std::cout << end - start << " DONE\n";
 	double avgg = 0;
 	int count = 0;
-	
-	for (auto c : w.overworld)
-	{
+	for (int i = 0; i < 0; i++)
+	{//Loop overworld
 		//c->clearDensity();
 	}
 	return;
 }
 std::mutex chunkGuard;
 std::atomic_int chunkGenerationSize = 0;
+
+std::vector<Chunk*> chunksToMesh;
+std::atomic_int chunkMeshingInProgress = false;
 void chunkMeshGeneration()
 {
-	while (true)
+	ThreadManager::getThreadManager()->registerThread(std::this_thread::get_id(), "Chunk Mesher");
+	while (!cleanup)
 	{
-		int temp = chunkGenerationSize;
-		
-		for (int i = 0; i < temp; i++)
+		if (chunkMeshingInProgress)
 		{
 			if (cleanup)
 			{
 				return;
 			}
-			try
+			for (auto c : chunksToMesh)
 			{
-				std::lock_guard<std::mutex> guard(chunkGuard);
-				auto c = w.overworld.at(i);
-
 				if (c && !c->loaded && c->neighboursLoaded())
 				{
 					c->generate();
@@ -204,10 +202,8 @@ void chunkMeshGeneration()
 					c->chunkUpdate = true;
 				}
 			}
-			catch (const std::exception& e)
-			{
-				std::cout << "Crash! " << e.what() << "\n";
-			}
+			chunksToMesh = std::vector<Chunk*>();
+			chunkMeshingInProgress = false;
 		}
 	}
 }
@@ -267,9 +263,10 @@ void GameState::render()
 {
 	if (lock)
 	{
-		w.addChunk(std::shared_ptr<Chunk>(new Chunk(*nextChunk)));
+		Chunk c = Chunk(*nextChunk.get());
+		w.addChunk(c);
 		nextChunk.reset();
-		chunkGenerationSize = w.overworld.size();
+		chunkGenerationSize = w.overworld.size() - 1;
 		lock = false;
 	}
 	if (w.unloadLock)
@@ -288,13 +285,63 @@ void GameState::render()
 		cpuUsageB = Profiler::getCurrentProcessCPU();
 	}
 	
-	for (auto c : w.overworld)
+	bool meshFlag = false;
+	if (!chunkMeshingInProgress)
+	{
+		for (auto& c : w.overworld)
+		{
+			if (!c->loaded && c->neighboursLoaded())
+			{
+				//c->fill(64, 64, 64, 80, 80, 80, 8, 255);
+				//c->sphere(64, 64, 64, 9, 7);
+				if (c->priorityLoad)
+				{
+					chunksToMesh.insert(chunksToMesh.begin(), c.get());
+					c->priorityLoad = false;
+				}
+				else
+				{
+					chunksToMesh.emplace_back(c.get());
+				}
+				meshFlag = true;
+			}
+		}
+		if (meshFlag)
+		{
+			chunkMeshingInProgress = true;
+		}
+	}
+	for (auto &c : w.overworld)
 	{
 		if (c->chunkUpdate)
 		{
 			c->refresh();
 			c->chunkUpdate = false;
 			c->ready = true;
+		}
+	}
+	if (WindowManager::getWindow()->getController()->isMouseDown(GLFW_MOUSE_BUTTON_1))
+	{
+		Chunk* c = w.getChunk(GFX::getOverlay()->CAM.cX, GFX::getOverlay()->CAM.cY, GFX::getOverlay()->CAM.cZ);
+		if (c)
+		{
+			c->fill(((int) GFX::getOverlay()->CAM.x) % 64 - 2, ((int)GFX::getOverlay()->CAM.y) % 64 -9, ((int)GFX::getOverlay()->CAM.z) % 64 - 2,
+				((int)GFX::getOverlay()->CAM.x) % 64 + 3, ((int)GFX::getOverlay()->CAM.y) % 64 - 4, ((int)GFX::getOverlay()->CAM.z) % 64 + 3, 8, 1);
+			c->chunkUpdate = true;
+			c->priorityLoad = true;
+			c->loaded = false;
+		}
+	}
+	if (WindowManager::getWindow()->getController()->isMouseDown(GLFW_MOUSE_BUTTON_2))
+	{
+		Chunk* c = w.getChunk(GFX::getOverlay()->CAM.cX, GFX::getOverlay()->CAM.cY, GFX::getOverlay()->CAM.cZ);
+		if (c)
+		{
+			c->fill(((int)GFX::getOverlay()->CAM.x) % 64 - 2, ((int)GFX::getOverlay()->CAM.y) % 64 - 9, ((int)GFX::getOverlay()->CAM.z) % 64 - 2,
+				((int)GFX::getOverlay()->CAM.x) % 64 + 3, ((int)GFX::getOverlay()->CAM.y) % 64 - 4, ((int)GFX::getOverlay()->CAM.z) % 64 + 3, 0, 0);
+			c->chunkUpdate = true;
+			c->priorityLoad = true;
+			c->loaded = false;
 		}
 	}
 	MEMORYSTATUSEX memInfo;
@@ -319,8 +366,6 @@ void GameState::render()
 	world();
 
 	chat.w = &w;
-
-
 
 
 	glEnable(GL_BLEND);
@@ -352,7 +397,7 @@ void GameState::render()
 	SIZE_T physMemUsedByMe = pmc.WorkingSetSize;
 	DWORDLONG totalPhysMem = memInfo.ullTotalPhys;
 	int renderableChunk = 0;
-	for (auto c : w.overworld)
+	for (auto &c : w.overworld)
 	{
 		if (c != nullptr && c->ready)
 		{
@@ -377,6 +422,11 @@ void GameState::render()
 	GFX::getOverlay()->drawStringBG("fly: " + std::string("on"),
 		0, dim * (di++), 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3);
 
+	#ifdef NDEBUG
+	#else
+	//	GFX::getOverlay()->drawStringBGR("[!] Debug build",
+	//		0, dim* (rdi++), 30, 0.8, 0, 0, 1, 0, 0, 0, -5, 0, 0, 0, 0.3);
+	#endif
 	GFX::getOverlay()->drawStringBGR("cpu usage: " + Util::removeDecimal((cpuUsageA + cpuUsageB) / 2, 2) + "%",
 		0, dim * (rdi++), 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3);
 
@@ -416,6 +466,7 @@ void GameState::render()
 }
 void startChunkLoader()
 {
+	ThreadManager::getThreadManager()->registerThread(std::this_thread::get_id(), "Chunk Loader");
 	//while (true)
 	{
 		Camera cam = GFX::getOverlay()->CAM;
@@ -474,4 +525,6 @@ void GameState::stop()
 	{
 		server.join();
 	}
+	glfwPollEvents();
+	glfwDestroyWindow(WindowManager::getWindow()->window);
 }

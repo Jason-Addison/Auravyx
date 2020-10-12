@@ -8,6 +8,7 @@
 #include "Engine/Clock.h"
 #include "Auravyx.h"
 #include "Library/GL/glew.h"
+#include <Utilities\Log.h>
 
 GFX::GFX()
 {
@@ -55,8 +56,14 @@ void GFX::drawImage(float x, float y, float xVel, float yVel, float width, float
 	drawImage((Clock::lerp * (x + xVel) + (1 - Clock::lerp) * (x)),
 		(Clock::lerp * (y + -yVel) + (1 - Clock::lerp) * (y)), width, height, texture);
 }
-
+float u = 0.4;
+float i = 6;
 void GFX::drawString(std::string string, float x, float y, float size, float r, float g, float b, float a)
+{
+	drawString(string, x, y, size, r, g, b, a, WindowManager::getWindow()->getWidth(), WindowManager::getWindow()->getHeight());
+}
+
+void GFX::drawString(std::string string, float x, float y, float size, float r, float g, float b, float a, float windowWidth, float windowHeight)
 {
 	Font font = *Assets::getAssets()->getAssets()->getFont("font_plain");
 	size *= 1 / (font.largestValue / size) * 2;
@@ -67,10 +74,26 @@ void GFX::drawString(std::string string, float x, float y, float size, float r, 
 	Matrix4f transformation;
 
 	glDisable(GL_CULL_FACE);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	Renderer::getRenderer()->getShaders()->fontShader->start();
-	Renderer::getRenderer()->getShaders()->fontShader->loadThickness(0.53, 0.5 / (0.5 * size));
+	if (WindowManager::getWindow()->getController()->isKeyDown(GLFW_KEY_Y))
+	{
+		u += 0.0003;
+	}
+	if (WindowManager::getWindow()->getController()->isKeyDown(GLFW_KEY_U))
+	{
+		u -= 0.0003;
+	}
+	if (WindowManager::getWindow()->getController()->isKeyDown(GLFW_KEY_H))
+	{
+		i += 0.0003;
+	}
+	if (WindowManager::getWindow()->getController()->isKeyDown(GLFW_KEY_J))
+	{
+		i -= 0.0003;
+	}
+	Renderer::getRenderer()->getShaders()->fontShader->loadThickness(u, 0.5 / (0.5 * size) * i);
 	Renderer::getRenderer()->getShaders()->fontShader->loadColour(r, g, b, a);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, font.texture.texture);
@@ -86,14 +109,14 @@ void GFX::drawString(std::string string, float x, float y, float size, float r, 
 		//
 		if (fchar.width != -1)
 		{
-			float newX = -1 + (x + totalX) / WindowManager::getWindow()->getWidth() * 2;
-			float newY = 1 - ((y + (fchar.yOffset) * (size / font.size)) / WindowManager::getWindow()->getHeight() * 2);
-			float newWidth = (size / font.size) / WindowManager::getWindow()->getWidth() * 2;
-			float newHeight = (size / font.size) / WindowManager::getWindow()->getHeight() * 2;
+			float newX = -1 + (x + totalX) / windowWidth * 2;
+			float newY = 1 - ((y + (fchar.yOffset) * (size / font.size)) / windowHeight * 2);
+			float newWidth = (size / font.size) / windowWidth * 2;
+			float newHeight = (size / font.size) / windowHeight * 2;
 
 			transformation = M::createTransformationMatrix(newX, newY, 0, newWidth, newHeight, 1, 0, 0, 0);
 			Renderer::getRenderer()->getShaders()->fontShader->loadTransformation(transformation);
-			totalX += ((float)fchar.xAdvance) * (size / font.size) * 0.8; //////////////////////////////////////////////////////////
+			totalX += ((float)fchar.xAdvance) * (size / font.size) * 1; //////////////////////////////////////////////////////////
 			
 			glBindVertexArray(fchar.vaoID);
 			glEnableVertexArrayAttrib(fchar.vaoID, 0);
@@ -158,7 +181,7 @@ float GFX::stringWidth(std::string string, float size)
 			float newWidth = (size / font.size) / WindowManager::getWindow()->getWidth() * 2;
 			float newHeight = (size / font.size) / WindowManager::getWindow()->getHeight() * 2;
 
-			totalX += ((float)fchar.xAdvance) * (size / font.size) * 0.8;
+			totalX += ((float)fchar.xAdvance) * (size / font.size) * 1;
 		}
 	}
 	return totalX;
@@ -173,7 +196,7 @@ void GFX::renderModel(float x, float y, float z, float xScale, float yScale,
 	Renderer::getRenderer()->getShaders()->modelShader->loadProjectionMatrix(*projection);
 	Matrix4f t = M::createTransformationMatrix(x, y, z, xScale, yScale, zScale, xRot, yRot, zRot);
 	Renderer::getRenderer()->getShaders()->modelShader->loadTransformationMatrix(t);
-	Renderer::getRenderer()->getShaders()->modelShader->loadCamera(c->x, c->y, c->z, viewDistance * 128);
+	Renderer::getRenderer()->getShaders()->modelShader->loadCamera(c->x, c->y, c->z, viewDistance * 64);
 	glEnable(GL_DEPTH_TEST);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glDisable(GL_CULL_FACE);
@@ -263,7 +286,7 @@ GLenum GFX::checkForGLError(std::string* s)
 	GLenum errorCode;
 	while ((errorCode = glGetError()) != GL_NO_ERROR)
 	{
-		std::cout << "[OpenGL] Error code: " << errorCode << " [" << -1 << "] [" << x << "] [" << *s << "]" << "\n";
+		Log::out("[OpenGL] Error code : " + std::to_string(errorCode) + " " + *s);
 	}
 	x = 0;
 	return GLenum();
@@ -274,7 +297,7 @@ GLenum GFX::checkForGLError(std::string* s, int l)
 	GLenum errorCode;
 	while ((errorCode = glGetError()) != GL_NO_ERROR)
 	{
-		std::cout << "[OpenGL] Error code: " << errorCode << " [" << l << "] [" << x << "] [" << *s << "]" << "\n";
+		Log::out("[OpenGL] Error code : " + std::to_string(errorCode) + " " + *s);
 	}
 	x = 0;
 	return GLenum();

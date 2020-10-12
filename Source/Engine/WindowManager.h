@@ -11,6 +11,7 @@ public:
 	~WindowManager();
 
 	GLFWwindow *window;
+
 	Controller controller;
 	int width = 0;
 	int height = 0;

@@ -52,6 +52,8 @@ public:
 	
 	void drawString(std::string string, float x, float y, float size, float r, float g, float b, float a);
 
+	void drawString(std::string string, float x, float y, float size, float r, float g, float b, float a, float windowWidth, float windowHeight);
+
 	void drawStringBG(std::string string, float x, float y, float size, float r, float g, float b, float a, 
 		float xB, float yB, float xSB, float ySB, float rB, float gB, float bB, float aB);
 

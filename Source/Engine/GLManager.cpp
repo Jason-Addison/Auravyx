@@ -40,9 +40,8 @@ void GLManager::start()
 {
 	if (!glfwInit())
 	{
-		Log::out("OpenGL", "GLFW Init() failed.", RED);
+		Log::criticalError("[GLFW] GLFW Init() failed.");
 	}
-
 	glfwSetErrorCallback(glfwErrorCallback);
 
 	WindowManager::getWindow()->create();

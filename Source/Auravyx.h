@@ -1,4 +1,5 @@
 #pragma once
+#define GLEW_MX
 #include "Engine/GameManager.h"
 #include "Graphics/GFX.h"
 #include "Engine/WindowManager.h"
@@ -7,6 +8,8 @@
 #include "Modify\Modify.h"
 #include "Audio/SoundManager.h"
 #include "Utilities/Resource.h"
+#include "Engine/OutputConsole.h"
+#include "Engine/ThreadManager.h"
 
 class Auravyx
 {
@@ -29,6 +32,10 @@ public:
 	SoundManager soundManager;
 
 	Resource resources;
+
+	OutputConsole outputConsole;
+
+	ThreadManager threadManager;
 
 	static Auravyx *getAuravyx();
 
@@ -55,6 +62,10 @@ public:
 	GFX* getOverlay();
 
 	WindowManager* getWindow();
+
+	OutputConsole* getConsole();
+
+	ThreadManager* getThreadManager();
 
 private:
 

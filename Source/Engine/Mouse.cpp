@@ -38,7 +38,7 @@ void send(int x, int y, int id)
 		cY = (y + 1) / 16;
 		cY -= 1;
 	}
-	std::shared_ptr<Chunk> c = GameManager::world.getChunk(cX, cY, 0);
+	Chunk* c = GameManager::world.getChunk(cX, cY, 0);
 	if (c != nullptr)
 	{
 		PacketTileChange p;

@@ -44,7 +44,7 @@ void ChunkIO::saveArea()
 }
 
 
-void ChunkIO::saveChunk(std::shared_ptr<Chunk> chunk, std::string name)
+void ChunkIO::saveChunk(Chunk* chunk, std::string name)
 {
 	std::string dir = Resource::getResources()->DIR + "\\Saves\\" + name + "\\data\\c" +
 		std::to_string(chunk->x) + "." + std::to_string(chunk->y) + "." + std::to_string(chunk->z) + ".voxc";
@@ -60,7 +60,7 @@ void ChunkIO::saveChunk(std::shared_ptr<Chunk> chunk, std::string name)
 	fwrite(&chunk->emptyChunk, sizeof(char), 1, chunkOutput);
 	if (!chunk->emptyChunk)
 	{
-		fwrite(chunk->density, sizeof(short), 2097152, chunkOutput);
+		fwrite(chunk->density, sizeof(short), 262144, chunkOutput);
 	}
 	fclose(chunkOutput);
 
@@ -74,7 +74,7 @@ void ChunkIO::saveChunk(std::shared_ptr<Chunk> chunk, std::string name)
 
 std::shared_ptr<Chunk> ChunkIO::readChunk(int x, int y, int z, std::string name)
 {
-	std::shared_ptr<Chunk> chunk(new Chunk);
+	std::shared_ptr<Chunk> chunk(new Chunk());
 
 	std::string dir = Resource::getResources()->DIR + "\\Saves\\" + name + "\\data\\c" +
 		std::to_string(x) + "." + std::to_string(y) + "." + std::to_string(z) + ".voxc";
@@ -93,7 +93,7 @@ std::shared_ptr<Chunk> ChunkIO::readChunk(int x, int y, int z, std::string name)
 	fread(&chunk->emptyChunk, sizeof(char), 1, chunkInput);
 	if (!chunk->emptyChunk)
 	{
-		fread(chunk->density, sizeof(short), 2097152, chunkInput);
+		fread(chunk->density, sizeof(short), 262144, chunkInput);
 	}
 	chunk->x = x;
 	chunk->y = y;
