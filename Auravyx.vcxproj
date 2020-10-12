@@ -44,7 +44,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ConsoleMessage.cpp" />
-    <ClCompile Include="OutputConsole.cpp" />
     <ClCompile Include="ServerHost\Client.cpp" />
     <ClCompile Include="ServerHost\Packet.cpp" />
     <ClCompile Include="ServerHost\PacketMsg.cpp" />
@@ -69,6 +68,7 @@
     <ClCompile Include="Source\Engine\Model.cpp" />
     <ClCompile Include="Source\Engine\Mouse.cpp" />
     <ClCompile Include="Source\Engine\OBJMaterial.cpp" />
+    <ClCompile Include="Source\Engine\OutputConsole.cpp" />
     <ClCompile Include="Source\Engine\State.cpp" />
     <ClCompile Include="Source\Engine\Texture.cpp" />
     <ClCompile Include="Source\Engine\ThreadManager.cpp" />
