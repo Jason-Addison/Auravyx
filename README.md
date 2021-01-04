@@ -299,6 +299,9 @@ game-version=1.0.0
 
 #### Pictures
 
+![Image](https://imgur.com/DdH7HOG.jpg)
+
+
 ![Imgur](https://imgur.com/K9W9gjf.jpg)
 
 
@@ -309,6 +312,7 @@ game-version=1.0.0
 
 
 ![Image](https://imgur.com/uXEN1i6.jpg)
+
 
 ![Image](https://imgur.com/2poeBib.jpg)
 
