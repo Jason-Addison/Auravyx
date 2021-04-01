@@ -29,26 +29,81 @@ Vec3f Voxel::getAverage()
     }
     return this->average;
 }
- 
-void Voxel::addAverage(float x, float y, float z)
+
+Vec3f Voxel::getLiquidAverage()
 {
-    average.x += x;
-    average.y += y;
-    average.z += z;
-    count++;
+    if (!avgCalcL)
+    {
+        if (avgLiq.size() != 0)
+        {
+            for (auto v : avgLiq)
+            {
+                averageLiquid.x += v->smoothAverage.x;
+                averageLiquid.y += v->smoothAverage.y;
+                averageLiquid.z += v->smoothAverage.z;
+            }
+            averageLiquid.x /= avgLiq.size();
+            averageLiquid.y /= avgLiq.size();
+            averageLiquid.z /= avgLiq.size();
+            
+            //averageLiquid.x /= countL;
+            //averageLiquid.y /= countL;
+            //averageLiquid.z /= countL;
+        }
+        avgCalcL = true;
+    }
+    return this->averageLiquid;
+}
+
+void Voxel::addAverage(float x, float y, float z, int id)
+{
+    addLiquidAverage(x, y, z);
+   
+    {
+        average.x += x;
+        average.y += y;
+        average.z += z;
+        count++;
+    }
 }
 
 void Voxel::addMaterial(int m)
 {
-	for (int i = 0; i < totalMaterial.size(); i++)
-	{
-		if (totalMaterial.at(i) == m)
-		{
-			totalMaterialCounter.at(i)++;
-		}
-	}
-	totalMaterial.emplace_back(m);
-	totalMaterialCounter.emplace_back(1);
+    for (int i = 0; i < totalMaterial.size(); i++)
+    {
+        if (totalMaterial.at(i) == m)
+        {
+            totalMaterialCounter.at(i)++;
+        }
+    }
+    totalMaterial.emplace_back(m);
+    totalMaterialCounter.emplace_back(1);
+}
+#include <iostream>
+void Voxel::addLiquidAverage(float x, float y, float z)
+{
+    averageLiquid.x += x;
+    averageLiquid.y += y;
+    averageLiquid.z += z;
+    countL++;
+}
+
+void Voxel::addLiquidAverage(Voxel* vox)
+{
+    avgLiq.emplace_back(vox);
+}
+
+void Voxel::addLiquidMaterial(int m)
+{
+    for (int i = 0; i < totalLiquidMaterial.size(); i++)
+    {
+        if (totalLiquidMaterial.at(i) == m)
+        {
+            totalLiquidMaterialCounter.at(i)++;
+        }
+    }
+    totalLiquidMaterial.emplace_back(m);
+    totalLiquidMaterialCounter.emplace_back(1);
 }
 
 void Voxel::findMostCommonMaterial()
@@ -68,4 +123,13 @@ void Voxel::findMostCommonMaterial()
 short Voxel::getCommonMaterial()
 {
 	return mat;
+}
+
+void Voxel::findMostCommonLiquid()
+{
+}
+
+short Voxel::getCommonLiquid()
+{
+    return 100;
 }

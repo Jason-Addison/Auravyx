@@ -23,7 +23,7 @@ public:
 
 	GLuint tileMap = 0;
 
-	int viewDistance = 8;
+	int viewDistance = 12;
 
 	int mipmapBias = 0;
 
@@ -71,6 +71,9 @@ public:
 
 	void renderModel(float x, float y, float z, float xScale, float yScale,
 		float zScale, float xRot, float yRot, float zRot, Model* m, Camera *c, Matrix4f *projection, Texture *tex);
+
+	void renderModelIndex(float x, float y, float z, float xScale, float yScale,
+		float zScale, float xRot, float yRot, float zRot, Model* m, Camera* c, Matrix4f* projection, Texture* tex);
 
 	void init();
 

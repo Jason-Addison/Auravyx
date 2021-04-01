@@ -59,6 +59,6 @@ private:
 
 	long long int overworldDayCycle = 240000;
 
-	long long int overworldTime = (long long int) (240000.0 * 10.2);
+	long long int overworldTime = (long long int) (240000.0 * 10.32);
 };
 

@@ -7,6 +7,7 @@ public:
 	~Camera();
 
 	double x, y, z;
+	double xPos, yPos, zPos;
 	double xVel = 0, yVel = 0, zVel = 0;
 	int cX, cY, cZ;
 	double zoom = 1;

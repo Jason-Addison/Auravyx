@@ -51,9 +51,13 @@ public:
 
 	static WindowManager* getWindow();
 
+	static double mainScroll;
+
 private:
 
 	static WindowManager* windowManager;
+
+	static void scrollCallback(GLFWwindow* window, double xoffset, double yoffset);
 
 	GLFWcharfun charCallback;
 

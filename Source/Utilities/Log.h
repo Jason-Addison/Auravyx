@@ -39,6 +39,8 @@ public:
 
 	static void out(std::string msg, int colour);
 
+	static void debug(std::string msg);
+
 	static void warn(std::string msg);
 
 	static void error(std::string msg);
@@ -52,6 +54,16 @@ public:
 	static void out(std::string msg);
 
 	static void update();
+
+	static void print(std::string msg);
+
+	Log& operator <<(const std::string& msg)
+	{
+		print(msg);
+		//*stream << msg;
+		return *this;
+	}
+	static Log& print(Log& l, int n);
 
 };
 

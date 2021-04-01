@@ -6,6 +6,7 @@
 #include <Auravyx.h>
 #include <thread>
 #include <Utilities\Log.h>
+#include "Auravyx.h"
 WindowManager::WindowManager()
 {
 }
@@ -21,6 +22,15 @@ WindowManager::~WindowManager()
 }
 bool WindowManager::resized = true;
 HWND hwnd;
+double WindowManager::mainScroll = 1;
+void WindowManager::scrollCallback(GLFWwindow* window, double xoffset, double yoffset)
+{
+	WindowManager::mainScroll += yoffset;
+	if (mainScroll < 1)
+	{
+		mainScroll = 1;
+	}
+}
 GLFWwindowrefreshfun windowUpdateCallback()
 {
 	GLFWwindow* w = nullptr;
@@ -71,7 +81,7 @@ void WindowManager::create()
 
 	glfwSetWindowSizeCallback(window, &displayResizeCallback);
 	glfwSetErrorCallback(&errorCallback);
-
+	glfwSetScrollCallback(window, &scrollCallback);
 	//glfwSetWindowPos(window, 1400, 50);
 	//glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	glfwMakeContextCurrent(window);
@@ -96,10 +106,10 @@ void WindowManager::update()
 			if (!fullscreen)
 			{
 				const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-				glfwWindowHint(GLFW_RED_BITS, mode->redBits);
+				/*glfwWindowHint(GLFW_RED_BITS, mode->redBits);
 				glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
 				glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
-				glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
+				glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);*/
 
 				glfwSetWindowMonitor(window, glfwGetPrimaryMonitor(), 0, 0, mode->width, mode->height, mode->refreshRate);
 				fullscreen = true;

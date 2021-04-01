@@ -11,6 +11,7 @@ Log::Log()
 Log::~Log()
 {
 }
+
 void Log::out(std::string who, std::wstringstream& msg)
 {
 	out(who, msg, 0);
@@ -29,6 +30,10 @@ void Log::out(std::wstringstream &msg)
 void Log::out(std::string msg, int colour)
 {
 	OutputConsole::getConsole()->message(msg, 0);
+}
+void Log::debug(std::string msg)
+{
+	OutputConsole::getConsole()->message(msg, ConsoleMessage::Type::DEBUG_MESSAGE);
 }
 void Log::warn(std::string msg)
 {
@@ -71,4 +76,14 @@ void Log::out(std::string msg)
 
 void Log::update()
 {
+}
+
+void Log::print(std::string msg)
+{
+	out(msg);
+}
+
+Log& Log::print(Log& l, int n)
+{
+	return l;
 }

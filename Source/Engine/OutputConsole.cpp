@@ -13,13 +13,16 @@
 #include <iostream>
 #include "Utilities/Log.h"
 #include "Engine/ThreadManager.h"
-std::chrono::duration<long, std::milli> timestep = std::chrono::milliseconds(2);
+#include "Engine/GLManager.h"
+std::chrono::duration<long, std::milli> timestep = std::chrono::milliseconds(30);
 OutputConsole* OutputConsole::console;
 
 OutputConsole::OutputConsole()
 {
 }
 
+double FPS = 60;
+int messageCount[5];
 OutputConsole::OutputConsole(OutputConsole* c)
 {
 	console = c;
@@ -27,6 +30,10 @@ OutputConsole::OutputConsole(OutputConsole* c)
 
 OutputConsole::~OutputConsole()
 {
+	for (int i = 0; i < 5; i++)
+	{
+		messageCount[i] = 0;
+	}
 }
 GLFWwindow* outputWindow;
 std::atomic_bool OutputConsole::ready = false;
@@ -34,6 +41,7 @@ std::atomic_bool OutputConsole::ready = false;
 double OutputConsole::scroll = 0;
 
 bool OutputConsole::resized = true;
+
 
 void OutputConsole::displayResizeCallback(GLFWwindow* _window, int _width, int _height)
 {
@@ -46,27 +54,30 @@ void OutputConsole::errorCallback(int error, const char* description)
 }
 void OutputConsole::scrollCallback(GLFWwindow* window, double xoffset, double yoffset)
 {
-	scroll += yoffset * 25;
+	scroll += yoffset * 200;
 	if (scroll > 0)
 	{
 		scroll = 0;
 	}
+	FPS = 60;
 }
 void OutputConsole::fboCallback(GLFWwindow* window, int width, int height)
 {
-	// make sure the viewport matches the new window dimensions; note that width and 
-	// height will be significantly larger than specified on retina displays.
 	glViewport(0, 0, width, height);
 	console->width = width;
 	console->height = height;
-	// Re-render the scene because the current frame was drawn for the old resolution
 	console->render();
+}
+bool windowEntered = false;
+void OutputConsole::mouseEnterCallback(GLFWwindow*, int enter)
+{
+	windowEntered = enter;
 }
 void OutputConsole::setupWindow()
 {
 	if (!glfwInit())
 	{
-		printf("ErrASDDDDDDDDDDDDDDDDDDDDDDADWJOIKDWJIUWJIUWDJIUDIJWUIJUDWIJUIUJIJUor");
+		Log::criticalError("[GLFW] glfwInit() failed in output console.");
 	}
 	GLFWmonitor* monitor = glfwGetPrimaryMonitor();
 	const GLFWvidmode* mode = glfwGetVideoMode(monitor);
@@ -88,6 +99,7 @@ void OutputConsole::setupWindow()
 	glfwSetFramebufferSizeCallback(outputWindow, &fboCallback);
 	glfwSetErrorCallback(&errorCallback);
 	glfwSetScrollCallback(outputWindow, &scrollCallback);
+	glfwSetCursorEnterCallback(outputWindow, &mouseEnterCallback);
 
 	glfwSetWindowSizeLimits(outputWindow, 500, 500, GLFW_DONT_CARE, GLFW_DONT_CARE);
 	glfwMakeContextCurrent(outputWindow);
@@ -100,6 +112,7 @@ void OutputConsole::setupWindow()
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
 	glewExperimental = GL_TRUE;
 
 	GLenum error = glewInit();
@@ -107,6 +120,8 @@ void OutputConsole::setupWindow()
 	{
 		printf("[Mod] GLEW Error : %s\n", glewGetErrorString(error));
 	}
+	glEnable(GL_DEBUG_OUTPUT);
+	glDebugMessageCallback(GLManager::glCallback, 0);
 	glViewport(0, 0, width, height);
 
 	GFX::getOverlay()->init();
@@ -121,10 +136,13 @@ void OutputConsole::render()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glClearColor(0.15, 0.15, 0.15, 1);
 	glViewport(0, 0, width, height);
-
-	if (-((int)scroll - height + 150) > (long int) messages.size() * 25)
+	if (true)
 	{
-		scroll = (((long int) messages.size() * 25) - height + 150);
+		//scroll = -10000000;
+	}
+	if (-((int)scroll - height + 125) > (long int) messages.size() * 25)
+	{
+		scroll = (((long int) messages.size() * 25) - height + 125);
 		scroll = -scroll;
 		if (messages.size() < (height - 125) / 25)
 		{
@@ -149,7 +167,7 @@ void OutputConsole::render()
 	{
 		offset = 455;
 	}
-	for (int i = 0; i < end; i++)
+	for (int i = start; i < end; i++)
 	{
 		if (messages.at(i).id % 2 == 1)
 		{
@@ -180,7 +198,14 @@ void OutputConsole::render()
 		{
 			GFX::getOverlay()->drawString(messages.at(i).location, 155, (i * 25) + 80 + scroll, 21, 1, 1, 1, 1, width, height);
 
-			GFX::getOverlay()->drawString(messages.at(i).thread, 305, (i * 25) + 80 + scroll, 21, 1, 1, 1, 1, width, height); 
+			if (messages.at(i).thread.size() > 0)
+			{
+				GFX::getOverlay()->drawString(messages.at(i).thread, 305, (i * 25) + 80 + scroll, 21, 1, 1, 1, 1, width, height); 
+			}
+			else
+			{
+				GFX::getOverlay()->drawString("Unknown", 305, (i * 25) + 80 + scroll, 21, 0.7, 0.7, 0.7, 1, width, height);
+			}
 		}
 
 		
@@ -206,6 +231,11 @@ void OutputConsole::render()
 				GFX::getOverlay()->drawString(messages.at(i).text, offset, (i * 25) + 80 + scroll, 21, 1, 1, 1, 1, width, height);
 				break;
 			}
+			case(ConsoleMessage::Type::DEBUG_MESSAGE):
+			{
+				GFX::getOverlay()->drawString(messages.at(i).text, offset, (i * 25) + 80 + scroll, 21, 0.5, 0.5, 0.5, 1, width, height);
+				break;
+			}
 		}
 	}
 
@@ -218,7 +248,12 @@ void OutputConsole::render()
 		{
 			barSize = 1;
 		}
-		GFX::getOverlay()->fillRect(width - 12, height - 75 - ((height - 125 - 4) * (barSize)) - (-scroll * barSize) + -2, 10, (height - 125 - 4) * (barSize), width, height, 1, 1, 1, 1);
+		double sb = (height - 125 - 4) * (barSize);
+		if (sb < 5)
+		{
+			sb = 5;
+		}
+		GFX::getOverlay()->fillRect(width - 12, height - 75 - (sb) - (-scroll * barSize) + -2, 10, sb, width, height, 1, 1, 1, 1);
 	}
 
 	GFX::getOverlay()->fillRect(0, 0, width, 50, width, height, 0.10, 0.10, 0.10, 1);
@@ -245,6 +280,15 @@ void OutputConsole::render()
 
 	GFX::getOverlay()->drawString("Time : " + oss.str(), 10, 10, 21, 1, 1, 1, 1, width, height);
 	GFX::getOverlay()->drawString("Runtime : " + Util::removeDecimal(glfwGetTime(), 1) + "s", 10, 30, 21, 1, 1, 1, 1, width, height);
+
+	GFX::getOverlay()->drawString("Total Messages : " + std::to_string(messageCount[ConsoleMessage::Type::MESSAGE] + messageCount[ConsoleMessage::Type::WARNING_MESSAGE]
+		+ messageCount[ConsoleMessage::Type::ERROR_MESSAGE] + messageCount[ConsoleMessage::Type::CRITICAL_ERROR_MESSAGE] + messageCount[ConsoleMessage::Type::DEBUG_MESSAGE]
+	), 305, 10, 21, 1, 1, 1, 1, width, height);
+	GFX::getOverlay()->drawString("Regular : " + std::to_string(messageCount[ConsoleMessage::Type::MESSAGE]), 505, 10, 21, 1, 1, 1, 1, width, height);
+	GFX::getOverlay()->drawString("Warnings : " + std::to_string(messageCount[ConsoleMessage::Type::WARNING_MESSAGE]), 635, 10, 21, 1, 1, 1, 1, width, height);
+	GFX::getOverlay()->drawString("Errors : " + std::to_string(messageCount[ConsoleMessage::Type::ERROR_MESSAGE]), 765, 10, 21, 1, 1, 1, 1, width, height);
+	GFX::getOverlay()->drawString("Critical Errors : " + std::to_string(messageCount[ConsoleMessage::Type::CRITICAL_ERROR_MESSAGE]), 895, 10, 21, 1, 1, 1, 1, width, height);
+	GFX::getOverlay()->drawString("Debug : " + std::to_string(messageCount[ConsoleMessage::Type::DEBUG_MESSAGE]), 1075, 10, 21, 1, 1, 1, 1, width, height);
 
 	glfwSwapBuffers(outputWindow);
 	glfwPollEvents();
@@ -276,23 +320,46 @@ void OutputConsole::consoleFunction()
 {
 	ThreadManager::getThreadManager()->registerThread(std::this_thread::get_id(), "Console");
 	setupWindow();
+	double last = 0;
+	double now = 0;
 
 	while (true)
 	{
-		if (!addingMessage)
+		now = glfwGetTime();
+		if (now - last > 1.0 / FPS)
 		{
-			messages.insert(messages.end(), messagesToLoad.begin(), messagesToLoad.end());
-			messagesToLoad.clear();
-		}
-		render();
-		if (glfwWindowShouldClose(outputWindow))
-		{
-			OutputConsole::getConsole()->shutdown = true;
-			Log::out("Shutdowen!");
-			if (cleanupFinished)
+			last = now;
+			if (!addingMessage)
 			{
-				break;
+				if (windowEntered)
+				{
+					FPS = 60;
+				}
+				else if (messagesToLoad.size() > 0)
+				{
+					FPS = 30;
+				}
+				else
+				{
+					FPS = 15;
+				}
+				messages.insert(messages.end(), messagesToLoad.begin(), messagesToLoad.end());
+				messagesToLoad.clear();
 			}
+
+			render();
+			if (glfwWindowShouldClose(outputWindow))
+			{
+				OutputConsole::getConsole()->shutdown = true;
+				if (cleanupFinished)
+				{
+					break;
+				}
+			}
+		}
+		else
+		{
+			std::this_thread::sleep_for(timestep);
 		}
 	}
 	cleanupFinished = false;
@@ -330,6 +397,7 @@ void OutputConsole::message(std::string msg, int level)
 	m.text = msg;
 	m.id = i++;
 	m.type = level;
+	messageCount[level]++;
 	m.location = "Auravyx";
 	m.thread = ThreadManager::getThreadManager()->getThreadName(std::this_thread::get_id());
 
@@ -348,7 +416,7 @@ void OutputConsole::cleanup()
 	cleanupFinished = true;
 	while (cleanupFinished)
 	{
-
+		std::this_thread::sleep_for(timestep);
 	}
 	glfwPollEvents();
 	glfwDestroyWindow(outputWindow);

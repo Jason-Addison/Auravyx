@@ -31,9 +31,15 @@ void ModelShader::loadAllUniformLocations()
 	viewMatrix = getUniformLocation("viewMatrix");
 	cameraPosition = getUniformLocation("cameraPosition");
 	farPlane = getUniformLocation("farPlane");
+	diffuseColor = getUniformLocation("diffuseColor");
 }
 void ModelShader::loadCamera(float x, float y, float z, float farPlane)
 {
 	loadVec3f(cameraPosition, x, y, z);
 	loadFloat(this->farPlane, farPlane);
+}
+
+void ModelShader::loadDiffuseColor(float r, float g, float b, float a)
+{
+	loadVec4f(diffuseColor, r, g, b, a);
 }

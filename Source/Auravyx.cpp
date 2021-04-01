@@ -20,6 +20,7 @@
 #include <Engine/Controller.h>
 #include <Engine/GameState.h>
 #include <Engine\OutputConsole.h>
+#include <Graphics\Model\ColladaParser.h>
 double thisFrame = 0;
 double nextFrame = 0;
 
@@ -97,7 +98,7 @@ void loop()
 		thisTimeFPS = glfwGetTime();
 		deltaRender = thisTimeFPS - lastTimeFPS;
 		lastTimeFPSOld = lastTimeFPS;
-		
+		Clock::DELTA = deltaRender;
 		if (GFX::getOverlay()->FPS == GFX::getOverlay()->UNLIMITED_FPS || deltaRender >= framesPerSecond)
 		{
 			WindowManager::getWindow()->update();
@@ -168,10 +169,16 @@ int main(int argc, char* argv[])
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			glClearColor(0.1, 0.1, 0.1, 1);
 			Resource::getResources()->renderProgress();
+			
 			WindowManager::getWindow()->update();
 		}
-		std::this_thread::sleep_for(timeStep);
+		else
+		{
+			std::this_thread::sleep_for(timeStep);
+		}
 	}
+
+	ColladaParser::parse("C:\\Users\\jason\\Downloads\\Zelda\\Zeld\\Zelda.dae");
 	Resource::getResources()->clearPreloadedResources();
 	Renderer::getRenderer()->getShaders()->lineShader->init();
 	asyncLoader.join();

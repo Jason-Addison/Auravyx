@@ -45,12 +45,12 @@ GLuint Model::getElementBuffer()
 {
 	return elementBuffer;
 }
-void Model::setMaterials(std::vector<OBJMaterial> materials)
+void Model::setMaterials(std::vector<ModelMaterial> materials)
 {
 	this->materials = materials;
 }
 
-std::vector<OBJMaterial> Model::getMaterials()
+std::vector<ModelMaterial> Model::getMaterials()
 {
 	return materials;
 }
@@ -66,7 +66,7 @@ void Model::destroy()
 
 void Model::setTexture(int index, Texture texture)
 {
-	materials.at(index).texture = texture;
+	/////////////////materials.at(index).texture = texture;
 }
 
 Model Model::load2DModel(std::vector<float> vertices)
@@ -99,6 +99,25 @@ Model Model::loadIndexed3DModel(std::vector<float> vertices, std::vector<float> 
 
 	addVertexAttribute(0, 3, m, vertices);
 	addVertexAttribute(1, 3, m, normals);
+	elementBuffer = addIndicesBuffer(indices);
+
+	m.indexCount = indices.size();
+
+	glBindVertexArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	return m;
+}
+Model Model::loadIndexed3DModel(std::vector<float> vertices, std::vector<float> normals, std::vector<float> textures,
+	std::vector<float> colors, std::vector<unsigned int> indices) 
+{
+	GLuint vao = generateVAO();
+	GLuint elementBuffer = 0;
+	Model m(vao, vertices.size());
+
+	addVertexAttribute(0, 3, m, vertices);
+	addVertexAttribute(1, 3, m, normals);
+	addVertexAttribute(2, 2, m, textures);
+	addVertexAttribute(3, 3, m, colors);
 	elementBuffer = addIndicesBuffer(indices);
 
 	m.indexCount = indices.size();

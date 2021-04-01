@@ -37,9 +37,15 @@ public:
 
 	std::vector<unsigned int> allMaterials;
 
+	std::vector<unsigned int> allLiquidMaterials;
+
 	Model mesh;
 
+	Model liquidMesh;
+
 	std::vector<std::vector<float>> generate();
+
+	std::vector<std::vector<float>> generateLiquid();
 
 	void generateTerrain(std::shared_ptr<ChunkHeight> heights);
 
@@ -48,6 +54,9 @@ public:
 	void addVertex(Vec3f pos, std::vector<float>* vec, float x, float y, float z);
 
 	void addTriangle(Voxel* v1, Voxel* v2, Voxel* v3, Voxel* v4, std::vector<float>* vec, float x, float y, float z);
+
+	void addTriangleL(Voxel* v1, Voxel* v2, Voxel* v3, Voxel* v4, std::vector<float>* vec, float x, float y, float z);
+
 
 	unsigned short getDensity(int x, int y, int z);
 
@@ -83,9 +92,13 @@ public:
 
 	void fill(int x, int y, int z, int nx, int ny, int nz, int id, int density);
 
+	void clear(int x, int y, int z, int nx, int ny, int nz, int id, int density);
+
 	static void setPredef();
 
 	void setRelativeVoxel(int x, int y, int z, int id, int density);
+
+	void updateRelativeVoxel(int x, int y, int z);
 
 	int getRelativeVoxelID(int x, int y, int z);
 

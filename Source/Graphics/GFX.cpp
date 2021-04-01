@@ -196,7 +196,7 @@ void GFX::renderModel(float x, float y, float z, float xScale, float yScale,
 	Renderer::getRenderer()->getShaders()->modelShader->loadProjectionMatrix(*projection);
 	Matrix4f t = M::createTransformationMatrix(x, y, z, xScale, yScale, zScale, xRot, yRot, zRot);
 	Renderer::getRenderer()->getShaders()->modelShader->loadTransformationMatrix(t);
-	Renderer::getRenderer()->getShaders()->modelShader->loadCamera(c->x, c->y, c->z, viewDistance * 64);
+	Renderer::getRenderer()->getShaders()->modelShader->loadCamera(c->x, c->y, c->z, GFX::getOverlay()->viewDistance * 64);
 	glEnable(GL_DEPTH_TEST);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glDisable(GL_CULL_FACE);
@@ -213,6 +213,44 @@ void GFX::renderModel(float x, float y, float z, float xScale, float yScale,
 	glEnableVertexArrayAttrib(m->getVAO(), 1);
 	glEnableVertexArrayAttrib(m->getVAO(), 2);
 	glDrawArrays(GL_TRIANGLES, 0, m->getCount());
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_CULL_FACE);
+	Renderer::getRenderer()->getShaders()->modelShader->stop();
+}
+
+void GFX::renderModelIndex(float x, float y, float z, float xScale, float yScale, float zScale, float xRot, float yRot, float zRot, Model* m, Camera* c, Matrix4f* projection, Texture* tex)
+{
+	Renderer::getRenderer()->getShaders()->modelShader->start();
+	Renderer::getRenderer()->getShaders()->modelShader->loadCamera(c->getViewMatrix());
+	Renderer::getRenderer()->getShaders()->modelShader->loadProjectionMatrix(*projection);
+	Matrix4f t = M::createTransformationMatrix(x, y, z, xScale, yScale, zScale, xRot, yRot, zRot);
+	Renderer::getRenderer()->getShaders()->modelShader->loadTransformationMatrix(t);
+	Renderer::getRenderer()->getShaders()->modelShader->loadCamera(c->x, c->y, c->z, viewDistance * 64);
+	glEnable(GL_DEPTH_TEST);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	glDisable(GL_CULL_FACE);
+
+	glBindVertexArray(m->getVAO());
+	glEnableVertexArrayAttrib(m->getVAO(), 0);
+	glEnableVertexArrayAttrib(m->getVAO(), 1);
+	glEnableVertexArrayAttrib(m->getVAO(), 2);
+	glEnableVertexArrayAttrib(m->getVAO(), 3);
+	int index = 0;
+	GLuint tt = Assets::getAssets()->getTexture("npc_zelda_miko_body_alb")->texture;
+
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glEnable(GL_BLEND);
+	glActiveTexture(GL_TEXTURE0);
+	for (auto mat : m->materials)
+	{
+		glBindTexture(GL_TEXTURE_2D, mat.albedo);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+		glDrawElements(GL_TRIANGLES, mat.length, GL_UNSIGNED_INT, (void*)(index * sizeof(GLuint)));
+		index += mat.length;
+	}
+
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
 	Renderer::getRenderer()->getShaders()->modelShader->stop();

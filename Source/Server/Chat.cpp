@@ -267,8 +267,15 @@ void Chat::command(std::string cmd)
 	if (parse.size() > 1 && parse.at(0).compare("fps") == 0)
 	{
 		float fps = std::stof(parse.at(1));
-		Log::out("Command", "FPS set to " + std::to_string(fps), RED);
-		GFX::getOverlay()->setFPS(fps);
+		if (fps < 5 && (int) fps != -1)
+		{
+			Log::out("Command", "FPS can not be lower than 5!", RED);
+		}
+		else
+		{
+			Log::out("Command", "FPS set to " + std::to_string(fps), RED);
+			GFX::getOverlay()->setFPS(fps);
+		}
 	}
 	if (parse.size() > 0 && parse.at(0).compare("save") == 0)
 	{

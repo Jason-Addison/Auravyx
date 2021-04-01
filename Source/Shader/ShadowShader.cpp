@@ -8,6 +8,7 @@
 #include <iostream>
 #include <Graphics/GFX.h>
 #include <Utilities/Assets.h>
+#include <Utilities\M.h>
 ShadowShader::ShadowShader()
 {
 	shader = "Shadow";
@@ -46,10 +47,10 @@ void ShadowShader::render(World &world, ShadowMap &shadowMap, Camera &camera, Ve
 	float yRot = position.y;// acos(position.y) * 180 / 3.14;
 	float zRot = position.z;// acos(position.z) * 180 / 3.14;
 
-	viewMatrix.createViewMatrix((int) camera.getX(), (int) camera.getY(), (int) camera.getZ(), xRot, yRot, zRot);
+	viewMatrix.createViewMatrix((int) camera.xPos, (int) camera.yPos, (int) camera.zPos, xRot, yRot, zRot);
 	Matrix4f modelMatrix;
 	Matrix4f projectionMatrix;
-	float size = 400;
+	float size = 100;
 	projectionMatrix.createOrthographicMatrix(-size, size, -size, size, -size, size);
 
 	depthMVP = projectionMatrix.multiply(viewMatrix);
@@ -85,9 +86,14 @@ void ShadowShader::render(World &world, ShadowMap &shadowMap, Camera &camera, Ve
 	}*/
 	loadDepthMVP(depthMVP);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+	Matrix4f iMatrix;
+	iMatrix.setIdentity();
+	loadTransformation(iMatrix);
+	//glEnable(GL_CULL_FACE);
+	//glCullFace(GL_BACK);
 	for (auto &c : world.overworld)
 	{
-		//glDisable(GL_CULL_FACE);
 		if (c->ready)
 		{
 			c->render(camera, projectionMatrix);
@@ -95,6 +101,24 @@ void ShadowShader::render(World &world, ShadowMap &shadowMap, Camera &camera, Ve
 	}
 	glCullFace(GL_BACK);
 	glDisable(GL_CULL_FACE);
+
+	std::shared_ptr<Model> m = Assets::getAssets()->getAssets()->getModel("mesh");
+	glBindVertexArray(m->getVAO());
+	glEnableVertexArrayAttrib(m->getVAO(), 0);
+
+	Matrix4f matrix = M::createTransformationMatrix(GFX::getOverlay()->CAM.xPos, GFX::getOverlay()->CAM.yPos, GFX::getOverlay()->CAM.zPos,
+		1, 1, 1, 0, 90, (GFX::getOverlay()->CAM.yRot + 180) * 0);
+	loadTransformation(matrix);
+	
+	glDrawElements(GL_TRIANGLES, m->indexCount, GL_UNSIGNED_INT, 0);
+	
+
+	//GFX::getOverlay()->renderModelIndex(GFX::getOverlay()->CAM.xPos, GFX::getOverlay()->CAM.yPos, GFX::getOverlay()->CAM.zPos,
+	//		1, 1, 1, 0, 0, (GFX::getOverlay()->CAM.yRot + 180) * 0, Assets::getAssets()->getAssets()->getModel("mesh").get(),
+	//		&(GFX::getOverlay()->CAM), projectionMatrix, Assets::getAssets()->getAssets()->getTexture("face").get());
+
+
+	//GFX::getOverlay()->renderModel(GFX::getOverlay()->CAM.xPos, GFX::getOverlay()->CAM.yPos, GFX::getOverlay()->CAM.zPos, 1, 1, 1, -90, 0, (GFX::getOverlay()->CAM.yRot + 180) * 0, Assets::getAssets()->getAssets()->getModel("model").get(), &(GFX::getOverlay()->CAM), projectionMatrix, Assets::getAssets()->getAssets()->getTexture("mod").get());
 }
 
 void ShadowShader::loadWind(float power, float xDir, float zDir)

@@ -16,7 +16,6 @@ bool verboseChunkIO = false;
 
 void ChunkIO::saveArea()
 {
-	
 	std::string dir = Resource::getResources()->DIR + "\\Saves\\m.txt";
 
 	FILE* chunkOutput = fopen(dir.c_str(), "rb+");
@@ -95,6 +94,10 @@ std::shared_ptr<Chunk> ChunkIO::readChunk(int x, int y, int z, std::string name)
 	{
 		fread(chunk->density, sizeof(short), 262144, chunkInput);
 	}
+	else
+	{
+		std::fill(chunk->density, chunk->density + 262144, 0);
+	}
 	chunk->x = x;
 	chunk->y = y;
 	chunk->z = z;
@@ -103,5 +106,6 @@ std::shared_ptr<Chunk> ChunkIO::readChunk(int x, int y, int z, std::string name)
 		Log::out("ChunkIO", "Loaded : " + std::to_string(x) + " " + std::to_string(y) + " " + std::to_string(z), DARK_BLUE);
 	}
 	fclose(chunkInput);
+	chunk->dataLoaded = true;
 	return chunk;
 }

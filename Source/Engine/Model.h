@@ -3,6 +3,7 @@
 #include "Library\GLFW\glfw3.h"
 #include <vector>
 #include "Engine/OBJMaterial.h"
+#include "Graphics/Model/ModelMaterial.h"
 class Model
 {
 public:
@@ -12,7 +13,7 @@ public:
 	Model(GLuint vao, GLuint elementBuffer, int vertexCount);
 	~Model();
 
-	std::vector<OBJMaterial> materials;
+	std::vector<ModelMaterial> materials;
 
 	std::string name;
 
@@ -35,6 +36,9 @@ public:
 
 	static Model loadIndexed3DModel(std::vector<float> vertices, std::vector<float> normals, std::vector<unsigned int> indices);
 
+	static Model loadIndexed3DModel(std::vector<float> vertices, std::vector<float> normals, std::vector<float> textures, 
+		std::vector<float> colors, std::vector<unsigned int> indices);
+
 	static Model load3DModel(std::vector<float> vertices, std::vector<float> normals);
 
 	static Model load3DLineModel(std::vector<float> vertices, std::vector<float> colours);
@@ -51,9 +55,9 @@ public:
 
 	static Model load3DModel(std::vector<float> vertices);
 
-	void setMaterials(std::vector<OBJMaterial> materials);
+	void setMaterials(std::vector<ModelMaterial> materials);
 
-	std::vector<OBJMaterial> getMaterials();
+	std::vector<ModelMaterial> getMaterials();
 
 	void destroy();
 

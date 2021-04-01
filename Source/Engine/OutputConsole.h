@@ -47,7 +47,7 @@ private:
 	static void displayResizeCallback(GLFWwindow* _window, int _width, int _height);
 	static void errorCallback(int error, const char* description);
 	static void scrollCallback(GLFWwindow* window, double xoffset, double yoffset);
-
+	static void mouseEnterCallback(GLFWwindow*, int enter);
 	void setupWindow();
 	void consoleFunction();
 

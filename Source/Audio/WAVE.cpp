@@ -41,19 +41,19 @@ void WAVE::load(const char * path)
 	fread(type, sizeof(char), 4, fp);
 	if (type[0] != 'R' || type[1] != 'I' || type[2] != 'F' || type[3] != 'F')
 	{
-		printf("No RIFF\n");
+		Log::error("[WAVE Loader] No 'RIFF' found!");
 	}
 	fread(&size, sizeof(DWORD), 1, fp);
 	fread(type, sizeof(char), 4, fp);
 	
 	if (type[0] != 'W' || type[1] != 'A' || type[2] != 'V' || type[3] != 'E')
 	{
-		printf("Not WAVE\n");
+		Log::error("[WAVE Loader] No 'WAVE' found!");
 	}
 	fread(type, sizeof(char), 4, fp);
 	if (type[0] != 'f' || type[1] != 'm' || type[2] != 't' || type[3] != ' ')
 	{
-		printf("Not fmt \n");
+		Log::error("[WAVE Loader] No 'fmt' found!");
 	}
 	fread(&chunkSize, sizeof(DWORD), 1, fp);
 	fread(&formatType, sizeof(short), 1, fp);

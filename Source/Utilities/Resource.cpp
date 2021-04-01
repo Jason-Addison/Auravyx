@@ -15,6 +15,7 @@
 #include <deque>
 #include <filesystem>
 #include <thread>
+#include "Graphics/Model/ColladaParser.h"
 Resource::Resource()
 {
 }
@@ -89,6 +90,7 @@ std::string fDebug = "Font texture";
 std::string otherDebug = "Other";
 std::string bootDebug = "Boot";
 
+int textureCounter = 0;
 
 bool Resource::loadAllResources()
 {
@@ -101,7 +103,6 @@ bool Resource::loadAllResources()
 		{
 			Renderer::getRenderer()->getShaders()->init(preloadShaders);
 			shadersLoaded = false;
-			GFX::getOverlay()->checkForGLError(&otherDebug);
 		}
 		if (modelsLoaded)
 		{
@@ -111,94 +112,80 @@ bool Resource::loadAllResources()
 				Assets::getAssets()->getAssets()->addModel(pm.name, m);
 			}
 			modelsLoaded = false;
-			GFX::getOverlay()->checkForGLError(&otherDebug);
 		}
 		if (texturesLoaded)
 		{
-			for (auto pt : preloadedTextures)
+			int nextUp = textureCounter + 1;
+			if (textureCounter >= preloadedTextures.size())
 			{
-				unsigned int tex = SOIL_create_OGL_texture(pt.tex, pt.width, pt.height, pt.channel, SOIL_CREATE_NEW_ID,
-					SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_COMPRESS_TO_DXT);
-				if (tex == 0)
-				{
-					Log::out("[SOIL] Error code: " + std::string(SOIL_last_result()) + " at " + pt.name);
-				}
-				
-				SOIL_free_image_data(pt.tex);
-
-				if (tex == 0)
-				{
-					Log::out("[SOIL] Error code: " + std::string(SOIL_last_result()) + " at " + pt.name);
-				}
-
-				Texture t(tex, pt.width, pt.height);
-				Assets::getAssets()->getAssets()->addTexture(pt.name, t);
+				texturesLoaded = false;
+				Log::out("AWWEWAJIOWADIJUDAWJIOU");
 			}
-			texturesLoaded = false;
-			GFX::getOverlay()->checkForGLError(&otherDebug);
+			else
+			{
+				for (int i = textureCounter; i < nextUp; i++)
+				{
+					auto pt = preloadedTextures.at(i);
+					unsigned int tex = SOIL_create_OGL_texture(pt.tex, pt.width, pt.height, pt.channel, SOIL_CREATE_NEW_ID,
+						SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_COMPRESS_TO_DXT);
+					if (tex == 0)
+					{
+						Log::out("[SOIL] Error code: " + std::string(SOIL_last_result()) + " at " + pt.name);
+					}
+
+					SOIL_free_image_data(pt.tex);
+
+					if (tex == 0)
+					{
+						Log::out("[SOIL] Error code: " + std::string(SOIL_last_result()) + " at " + pt.name);
+					}
+					Texture t(tex, pt.width, pt.height);
+					Assets::getAssets()->getAssets()->addTexture(pt.name, t);
+				}
+				textureCounter++;
+			}
 		}
-		if (terrainTexturesLoaded)
+		else if (terrainTexturesLoaded)
 		{
 			int l = 0;
 			int width = 1024, height = 1024;
 			GLsizei count = (GLsizei) preloadedTerrainTextures.size();
-			GFX::getOverlay()->checkForGLError(&ttDebug, l++);
 			int i = 0;
 			GLuint texture3D;
 			glGenTextures(1, &texture3D);
-			GFX::getOverlay()->checkForGLError(&ttDebug, l++);
 			glBindTexture(GL_TEXTURE_2D_ARRAY, texture3D);
-			GFX::getOverlay()->checkForGLError(&ttDebug, l++);
 			glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_WIDTH, &width);
-			GFX::getOverlay()->checkForGLError(&ttDebug, l++);
 			glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_HEIGHT, &height);
-			GFX::getOverlay()->checkForGLError(&ttDebug, l++);
 			width = 1024;
 			height = 1024;
 			glPixelStorei(GL_UNPACK_ROW_LENGTH, width);
-			GFX::getOverlay()->checkForGLError(&ttDebug, l++);
 			glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-			GFX::getOverlay()->checkForGLError(&ttDebug, l++);
 			glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-			GFX::getOverlay()->checkForGLError(&ttDebug, l++);
 			glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-			GFX::getOverlay()->checkForGLError(&ttDebug, l++);
 			glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, GL_REPEAT);
-			GFX::getOverlay()->checkForGLError(&ttDebug, l++);
 			glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, GL_REPEAT);
-			GFX::getOverlay()->checkForGLError(&ttDebug, l++);
 			glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGBA8, width, height, count, 0, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, NULL);
-			GFX::getOverlay()->checkForGLError(&ttDebug, l++);
 			for (auto pt : preloadedTerrainTextures)
 			{
 				glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, i, width, height, 1, GL_RGBA, GL_UNSIGNED_BYTE, pt.tex);
-				GFX::getOverlay()->checkForGLError(&ttDebug, 1000);
 				glGenerateMipmap(GL_TEXTURE_2D_ARRAY);
-				GFX::getOverlay()->checkForGLError(&ttDebug, 1001);
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-				GFX::getOverlay()->checkForGLError(&ttDebug, 1002);
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-				GFX::getOverlay()->checkForGLError(&ttDebug, 1003);
 
 				glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-				GFX::getOverlay()->checkForGLError(&ttDebug, 1004);
 				glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-				GFX::getOverlay()->checkForGLError(&ttDebug, 1005);
 				glTexParameterf(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_LOD_BIAS, (GLfloat) GFX::getOverlay()->mipmapBias);
-				GFX::getOverlay()->checkForGLError(&ttDebug, 1006);
 				i++;
 				SOIL_free_image_data(pt.tex);
 				if (pt.tex == 0)
 				{
 					Log::out("[SOIL] Error code: " + std::string(SOIL_last_result()) + " at " + pt.name);
 				}
-				GFX::getOverlay()->checkForGLError(&ttDebug, 1007);
 			}
 			GFX::getOverlay()->terrainMaterials = texture3D;
 			terrainTexturesLoaded = false;
-			GFX::getOverlay()->checkForGLError(&ttDebug, l++);
 		}
-		if (modsLoaded)
+		else if (modsLoaded)
 		{
 			whatIsLoadingPrimary = "";
 			whatIsLoadingSecondary = "";
@@ -220,6 +207,7 @@ bool Resource::loadAllResources()
 	{
 		return true;
 	}
+
 	return false;
 }
 
@@ -273,7 +261,6 @@ void Resource::loadTextureSilent(std::string texture)
 	std::string textureName = FileIO::getFileName(texture);
 	t.name = textureName.substr(0, textureName.length() - 4);
 	Assets::getAssets()->getAssets()->addTexture(t.name, t);
-	GFX::getOverlay()->checkForGLError(&bootDebug);
 }
 
 void Resource::loadAllAsyncAssets()
@@ -401,7 +388,6 @@ void Resource::loadBootAssets()
 	//FontLoader::loadFont(Resource::getResources()->DIR + "\\Assets\\font.fnt");
 	loadTextureSilent(Resource::getResources()->DIR + "\\Assets\\Boot\\font_plain.png");
 	FontLoader::loadFont(Resource::getResources()->DIR + "\\Assets\\Boot\\font_plain.fnt");
-	GFX::getOverlay()->checkForGLError(&bootDebug);
 }
 
 int Resource::loadTexture(std::string dir)
@@ -608,6 +594,11 @@ void Resource::loadAllTerrainTextures()
 			std::string textureName = FileIO::getFileName(texture);
 			textureName = textureName.substr(0, textureName.length() - 4);
 			whatIsLoadingSecondary = textureName;
+
+			if (printEachAssetLoad)
+			{
+				Log::out("         - " + textureName + " (" + std::to_string(width) + " x " + std::to_string(height) + ")");
+			}
 		}
 		else
 		{

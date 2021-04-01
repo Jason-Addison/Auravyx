@@ -5,8 +5,8 @@ class ShadowMap : public FBO
 {
 public:
 
-	int width = 1024 * 2;
-	int height = 1024 * 2;
+	int width = 1024 * 8;
+	int height = 1024 * 8;
 
 	Matrix4f depthMVP;
 

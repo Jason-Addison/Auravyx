@@ -24,7 +24,7 @@ void DeferredShader::loadAllUniformLocations()
 
 	loadTexture("albedo", 0);
 	loadTexture("normal", 1);
-	loadTexture("specular", 2);
+	loadTexture("lighting", 2);
 	loadTexture("glow", 3);
 	loadTexture("position", 4);
 	loadTexture("shadowMap", 5);

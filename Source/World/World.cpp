@@ -13,6 +13,7 @@
 #include "Physics/PhysicsWorld.h"
 #include <iostream>
 #include <Auravyx.h>
+#include <Utilities\Log.h>
 FBO fbo;
 std::vector<std::string> fboStrings;
 
@@ -35,7 +36,7 @@ void World::generate()
 
 void World::update()
 {
-	float speed = 50000;
+	float speed = 500000;
 	if (WindowManager::getWindow()->getController()->isKeyDown(GLFW_KEY_EQUAL))
 	{
 		overworldTime += Clock::get(speed);
@@ -58,19 +59,21 @@ void World::render(Camera* cam, Matrix4f* projectionMatrix)
 {
 	fbo.unbind();
 
+	static float m = -40;
+	
+	m = fmod((double)(getOverworldTime() % getOverworldDayCycle()) * 0.0015, 360);
 	shadowMap.bind();
 	glDisable(GL_BLEND);
 	glClearColor(1, 1, 1, 1);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	static float m = -40;
-	
-	m = fmod((double)(getOverworldTime() % getOverworldDayCycle()) * 0.0015, 360);
 	
 	Vec3f dir(0, -90, -m);
 	Renderer::getRenderer()->getShaders()->shadowShader->render(*this, shadowMap, *cam, dir);
 	
 	shadowMap.unbind();
 	fbo.update(WindowManager::getWindow()->getWidth(), WindowManager::getWindow()->getHeight());
+	//fbo.checkStatus();
+	//Log::out(std::to_string(fbo.checkStatus()));
 	fbo.bind();
 	fbo.clear();
 
@@ -102,7 +105,7 @@ void World::render(Camera* cam, Matrix4f* projectionMatrix)
 	Renderer::getRenderer()->getShaders()->voxelShader->start();
 	Renderer::getRenderer()->getShaders()->voxelShader->loadProjectionMatrix(*projectionMatrix); // *projectionMatrix);
 	Renderer::getRenderer()->getShaders()->voxelShader->loadCamera(cam->getViewMatrix());
-	Renderer::getRenderer()->getShaders()->voxelShader->loadCamera(cam->x, cam->y, cam->z, GFX::getOverlay()->viewDistance * 64);
+	Renderer::getRenderer()->getShaders()->voxelShader->loadCamera(cam->xPos, cam->yPos, cam->zPos, GFX::getOverlay()->viewDistance * 64);
 
 	std::vector<int> toRemove;
 	int distance;
@@ -198,10 +201,20 @@ void World::render(Camera* cam, Matrix4f* projectionMatrix)
 		if (c != nullptr && c->ready)
 		{
 			c->render(GFX::getOverlay()->CAM, *projectionMatrix);
-			//GFX::getOverlay()->renderModel(c->x * 128, c->y * 128, c->z * 128, 10, 10, 10, 0, 0, 0, Assets::getAssets()->getAssets()->getModel("sky").get(), &GFX::getOverlay()->CAM, projectionMatrix, Assets::getAssets()->getAssets()->getTexture("light_blue").get());
 		}
 	}
 	Renderer::getRenderer()->getShaders()->voxelShader->stop();
+	//GFX::getOverlay()->renderModel(GFX::getOverlay()->CAM.xPos, GFX::getOverlay()->CAM.yPos, GFX::getOverlay()->CAM.zPos,
+	//	1, 1, 1, -90, 0, (GFX::getOverlay()->CAM.yRot + 180) * 0, Assets::getAssets()->getAssets()->getModel("model").get(),
+	//	&(GFX::getOverlay()->CAM), projectionMatrix, Assets::getAssets()->getAssets()->getTexture("mod").get());
+
+		GFX::getOverlay()->renderModelIndex(GFX::getOverlay()->CAM.xPos, GFX::getOverlay()->CAM.yPos, GFX::getOverlay()->CAM.zPos,
+			1, 1, 1, 0, 90, (GFX::getOverlay()->CAM.yRot + 180) * 0, Assets::getAssets()->getAssets()->getModel("mesh").get(),
+			&(GFX::getOverlay()->CAM), projectionMatrix, Assets::getAssets()->getAssets()->getTexture("face").get());
+	
+		GFX::getOverlay()->renderModelIndex(0, 0, 0,
+			1, 1, 1, 0, 0, (0 + 180) * 0, Assets::getAssets()->getAssets()->getModel("mesh").get(),
+			&(GFX::getOverlay()->CAM), projectionMatrix, Assets::getAssets()->getAssets()->getTexture("face").get());
 	//s1.setPosition(GFX::getOverlay()->CAM.x, GFX::getOverlay()->CAM.y - 5, GFX::getOverlay()->CAM.z);
 	
 	GFX::getOverlay()->renderModel(s1->getX(), s1->getY(), s1->getZ(), 1, 1, 1, 0, 0, 0, Assets::getAssets()->getAssets()->getModel("sky").get(), &(GFX::getOverlay()->CAM), projectionMatrix, Assets::getAssets()->getAssets()->getTexture("light_blue").get());
@@ -224,7 +237,7 @@ void World::render(Camera* cam, Matrix4f* projectionMatrix)
 	Renderer::getRenderer()->getShaders()->deferredShader->loadDepthMVP(shadowMap.depthMVP);
 	//Renderer::getRenderer()->getShaders()->deferredShader->loadPointLights(lights);
 	Renderer::getRenderer()->getShaders()->deferredShader->loadSunDirection(cos(M::toRadians(m)), -sin(M::toRadians(m)), 0);
-	Renderer::getRenderer()->getShaders()->deferredShader->loadCamera(cam->x, cam->y, cam->z, GFX::getOverlay()->viewDistance * 64, cam->getViewMatrix());
+	Renderer::getRenderer()->getShaders()->deferredShader->loadCamera(cam->xPos, cam->yPos, cam->zPos, GFX::getOverlay()->viewDistance * 64, cam->getViewMatrix());
 	double lightFactor = (1 - 1) * 0.9 + 0.1;
 	   
 	double step = (double)(getOverworldTime() % getOverworldDayCycle()) / (double)getOverworldDayCycle();
@@ -250,8 +263,7 @@ void World::render(Camera* cam, Matrix4f* projectionMatrix)
 	glBindTexture(GL_TEXTURE_2D, fbo.buffers[4]);
 	glActiveTexture(GL_TEXTURE5);
 	glBindTexture(GL_TEXTURE_2D, shadowMap.depthTexture);
-	glActiveTexture(GL_TEXTURE6);
-	glBindTexture(GL_TEXTURE_2D, fbo.buffers[1]);
+
 	glBindVertexArray(GFX::getOverlay()->quad.getVAO());
 	glEnableVertexArrayAttrib(GFX::getOverlay()->quad.getVAO(), 0);
 	glDrawArrays(GL_TRIANGLES, 0, 6 * 3);
@@ -266,11 +278,13 @@ void World::render(Camera* cam, Matrix4f* projectionMatrix)
 		for (int i = 0; i < 5; i++)
 		{
 			GFX::getOverlay()->drawImage(width * i, 0, width, height, fbo.buffers[i]);
-			GFX::getOverlay()->drawStringBG(fboStrings.at(i), i * width, WindowManager::getWindow()->getHeight() - height, 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3);
+			GFX::getOverlay()->drawStringBG(fboStrings.at(i), i * width, WindowManager::getWindow()->getHeight() - height, WindowManager::getWindow()->getWidth() / 80,
+				1, 1, 1, 1, 0, 0, 0, WindowManager::getWindow()->getWidth() / 300 - 10, 0, 0, 0, 0.3);
 		}
 		GFX::getOverlay()->drawImage(width * 5, 0, width, height, shadowMap.depthTexture);
 		GFX::getOverlay()->drawImage(width * 5, height, width, height, Assets::getAssets()->getAssets()->getTexture("font_plain")->texture);
-		GFX::getOverlay()->drawStringBG("shadow", width * 5, WindowManager::getWindow()->getHeight() - height, 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3);
+		GFX::getOverlay()->drawStringBG("shadow", width * 5, WindowManager::getWindow()->getHeight() - height, WindowManager::getWindow()->getWidth() / 80,
+			1, 1, 1, 1, 0, 0, 0, WindowManager::getWindow()->getWidth() / 300 - 10, 0, 0, 0, 0.3);
 	}
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }
@@ -342,10 +356,7 @@ void World::setVoxel(int x, int y, int z, int type, float density)
 	Chunk* c = getChunk(((float) x / (float) c->CHUNK_SIZE) * 2, (float)y / (float)c->CHUNK_SIZE * 2, (float)z / (float) c->CHUNK_SIZE * 2);
 	if (c != nullptr)
 	{
-		//std::cout << x - (c->x * c->CHUNK_SIZE / 2) << " " << c->x << "  " << (y - c->y * c->CHUNK_SIZE) * 2 << "  " << (z - c->z * c->CHUNK_SIZE) * 2 << "\n";
-		//c->setDensity((x - c->x * c->CHUNK_SIZE) * 2, (y - c->y * c->CHUNK_SIZE) * 2, (z - c->z * c->CHUNK_SIZE) * 2, density);
-		//c->generate();
-		//c->chunkUpdate = true;
+
 	}
 }
 
@@ -384,14 +395,14 @@ void World::setup()
 	overworld = std::vector<std::unique_ptr<Chunk>>();
 	fboStrings.emplace_back("albedo");
 	fboStrings.emplace_back("normal");
-	fboStrings.emplace_back("specular");
+	fboStrings.emplace_back("spec / light");
 	fboStrings.emplace_back("glow");
+	fboStrings.emplace_back("position");
+	fboStrings.emplace_back("shadow");
 	fboStrings.emplace_back("glow");
-	fboStrings.emplace_back("glow");
-	fboStrings.emplace_back("glow");
-	//fboStrings.emplace_back("-");
-	//fboStrings.emplace_back("-");
-	//fboStrings.emplace_back("-");
+	fboStrings.emplace_back("-");
+	fboStrings.emplace_back("-");
+	fboStrings.emplace_back("-");
 	fboStrings.emplace_back("position");
 }
 

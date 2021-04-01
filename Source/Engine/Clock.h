@@ -9,5 +9,7 @@ public:
 
 	static double UPS;
 	static double get(double x);
+
+	static double DELTA;
 };
 

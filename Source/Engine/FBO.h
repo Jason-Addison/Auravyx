@@ -35,5 +35,7 @@ public:
 	void addBuffer(int attachment, int format);
 
 	void destroy();
+
+	GLenum checkStatus();
 };
 

@@ -28,6 +28,7 @@
 #include <Auravyx.h>
 #include <stdexcept>
 #include <Utilities\Log.h>
+#include <Utilities\io.h>
 GameState::GameState()
 {
 }
@@ -99,13 +100,13 @@ void chunkLoading(int xC, int yC, int zC)
 					cX = z;
 					cZ = -(z - x);
 				}
-				std::shared_ptr<ChunkHeight> ch = w.getChunkHeightmap(cX, cZ);
-				if (ch == nullptr)
+				//std::shared_ptr<ChunkHeight> ch = w.getChunkHeightmap(cX, cZ);
+				//if (ch == nullptr)
 				{
-						ch = std::shared_ptr<ChunkHeight>(new ChunkHeight());
-						ch->generate(cX, cZ);
+					//ch = std::shared_ptr<ChunkHeight>(new ChunkHeight());
+					//ch->generate(cX, cZ);
 				}
-				for (int y = -2; y < 4; y++)
+				for (int y = -1; y < 7; y++)
 				{
 					if (cleanup)
 					{
@@ -125,14 +126,11 @@ void chunkLoading(int xC, int yC, int zC)
 						//avg += c.generate();
 						if (!origin && !w.isLoaded(cX, cY, cZ))
 						{
-							//nextChunk.release();
-							//chunksToLoad.emplace_back(std::unique_ptr<Chunk>(new Chunk(c)));
-							//nextChunk = cio.readChunk(cX, cY, cZ, "myworld");// new Chunk(cX, cY, cZ);
+							nextChunk = cio.readChunk(cX, cY, cZ, "myworld");// new Chunk(cX, cY, cZ);
+							//std::shared_ptr<Chunk> c (new Chunk(cX, cY, cZ));
+							//c->generateTerrain(ch);
 
-							std::shared_ptr<Chunk> c (new Chunk(cX, cY, cZ));
-							c->generateTerrain(ch);
-
-							nextChunk = c;
+							//nextChunk = c;
 
 							//std::shared_ptr<Chunk> c (new Chunk(cX, cY, cZ));
 							//c->generateTerrain(ch)
@@ -210,7 +208,6 @@ void chunkMeshGeneration()
 
 void GameState::update()
 {
-	WindowManager::getWindow()->getController()->update();
 	//std::cout << s1.checkCollision(&s2) << "\n";
 	if (WindowManager::getWindow()->getController()->isKeyDown(GLFW_KEY_ENTER))
 	{
@@ -226,8 +223,7 @@ void GameState::update()
 	{
 		//PacketMsg::sendMessage("hello!!!");
 	}
-	
-	GFX::getOverlay()->CAM.getPlayerInput();
+
 	w.update();
 	
 	int x = GFX::getOverlay()->CAM.cX >> 2;
@@ -240,6 +236,8 @@ void GameState::update()
 
 void world()
 {
+	WindowManager::getWindow()->getController()->update();
+	GFX::getOverlay()->CAM.getPlayerInput();
 	Matrix4f m4;
 	int fov = GFX::getOverlay()->CAM.fov;
 	if (glfwGetMouseButton(WindowManager::getWindow()->window, GLFW_MOUSE_BUTTON_4) == GLFW_PRESS)
@@ -247,7 +245,6 @@ void world()
 		fov /= 3.6666;
 	}
 	m4.createProjectionMatrix(WindowManager::getWindow()->getWidth(), WindowManager::getWindow()->getHeight(), GFX::getOverlay()->viewDistance * 1000, 0.1, fov);
-
 	w.render(&GFX::getOverlay()->CAM, &m4);
 	
 	Camera cam = GFX::getOverlay()->CAM;
@@ -258,12 +255,16 @@ double now;
 double last;
 double fpsCounter = 0;
 double lastFpsCounter = 0;
+std::vector<GLuint> ttex;
+
+int id = 19;
 
 void GameState::render()
 {
 	if (lock)
 	{
 		Chunk c = Chunk(*nextChunk.get());
+		c.loaded = false;
 		w.addChunk(c);
 		nextChunk.reset();
 		chunkGenerationSize = w.overworld.size() - 1;
@@ -320,13 +321,72 @@ void GameState::render()
 			c->ready = true;
 		}
 	}
+	if (WindowManager::getWindow()->getController()->isKeyDown(GLFW_KEY_KP_0))
+	{
+		id = 18;
+	}
+	if (WindowManager::getWindow()->getController()->isKeyDown(GLFW_KEY_KP_1))
+	{
+		id = 19;
+	}
+	if (WindowManager::getWindow()->getController()->isKeyDown(GLFW_KEY_KP_2))
+	{
+		id = 20;
+	}
+	if (WindowManager::getWindow()->getController()->isKeyDown(GLFW_KEY_KP_3))
+	{
+		id = 21;
+	}
+	if (WindowManager::getWindow()->getController()->isKeyDown(GLFW_KEY_KP_4))
+	{
+		id = 22;
+	}
+	if (WindowManager::getWindow()->getController()->isKeyDown(GLFW_KEY_KP_5))
+	{
+		id = 23;
+	}
+	if (WindowManager::getWindow()->getController()->isKeyDown(GLFW_KEY_KP_6))
+	{
+		id = 24;
+	}
+	if (WindowManager::getWindow()->getController()->isKeyDown(GLFW_KEY_KP_7))
+	{
+		id = 25;
+	}
+	if (WindowManager::getWindow()->getController()->isKeyDown(GLFW_KEY_KP_8))
+	{
+		id = 26;
+	}
+	if (WindowManager::getWindow()->getController()->isKeyDown(GLFW_KEY_KP_9))
+	{
+		id = 100;
+	}
 	if (WindowManager::getWindow()->getController()->isMouseDown(GLFW_MOUSE_BUTTON_1))
 	{
 		Chunk* c = w.getChunk(GFX::getOverlay()->CAM.cX, GFX::getOverlay()->CAM.cY, GFX::getOverlay()->CAM.cZ);
 		if (c)
 		{
-			c->fill(((int) GFX::getOverlay()->CAM.x) % 64 - 2, ((int)GFX::getOverlay()->CAM.y) % 64 -9, ((int)GFX::getOverlay()->CAM.z) % 64 - 2,
-				((int)GFX::getOverlay()->CAM.x) % 64 + 3, ((int)GFX::getOverlay()->CAM.y) % 64 - 4, ((int)GFX::getOverlay()->CAM.z) % 64 + 3, 8, 1);
+			int x = ((int) floor(GFX::getOverlay()->CAM.xPos)) % 64;
+			int y = ((int) floor(GFX::getOverlay()->CAM.yPos)) % 64;
+			int z = ((int) floor(GFX::getOverlay()->CAM.zPos)) % 64;
+			if (x < 0)
+			{
+				x = Chunk::CHUNK_SIZE + x;
+			}
+			if (y < 0)
+			{
+				y = Chunk::CHUNK_SIZE + y;
+			}
+			if (z < 0)
+			{
+				z = Chunk::CHUNK_SIZE + z;
+			}
+			int size = WindowManager::getWindow()->mainScroll;
+			if (size < 1)
+			{
+				size = 1;
+			}
+			c->fill(x, y - 7, z, size, size, size, id, 255);
 			c->chunkUpdate = true;
 			c->priorityLoad = true;
 			c->loaded = false;
@@ -337,8 +397,27 @@ void GameState::render()
 		Chunk* c = w.getChunk(GFX::getOverlay()->CAM.cX, GFX::getOverlay()->CAM.cY, GFX::getOverlay()->CAM.cZ);
 		if (c)
 		{
-			c->fill(((int)GFX::getOverlay()->CAM.x) % 64 - 2, ((int)GFX::getOverlay()->CAM.y) % 64 - 9, ((int)GFX::getOverlay()->CAM.z) % 64 - 2,
-				((int)GFX::getOverlay()->CAM.x) % 64 + 3, ((int)GFX::getOverlay()->CAM.y) % 64 - 4, ((int)GFX::getOverlay()->CAM.z) % 64 + 3, 0, 0);
+			int x = ((int)floor(GFX::getOverlay()->CAM.xPos)) % 64;
+			int y = ((int)floor(GFX::getOverlay()->CAM.yPos)) % 64;
+			int z = ((int)floor(GFX::getOverlay()->CAM.zPos)) % 64;
+			if (x < 0)
+			{
+				x = Chunk::CHUNK_SIZE + x;
+			}
+			if (y < 0)
+			{
+				y = Chunk::CHUNK_SIZE + y;
+			}
+			if (z < 0)
+			{
+				z = Chunk::CHUNK_SIZE + z;
+			}
+			int size = WindowManager::getWindow()->mainScroll;
+			if (size < 1)
+			{
+				size = 1;
+			}
+			c->clear(x, y - 7, z, size, size, size, 0, 0);
 			c->chunkUpdate = true;
 			c->priorityLoad = true;
 			c->loaded = false;
@@ -384,15 +463,14 @@ void GameState::render()
 	fps = std::to_string(curFPS);
 	fps += std::string(" (" + fpsCap + ")");
 	GFX::getOverlay()->drawStringBG("fps: " + fps, 0, dim * (di++), 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3f);
-	GFX::getOverlay()->drawStringBGC("authenticated", 0, 0, 30, WindowManager::getWindow()->getWidth(), 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3f);
-	GFX::getOverlay()->drawStringBG("x: " + Util::removeDecimal(GFX::getOverlay()->CAM.x, 3), 0, dim * (di++), 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3f);
-	GFX::getOverlay()->drawStringBG("y: " + Util::removeDecimal(GFX::getOverlay()->CAM.y, 3), 0, dim * (di++), 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3f);
-	GFX::getOverlay()->drawStringBG("z: " + Util::removeDecimal(GFX::getOverlay()->CAM.z, 3), 0, dim * (di++), 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3f);
+	//GFX::getOverlay()->drawStringBGC("authenticated", 0, 0, 30, WindowManager::getWindow()->getWidth(), 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3f);
+	GFX::getOverlay()->drawStringBG("x: " + Util::removeDecimal(GFX::getOverlay()->CAM.xPos, 3), 0, dim * (di++), 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3f);
+	GFX::getOverlay()->drawStringBG("y: " + Util::removeDecimal(GFX::getOverlay()->CAM.yPos, 3), 0, dim * (di++), 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3f);
+	GFX::getOverlay()->drawStringBG("z: " + Util::removeDecimal(GFX::getOverlay()->CAM.zPos, 3), 0, dim * (di++), 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3f);
 	GFX::getOverlay()->drawStringBG("c: " + std::to_string(GFX::getOverlay()->CAM.cX) + " / " + std::to_string(GFX::getOverlay()->CAM.cY) + " / " +
 		std::to_string(GFX::getOverlay()->CAM.cZ), 0, dim * (di++), 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3f);
 
 	float velocity = sqrt(pow(GFX::getOverlay()->CAM.xVel, 2) + pow(GFX::getOverlay()->CAM.yVel, 2) + pow(GFX::getOverlay()->CAM.zVel, 2));
-	velocity *= 60;
 	GFX::getOverlay()->drawStringBG("v: " + Util::removeDecimal(velocity, 1) + " m/s", 0, dim * (di++), 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3f);
 	SIZE_T physMemUsedByMe = pmc.WorkingSetSize;
 	DWORDLONG totalPhysMem = memInfo.ullTotalPhys;
@@ -422,11 +500,6 @@ void GameState::render()
 	GFX::getOverlay()->drawStringBG("fly: " + std::string("on"),
 		0, dim * (di++), 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3);
 
-	#ifdef NDEBUG
-	#else
-	//	GFX::getOverlay()->drawStringBGR("[!] Debug build",
-	//		0, dim* (rdi++), 30, 0.8, 0, 0, 1, 0, 0, 0, -5, 0, 0, 0, 0.3);
-	#endif
 	GFX::getOverlay()->drawStringBGR("cpu usage: " + Util::removeDecimal((cpuUsageA + cpuUsageB) / 2, 2) + "%",
 		0, dim * (rdi++), 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3);
 
@@ -483,7 +556,6 @@ void physicsCallback(std::string s)
 {
 	std::cout << s;
 }
-
 void GameState::start()
 {
 	ChunkIO c;
@@ -492,6 +564,7 @@ void GameState::start()
 	
 	Sound s;
 	s.play(Assets::getAssets()->getAssets()->getAudio("Fall"));
+	s.setGain(0.4);
 	hostServer = false;// Settings::getBool("host");
 	Modify::getModify()->loadAllMods();
 	
@@ -507,7 +580,6 @@ void GameState::start()
 	chunkMeshGenerator = std::thread(chunkMeshGeneration);
 	w.create();
 	w.test();
-
 }
 
 void GameState::stop()
