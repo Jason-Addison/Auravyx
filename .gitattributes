@@ -4,6 +4,8 @@
 * text=auto
 Source/Library/* linguist-vendored
 Source/Library linguist-vendored
+Library/* linguist-vendored
+Library linguist-vendored
 
 ###############################################################################
 # Set default behavior for command prompt diff.
