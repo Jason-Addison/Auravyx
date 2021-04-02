@@ -168,10 +168,10 @@ void ClientManager::stop()
 
 	WSACleanup();
 }
-void ClientManager::send(char id, std::string s)
+void ClientManager::send(const char id, const std::string& s)
 {
-	s = id + s;
-	int sendOK = sendto(out, s.c_str(), s.length(), 0, (sockaddr*)& server, sizeof(server));
+	std::string scon = id + s;
+	int sendOK = sendto(out, scon.c_str(), scon.length(), 0, (sockaddr*)& server, sizeof(server));
 	if (sendOK == SOCKET_ERROR)
 	{
 		std::cout << "Error sending (" << WSAGetLastError() << ")\n";

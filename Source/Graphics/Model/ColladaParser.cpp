@@ -13,7 +13,7 @@
 #define AMBIENT_OCCLUSION 3
 #define DETAIL 4
 
-std::vector<float> ColladaParser::stringToFloats(std::string str)
+std::vector<float> ColladaParser::stringToFloats(const std::string& str)
 {
     std::vector<float> v;
 
@@ -25,7 +25,7 @@ std::vector<float> ColladaParser::stringToFloats(std::string str)
     return v;
 }
 
-std::vector<GLuint> ColladaParser::stringToIntegers(std::string str)
+std::vector<GLuint> ColladaParser::stringToIntegers(const std::string& str)
 {
     std::vector<GLuint> v;
 
@@ -37,34 +37,34 @@ std::vector<GLuint> ColladaParser::stringToIntegers(std::string str)
     return v;
 }
 
-void ColladaParser::processVertex(int v, int n, int t, int c, std::vector<GLuint>* indices,
-    std::vector<float>* textures, std::vector<float>* normals,
-    std::vector<float>* colors, std::vector<float>* processedTextures,
-    std::vector<float>* processedNormals, std::vector<float>* processedColors)
+void ColladaParser::processVertex(int v, int n, int t, int c, std::vector<GLuint>& indices,
+    std::vector<float>& textures, std::vector<float>& normals,
+    std::vector<float>& colors, std::vector<float>& processedTextures,
+    std::vector<float>& processedNormals, std::vector<float>& processedColors)
 {
-    indices->emplace_back(v);
+    indices.emplace_back(v);
 
-    float tx = textures->at(t * 2 + 0);
-    float ty = textures->at(t * 2 + 1);
+    float tx = textures.at(t * 2 + 0);
+    float ty = textures.at(t * 2 + 1);
 
-    processedTextures->at(v * 2 + 0) = tx;
-    processedTextures->at(v * 2 + 1) = ty;
+    processedTextures.at(v * 2 + 0) = tx;
+    processedTextures.at(v * 2 + 1) = ty;
 
-    float nx = normals->at(n * 3 + 0);
-    float ny = normals->at(n * 3 + 1);
-    float nz = normals->at(n * 3 + 2);
+    float nx = normals.at(n * 3 + 0);
+    float ny = normals.at(n * 3 + 1);
+    float nz = normals.at(n * 3 + 2);
 
-    processedNormals->at(v * 3 + 0) = -nz;
-    processedNormals->at(v * 3 + 1) = ny;
-    processedNormals->at(v * 3 + 2) = nx;
+    processedNormals.at(v * 3 + 0) = -nz;
+    processedNormals.at(v * 3 + 1) = ny;
+    processedNormals.at(v * 3 + 2) = nx;
 
-    float r = colors->at(c * 3 + 0);
-    float g = colors->at(c * 3 + 1);
-    float b = colors->at(c * 3 + 2);
+    float r = colors.at(c * 3 + 0);
+    float g = colors.at(c * 3 + 1);
+    float b = colors.at(c * 3 + 2);
 
-    processedColors->at(v * 3 + 0) = r;
-    processedColors->at(v * 3 + 1) = g;
-    processedColors->at(v * 3 + 2) = b;
+    processedColors.at(v * 3 + 0) = r;
+    processedColors.at(v * 3 + 1) = g;
+    processedColors.at(v * 3 + 2) = b;
 }
 std::map<std::string, std::string> ColladaParser::loadTextures(XMLParser::XMLNode* doc)
 {
@@ -83,7 +83,7 @@ std::map<std::string, std::string> ColladaParser::loadTextures(XMLParser::XMLNod
     }
     return textures;
 }
-std::map<std::string, GLuint> ColladaParser::getTextureLinks(XMLParser::XMLNode* doc, std::map<std::string, std::string> textures)
+std::map<std::string, GLuint> ColladaParser::getTextureLinks(XMLParser::XMLNode* doc, std::map<std::string, std::string>& textures)
 {
     std::map<std::string, GLuint> links;
     for (XMLParser::XMLElement* current = doc->FirstChildElement("library_effects")->
@@ -165,7 +165,7 @@ AnimatedMesh ColladaParser::loadGeometry(XMLParser::XMLNode* g)
     for (int i = 0; i < polylist.size() / 4; i++)
     {
         processVertex(polylist.at(i * 4 + 0), polylist.at(i * 4 + 1), polylist.at(i * 4 + 2), polylist.at(i * 4 + 3),
-            &indices, &texCoords, &normals, &colors, &processedTex, &processedNormals, &processedColors);
+            indices, texCoords, normals, colors, processedTex, processedNormals, processedColors);
     }
     
     AnimatedMesh mesh;
@@ -177,7 +177,7 @@ AnimatedMesh ColladaParser::loadGeometry(XMLParser::XMLNode* g)
     mesh.colors = processedColors;
     return mesh;
 }
-AnimatedMesh ColladaParser::loadAllGeometries(XMLParser::XMLElement* doc, std::map<std::string, GLuint> texLinks)
+AnimatedMesh ColladaParser::loadAllGeometries(XMLParser::XMLElement* doc, std::map<std::string, GLuint>& texLinks)
 {
     AnimatedMesh mesh;
     std::vector<GLuint> indices;
@@ -224,7 +224,7 @@ AnimatedMesh ColladaParser::loadAllGeometries(XMLParser::XMLElement* doc, std::m
 }
 
 
-void ColladaParser::parse(std::string dir)
+void ColladaParser::parse(const std::string& dir)
 {
     XMLParser::XMLDocument doc;
     doc.LoadFile(dir.c_str());

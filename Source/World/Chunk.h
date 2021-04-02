@@ -47,22 +47,22 @@ public:
 
 	std::vector<std::vector<float>> generateLiquid();
 
-	void generateTerrain(std::shared_ptr<ChunkHeight> heights);
+	void generateTerrain(const std::shared_ptr<ChunkHeight>& heights);
 
-	void render(Camera camera, Matrix4f projectionMatrix);
+	void render(const Camera& camera, const Matrix4f& projectionMatrix);
 
-	void addVertex(Vec3f pos, std::vector<float>* vec, float x, float y, float z);
+	void addVertex(const Vec3f& pos, std::vector<float>& vec, const float x, const float y, const float z);
 
-	void addTriangle(Voxel* v1, Voxel* v2, Voxel* v3, Voxel* v4, std::vector<float>* vec, float x, float y, float z);
+	void addTriangle(const Voxel* v1, const Voxel* v2, const Voxel* v3, const Voxel* v4, std::vector<float>& vec, const float x, const float y, const float z);
 
-	void addTriangleL(Voxel* v1, Voxel* v2, Voxel* v3, Voxel* v4, std::vector<float>* vec, float x, float y, float z);
+	void addTriangleL(const Voxel* v1, const Voxel* v2, const Voxel* v3, const Voxel* v4, std::vector<float>& vec, const float x, const float y, const float z);
 
 
-	unsigned short getDensity(int x, int y, int z);
+	unsigned short getDensity(const int x, const int y, const int z);
 
-	unsigned short getVoxelID(int x, int y, int z);
+	unsigned short getVoxelID(const int x, const int y, const int z);
 
-	unsigned short getVoxel(int x, int y, int z);
+	unsigned short getVoxel(const int x, const int y, const int z);
 
 	float calcDensity(int x, int y, int z, int xX, int yY, int zZ);
 
@@ -78,7 +78,7 @@ public:
 
 	void sendDeleteNotification();
 
-	void addNeighbour(Chunk* c, Chunk* localChunk);
+	void addNeighbour(Chunk* c, Chunk* const localChunk);
 
 	bool neighboursLoaded();
 
@@ -106,8 +106,8 @@ private:
 
 	char BORDER_WITH_UNLOADED_CHUNK = -1;
 
-	bool isValidNormal(Voxel* vert);
-	bool isValid(Voxel* vert);
+	bool isValidNormal(const Voxel* vert);
+	bool isValid(const Voxel* vert);
 
 	Voxel* at(int x, int y, int z);
 

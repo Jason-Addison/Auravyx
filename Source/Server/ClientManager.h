@@ -12,6 +12,6 @@ public:
 
 	void stop();
 
-	static void send(char id, std::string s);
+	static void send(const char id, const std::string& s);
 };
 

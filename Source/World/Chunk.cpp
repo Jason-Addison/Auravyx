@@ -27,19 +27,19 @@ Chunk::~Chunk()
 
 int Chunk::CHUNK_SIZE = 64;
 
-void addN(Vec3f n, std::vector<float>* vec)
+void addN(const Vec3f& n, std::vector<float>* vec)
 {
 	vec->emplace_back(n.x);
 	vec->emplace_back(n.y);
 	vec->emplace_back(n.z);
 }
-void addN(Voxel*n, std::vector<float>* vec)
+void addN(const Voxel* const n, std::vector<float>* vec)
 {
 	vec->emplace_back(n->fn.x);
 	vec->emplace_back(n->fn.y);
 	vec->emplace_back(n->fn.z);
 }
-void addNL(Voxel* n, std::vector<float>* vec)
+void addNL(const Voxel* const n, std::vector<float>* vec)
 {
 	vec->emplace_back(n->fnL.x);
 	vec->emplace_back(n->fnL.y);
@@ -134,7 +134,7 @@ void addNormalFaceL(Voxel* n1, Voxel* n2, Voxel* n3, Voxel* n4, std::vector<floa
 	n3->fnL.add(b);
 	n2->fnL.add(b);
 }
-bool Chunk::isValidNormal(Voxel* vert)
+bool Chunk::isValidNormal(const Voxel* vert)
 {
 	if (vert->x >= -1 && vert->y >= -1 && vert->z >= -1 &&
 		vert->x < BASE_SIZE + 3 && vert->y < BASE_SIZE + 3 && vert->z < BASE_SIZE + 3)
@@ -143,7 +143,7 @@ bool Chunk::isValidNormal(Voxel* vert)
 	}
 	return true;
 }
-bool Chunk::isValid(Voxel* vert)
+bool Chunk::isValid(const Voxel* vert)
 {
 	if (vert->x > 0 && vert->y > 0 && vert->z > 0 &&
 		(float) vert->x < (float) size - 4.9 && (float) vert->y < (float) size - 4.9 && (float) vert->z < (float) size - 4.9)
@@ -152,14 +152,14 @@ bool Chunk::isValid(Voxel* vert)
 	}
 	return false;
 }
-void Chunk::addVertex(Vec3f pos, std::vector<float>* vec, float x, float y, float z)
+void Chunk::addVertex(const Vec3f& pos, std::vector<float>& vec, const float x, const float y, const float z)
 {
-	vec->emplace_back((pos.x * lod + CHUNK_SIZE * x) * 1);
-	vec->emplace_back((pos.y * lod + CHUNK_SIZE * y) * 1 - 0.5f);
-	vec->emplace_back((pos.z * lod + CHUNK_SIZE * z) * 1);
+	vec.emplace_back((pos.x * lod + CHUNK_SIZE * x) * 1);
+	vec.emplace_back((pos.y * lod + CHUNK_SIZE * y) * 1 - 0.5f);
+	vec.emplace_back((pos.z * lod + CHUNK_SIZE * z) * 1);
 }
 
-void Chunk::addTriangle(Voxel * v1, Voxel * v2, Voxel * v3, Voxel * v4, std::vector<float> * vec, float x, float y, float z)
+void Chunk::addTriangle(const Voxel* v1, const Voxel* v2, const Voxel* v3, const Voxel* v4, std::vector<float>& vec, const float x, const float y, const float z)
 {
 	addVertex(v1->smoothAverage, vec, x, y, z);
 	addVertex(v2->smoothAverage, vec, x, y, z);
@@ -169,7 +169,7 @@ void Chunk::addTriangle(Voxel * v1, Voxel * v2, Voxel * v3, Voxel * v4, std::vec
 	addVertex(v3->smoothAverage, vec, x, y, z);
 	addVertex(v2->smoothAverage, vec, x, y, z);
 }
-void Chunk::addTriangleL(Voxel* v1, Voxel* v2, Voxel* v3, Voxel* v4, std::vector<float>* vec, float x, float y, float z)
+void Chunk::addTriangleL(const Voxel* v1, const Voxel* v2, const Voxel* v3, const Voxel* v4, std::vector<float>& vec, const float x, const float y, const float z)
 {
 	addVertex(v1->smoothLiquidAverage, vec, x, y, z);
 	addVertex(v2->smoothLiquidAverage, vec, x, y, z);
@@ -433,7 +433,7 @@ void Chunk::sendDeleteNotification()
 		}
 	}
 }
-void Chunk::addNeighbour(Chunk* c, Chunk* localChunk)
+void Chunk::addNeighbour(Chunk* c, Chunk* const localChunk)
 {
 	int cX = c->x - this->x;
 	int cY = c->y - this->y;
@@ -947,7 +947,7 @@ std::vector<std::vector<float>> Chunk::generate()
 		axisType = axis.at(i);
 		if (validEdges.at(i * 4 + 0) && validEdges.at(i * 4 + 1) && validEdges.at(i * 4 + 2) && validEdges.at(i * 4 + 3))
 		{
-			addTriangle(aV, bV, cV, dV, &vertices, x, y, z);
+			addTriangle(aV, bV, cV, dV, vertices, x, y, z);
 
 			int material1 = aV->getCommonMaterial();
 			int material2 = bV->getCommonMaterial();
@@ -981,7 +981,7 @@ std::vector<std::vector<float>> Chunk::generate()
 		axisTypeL = axisL.at(i);
 		if (validEdgesL.at(i * 4 + 0) && validEdgesL.at(i * 4 + 1) && validEdgesL.at(i * 4 + 2) && validEdgesL.at(i * 4 + 3))
 		{
-			addTriangleL(aVL, bVL, cVL, dVL, &verticesL, x, y, z);
+			addTriangleL(aVL, bVL, cVL, dVL, verticesL, x, y, z);
 
 			int material1 = aVL->getCommonLiquid();
 			int material2 = bVL->getCommonLiquid();
@@ -1326,7 +1326,7 @@ std::vector<std::vector<float>> Chunk::generateLiquid()
 	return std::vector<std::vector<float>>();
 }
 
-void Chunk::generateTerrain(std::shared_ptr<ChunkHeight> heights)
+void Chunk::generateTerrain(const std::shared_ptr<ChunkHeight>& heights)
 {
 	bool air = false;
 	bool solid = false;
@@ -1459,7 +1459,7 @@ void Chunk::generateTerrain(std::shared_ptr<ChunkHeight> heights)
 	}
 	dataLoaded = true;
 }
-void Chunk::render(Camera camera, Matrix4f projectionMatrix)
+void Chunk::render(const Camera& camera, const Matrix4f& projectionMatrix)
 {
 	glDisable(GL_CULL_FACE);
 	glBindVertexArray(liquidMesh.getVAO());

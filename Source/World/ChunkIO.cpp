@@ -7,7 +7,6 @@ ChunkIO::ChunkIO()
 {
 }
 
-
 ChunkIO::~ChunkIO()
 {
 
@@ -42,8 +41,7 @@ void ChunkIO::saveArea()
 	fclose(chunkOutput);
 }
 
-
-void ChunkIO::saveChunk(Chunk* chunk, std::string name)
+void ChunkIO::saveChunk(const std::shared_ptr<Chunk>& chunk, const std::string& name)
 {
 	std::string dir = Resource::getResources()->DIR + "\\Saves\\" + name + "\\data\\c" +
 		std::to_string(chunk->x) + "." + std::to_string(chunk->y) + "." + std::to_string(chunk->z) + ".voxc";
@@ -71,7 +69,7 @@ void ChunkIO::saveChunk(Chunk* chunk, std::string name)
 
 }
 
-std::shared_ptr<Chunk> ChunkIO::readChunk(int x, int y, int z, std::string name)
+std::shared_ptr<Chunk> ChunkIO::readChunk(const int x, const int y, const int z, const std::string& name)
 {
 	std::shared_ptr<Chunk> chunk(new Chunk());
 

@@ -9,12 +9,12 @@ ChunkHeight::~ChunkHeight()
 {
 }
 
-float ChunkHeight::getHeight(int x, int z)
+float ChunkHeight::getHeight(const int x, const int z)
 {
 	return heightmap[x * 64 + z];
 }
 
-void ChunkHeight::generate(int xC, int zC)
+void ChunkHeight::generate(const int xC, const int zC)
 {
 	this->x = xC;
 	this->z = zC;
