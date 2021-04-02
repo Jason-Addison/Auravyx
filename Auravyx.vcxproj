@@ -43,7 +43,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ModelMaterial.cpp" />
     <ClCompile Include="ServerHost\Client.cpp" />
     <ClCompile Include="ServerHost\Packet.cpp" />
     <ClCompile Include="ServerHost\PacketMsg.cpp" />
@@ -82,6 +81,7 @@
     <ClCompile Include="Source\Graphics\GLContext.cpp" />
     <ClCompile Include="Source\Graphics\Model\AnimatedMesh.cpp" />
     <ClCompile Include="Source\Graphics\Model\ColladaParser.cpp" />
+    <ClCompile Include="Source\Graphics\Model\ModelMaterial.cpp" />
     <ClCompile Include="Source\Graphics\Model\Parser.cpp" />
     <ClCompile Include="Source\Graphics\Model\XMLParser.cpp" />
     <ClCompile Include="Source\Graphics\Renderer.cpp" />

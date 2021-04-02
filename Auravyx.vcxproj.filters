@@ -312,7 +312,7 @@
     <ClCompile Include="Source\Graphics\Model\Parser.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ModelMaterial.cpp">
+    <ClCompile Include="Source\Graphics\Model\ModelMaterial.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
