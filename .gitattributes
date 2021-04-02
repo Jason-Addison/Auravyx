@@ -6,6 +6,7 @@ Source/Library/* linguist-vendored
 Source/Library linguist-vendored
 Library/* linguist-vendored
 Library linguist-vendored
+Library/OpenAL/alut/src/* linguist-vendored
 
 ###############################################################################
 # Set default behavior for command prompt diff.
