@@ -18,8 +18,8 @@ public:
 
 private:
 
-	void message(std::string msg);
+	void message(const std::string& msg);
 
-	void command(std::string cmd);
+	void command(const std::string& cmd);
 };
 

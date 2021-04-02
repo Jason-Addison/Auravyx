@@ -18,29 +18,29 @@ Assets::~Assets()
 
 Assets* Assets::assets;
 
-void Assets::addTexture(std::string name, Texture texture)
+void Assets::addTexture(const std::string& name, const Texture& texture)
 {
 	textures.emplace(name, std::shared_ptr<Texture>(new Texture(texture)));
 }
 
-void Assets::addModel(std::string name, Model model)
+void Assets::addModel(const std::string& name, const Model& model)
 {
 	std::shared_ptr<Model> mod(new Model(model));
 	mod->name = name;
 	models.emplace(name, mod);
 }
 
-void Assets::addFont(std::string name, Font font)
+void Assets::addFont(const std::string& name, const Font& font)
 {
 	fonts.emplace(name, std::shared_ptr<Font>(new Font(font)));
 }
 
-void Assets::addAudio(std::string name, WAVE a)
+void Assets::addAudio(const std::string& name, const WAVE& a)
 {
 	audio.emplace(name, std::shared_ptr<WAVE>(new WAVE(a)));
 }
 
-std::shared_ptr<Texture> Assets::getTexture(std::string name)
+std::shared_ptr<Texture> Assets::getTexture(const std::string& name)
 {
 	try
 	{
@@ -53,7 +53,7 @@ std::shared_ptr<Texture> Assets::getTexture(std::string name)
 	return NULL;
 }
 
-std::shared_ptr<Font> Assets::getFont(std::string name)
+std::shared_ptr<Font> Assets::getFont(const std::string& name)
 {
 	try
 	{
@@ -66,7 +66,7 @@ std::shared_ptr<Font> Assets::getFont(std::string name)
 	return NULL;
 }
 
-std::shared_ptr<WAVE> Assets::getAudio(std::string name)
+std::shared_ptr<WAVE> Assets::getAudio(const std::string& name)
 {
 	try
 	{
@@ -123,7 +123,7 @@ Assets* Assets::getAssets()
 	return assets;
 }
 
-std::shared_ptr<Model> Assets::getModel(std::string name)
+std::shared_ptr<Model> Assets::getModel(const std::string& name)
 {
 	try
 	{

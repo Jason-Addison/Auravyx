@@ -9,12 +9,6 @@ Vec3f::Vec3f(float x, float y, float z)
 	this->z = z;
 }
 
-Vec3f::Vec3f()
-{
-	x = 0;
-	y = 0;
-	z = 0;
-}
 Vec3f::~Vec3f()
 {
 }
@@ -168,9 +162,9 @@ Vec3f& Vec3f::operator*=(const Vec3f b)
 }
 Vec3f& Vec3f::operator/=(const Vec3f b)
 {
-	this->x /= b;
-	this->y /= b;
-	this->z /= b;
+	this->x /= b.x;
+	this->y /= b.y;
+	this->z /= b.z;
 	return *this;
 }
 
@@ -201,6 +195,11 @@ Vec3f& Vec3f::operator/=(const float b)
 	this->y /= b;
 	this->z /= b;
 	return *this;
+}
+
+float Vec3f::maxx() const
+{
+	return 0.0f;
 }
 
 Vec3f operator+(const Vec3f a, const Vec3f b)

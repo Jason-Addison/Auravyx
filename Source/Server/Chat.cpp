@@ -242,14 +242,14 @@ void Chat::render()
 	}
 }
 
-void Chat::message(std::string msg)
+void Chat::message(const std::string& msg)
 {
 	chatLog.emplace_back(msg);
 	chatLogTimings.emplace_back(glfwGetTime());
 	Log::out("Chat", msg, YELLOW);
 }
 
-void Chat::command(std::string cmd)
+void Chat::command(const std::string& cmd)
 {
 	std::vector<std::string> parse = Util::splitString(cmd, " ");
 	if (parse.size() > 1 && parse.at(0).compare("speed") == 0)

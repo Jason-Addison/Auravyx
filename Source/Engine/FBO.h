@@ -6,7 +6,7 @@ class FBO
 {
 public:
 	FBO();
-	FBO(int width, int height);
+	FBO(const int width, const int height);
 	~FBO();
 	bool made;
 	int width, height;
@@ -22,17 +22,17 @@ public:
 
 	static void unbind();
 
-	void update(int width, int height);
+	void update(const int width, const int height);
 
-	int createColourBufferAttachment(int attachment);
+	int createColourBufferAttachment(const int attachment);
 
-	void resolve(int readBuffer, FBO output);
+	void resolve(const int readBuffer, const FBO & output);
 
 	void clear();
 
-	void addBuffer(int attachment);
+	void addBuffer(const int attachment);
 
-	void addBuffer(int attachment, int format);
+	void addBuffer(const int attachment, const int format);
 
 	void destroy();
 

@@ -136,7 +136,6 @@ int main(int argc, char* argv[])
 {
 	Vec3f a;
 	Vec3f b;
-	a + b;
 	Auravyx::start();
 	ThreadManager::getThreadManager()->registerThread(std::this_thread::get_id(), "Main");
 	Resource::getResources()->DIR = std::string(argv[0]) + "\\..";

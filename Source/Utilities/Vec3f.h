@@ -5,7 +5,7 @@ public:
 
 	float x, y, z;
 
-	Vec3f();
+	Vec3f() = default;
 	Vec3f(float x, float y, float z);
 	~Vec3f();
 
@@ -89,6 +89,8 @@ public:
 	Vec3f& operator*=(const float b);
 
 	Vec3f& operator/=(const float b);
+
+	float maxx() const;
 };
 
 Vec3f operator+(const Vec3f a, const Vec3f b);

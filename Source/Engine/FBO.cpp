@@ -8,7 +8,7 @@
 FBO::FBO()
 {
 }
-FBO::FBO(int width, int height)
+FBO::FBO(const int width, const int height)
 {
 	this->width = width;
 	this->height = height;
@@ -19,7 +19,7 @@ FBO::~FBO()
 {
 }
 
-int FBO::createColourBufferAttachment(int attachment)
+int FBO::createColourBufferAttachment(const int attachment)
 {
 	GLuint colourBuffer = 0;
 	glGenRenderbuffers(1, &colourBuffer);
@@ -83,7 +83,7 @@ void FBO::unbind()
 	glViewport(0, 0, WindowManager::getWindow()->getWidth(), WindowManager::getWindow()->getHeight());
 }
 
-void FBO::update(int width, int height)
+void FBO::update(const int width, const int height)
 {
 	if ((this->width != width || this->height != height) && (width != 0 && height != 0))
 	{
@@ -94,7 +94,7 @@ void FBO::update(int width, int height)
 	}
 }
 
-void FBO::resolve(int readBuffer, FBO output)
+void FBO::resolve(const int readBuffer, const FBO & output)
 {
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, output.framebuffer);
 	glBindFramebuffer(GL_READ_FRAMEBUFFER, this->framebuffer);
@@ -108,7 +108,7 @@ void FBO::clear()
 	glClearColor(1, 1, 1, 1);
 }
 
-void FBO::addBuffer(int attachment, int format)
+void FBO::addBuffer(const int attachment, const int format)
 {
 	glActiveTexture(GL_TEXTURE0 + attachment);
 	glGenTextures(1, &buffers[attachment]);
@@ -146,7 +146,7 @@ GLenum FBO::checkStatus()
 	return s;
 }
 
-void FBO::addBuffer(int attachment)
+void FBO::addBuffer(const int attachment)
 {
 	addBuffer(attachment, GL_RGBA16);
 }

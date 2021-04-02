@@ -12,29 +12,21 @@ public:
 	Assets(Assets* a);
 	~Assets();
 
-	std::map<std::string, std::shared_ptr<Model>> models;
+	void addTexture(const std::string& name, const Texture& texture);
 
-	std::map<std::string, std::shared_ptr<Texture>> textures;
+	void addModel(const std::string& name, const Model& model);
 
-	std::map<std::string, std::shared_ptr<Font>> fonts;
+	void addFont(const std::string& name, const Font& font);
 
-	std::map<std::string, std::shared_ptr<WAVE>> audio;
+	void addAudio(const std::string& name, const WAVE& a);
 
-	void addTexture(std::string name, Texture texture);
+	std::shared_ptr<Texture> getTexture(const std::string& name);
 
-	void addModel(std::string name, Model model);
+	std::shared_ptr<Model> getModel(const std::string& name);
 
-	void addFont(std::string name, Font font);
+	std::shared_ptr<Font> getFont(const std::string& name);
 
-	void addAudio(std::string name, WAVE a);
-
-	std::shared_ptr<Texture> getTexture(std::string name);
-
-	std::shared_ptr<Model> getModel(std::string name);
-
-	std::shared_ptr<Font> getFont(std::string name);
-
-	std::shared_ptr<WAVE> getAudio(std::string name);
+	std::shared_ptr<WAVE> getAudio(const std::string& name);
 
 	void deleteAllAssets();
 
@@ -47,8 +39,17 @@ public:
 	void deleteModels();
 
 	static Assets* getAssets();
+
 private:
 
 	static Assets* assets;
+
+	std::map<std::string, std::shared_ptr<Model>> models;
+
+	std::map<std::string, std::shared_ptr<Texture>> textures;
+
+	std::map<std::string, std::shared_ptr<Font>> fonts;
+
+	std::map<std::string, std::shared_ptr<WAVE>> audio;
 };
 
