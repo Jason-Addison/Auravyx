@@ -74,5 +74,29 @@ public:
 
 	static Vec3f mod(Vec3f a, int mod);
 
+	Vec3f& operator+=(const Vec3f b);
+
+	Vec3f& operator-=(const Vec3f b);
+
+	Vec3f& operator*=(const Vec3f b);
+
+	Vec3f& operator/=(const Vec3f b);
+
+	Vec3f& operator+=(const float b);
+
+	Vec3f& operator-=(const float b);
+
+	Vec3f& operator*=(const float b);
+
+	Vec3f& operator/=(const float b);
 };
 
+Vec3f operator+(const Vec3f a, const Vec3f b);
+
+Vec3f operator-(const Vec3f a, const Vec3f b);
+
+Vec3f operator*(const Vec3f a, const Vec3f b);
+
+Vec3f operator/(const Vec3f a, const Vec3f b);
+
+Vec3f operator+(const Vec3f a, const float b);

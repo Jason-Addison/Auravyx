@@ -145,4 +145,100 @@ Vec3f Vec3f::mod(Vec3f a, int mod)
 	return Vec3f((int) a.x % mod, (int) a.y % mod, (int) a.z % mod);
 }
 
+Vec3f& Vec3f::operator+=(const Vec3f b)
+{
+	this->x += b.x;
+	this->y += b.y;
+	this->z += b.z;
+	return *this;
+}
+Vec3f& Vec3f::operator-=(const Vec3f b)
+{
+	this->x -= b.x;
+	this->y -= b.y;
+	this->z -= b.z;
+	return *this;
+}
+Vec3f& Vec3f::operator*=(const Vec3f b)
+{
+	this->x *= b.x;
+	this->y *= b.y;
+	this->z *= b.z;
+	return *this;
+}
+Vec3f& Vec3f::operator/=(const Vec3f b)
+{
+	this->x /= b;
+	this->y /= b;
+	this->z /= b;
+	return *this;
+}
 
+Vec3f& Vec3f::operator+=(const float b)
+{
+	this->x += b;
+	this->y += b;
+	this->z += b;
+	return *this;
+}
+Vec3f& Vec3f::operator-=(const float b)
+{
+	this->x -= b;
+	this->y -= b;
+	this->z -= b;
+	return *this;
+}
+Vec3f& Vec3f::operator*=(const float b)
+{
+	this->x *= b;
+	this->y *= b;
+	this->z *= b;
+	return *this;
+}
+Vec3f& Vec3f::operator/=(const float b)
+{
+	this->x /= b;
+	this->y /= b;
+	this->z /= b;
+	return *this;
+}
+
+Vec3f operator+(const Vec3f a, const Vec3f b)
+{
+	return Vec3f(a.x + b.x, a.y + b.y, a.z + b.z);
+}
+
+Vec3f operator-(const Vec3f a, const Vec3f b)
+{
+	return Vec3f(a.x - b.x, a.y - b.y, a.z - b.z);
+}
+
+Vec3f operator*(const Vec3f a, const Vec3f b)
+{
+	return Vec3f(a.x * b.x, a.y * b.y, a.z * b.z);
+}
+
+Vec3f operator/(const Vec3f a, const Vec3f b)
+{
+	return Vec3f(a.x / b.x, a.y / b.y, a.z / b.z);
+}
+
+Vec3f operator+(const Vec3f a, const float b)
+{
+	return Vec3f(a.x + b, a.y + b, a.z + b);
+}
+
+Vec3f operator-(const Vec3f a, const float b)
+{
+	return Vec3f(a.x - b, a.y - b, a.z - b);
+}
+
+Vec3f operator*(const Vec3f a, const float b)
+{
+	return Vec3f(a.x * b, a.y * b, a.z * b);
+}
+
+Vec3f operator/(const Vec3f a, const float b)
+{
+	return Vec3f(a.x / b, a.y / b, a.z / b);
+}
