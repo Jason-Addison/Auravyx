@@ -52,7 +52,7 @@ std::thread chunkMeshGenerator;
 std::thread server;
 
 Chunk ch;
-
+//
 World w;
 
 void chunkLoading(int xC, int yC, int zC)
