@@ -39,7 +39,7 @@ GameState::~GameState()
 std::vector<Chunk> chunks;
 
 Chat chat;
-//
+
 //ClientManager c;
 std::shared_ptr<Chunk> nextChunk;
 std::atomic_int lock = false;
