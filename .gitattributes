@@ -2,11 +2,11 @@
 # Set default behavior to automatically normalize line endings.
 ###############################################################################
 * text=auto
-Source/Library/* linguist-vendored
+Source/Library/* linguist-vendored=true
+Library/* linguist-vendored=true
+Library/OpenAL/alut/src/* linguist-vendored=true
 Source/Library linguist-vendored
-Library/* linguist-vendored
 Library linguist-vendored
-Library/OpenAL/alut/src/* linguist-vendored
 
 ###############################################################################
 # Set default behavior for command prompt diff.
