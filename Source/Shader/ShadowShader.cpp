@@ -96,7 +96,7 @@ void ShadowShader::render(const World &world, ShadowMap &shadowMap, const Camera
 	{
 		if (c->ready)
 		{
-			c->render(camera, projectionMatrix);
+			c->render();
 		}
 	}
 	glCullFace(GL_BACK);

@@ -4,6 +4,10 @@
 #include "Engine/Camera.h"
 #include <memory>
 #include "World/ChunkHeight.h"
+
+/**
+ * @brief Represents a 3D voxel chunk. Responsible for storage, generation and rendering of chunk.
+*/
 class Chunk
 {
 public:
@@ -43,63 +47,142 @@ public:
 
 	Model liquidMesh;
 
+	/**
+	 * @brief Generates geometry for chunk in a thread safe manner.
+	 * @return vector containing all geometry data
+	*/
 	std::vector<std::vector<float>> generate();
 
-	std::vector<std::vector<float>> generateLiquid();
-
+	/**
+	 * @brief Generates 3D density values from 2D heightmap
+	 * @param heights 2D heightmap
+	*/
 	void generateTerrain(const std::shared_ptr<ChunkHeight>& heights);
 
-	void render(const Camera& camera, const Matrix4f& projectionMatrix);
+	/**
+	 * @brief Renders chunk without any setup.
+	*/
+	void render();
 
-	void addVertex(const Vec3f& pos, std::vector<float>& vec, const float x, const float y, const float z);
-
-	void addTriangle(const Voxel* v1, const Voxel* v2, const Voxel* v3, const Voxel* v4, std::vector<float>& vec, const float x, const float y, const float z);
-
-	void addTriangleL(const Voxel* v1, const Voxel* v2, const Voxel* v3, const Voxel* v4, std::vector<float>& vec, const float x, const float y, const float z);
-
-	unsigned short getDensity(const int x, const int y, const int z);
-
-	unsigned short getVoxelID(const int x, const int y, const int z);
-
+	/**
+	 * @brief Returns value containing both the ID and density of a voxel at a certain location.
+	 * @param x position
+	 * @param y position
+	 * @param z position
+	 * @return value containing ID and density
+	*/
 	unsigned short getVoxel(const int x, const int y, const int z);
 
-	float calcDensity(int x, int y, int z, int xX, int yY, int zZ);
+	/**
+	 * @brief Returns density of a voxel at a certain location.
+	 * @param x position
+	 * @param y position
+	 * @param z position
+	 * @return voxel's density
+	*/
+	unsigned short getDensity(const int x, const int y, const int z);
 
-	int scan(int x, int y, int z, int axis, int axisA, int axisB, int &material);
-		
-	void destroy();
+	/**
+	 * @brief Returns ID of a voxel at a certain location.
+	 * @param x position
+	 * @param y position
+	 * @param z position
+	 * @return voxel's ID
+	*/
+	unsigned short getVoxelID(const int x, const int y, const int z);
+	
+	/**
+	 * @brief Sets voxel ID and density at point relative to chunk.
+	 * @param x position
+	 * @param y position
+	 * @param z position
+	 * @param id voxel ID
+	 * @param density voxel density
+	*/
+	void setVoxel(char x, char y, char z, unsigned short id, unsigned short density);
 
-	void refresh();
+	/**
+	 * @brief Sets voxel ID and density at point relative to chunk and it's neighbours.
+	 * @param x position
+	 * @param y position
+	 * @param z position
+	 * @param id voxel ID
+	 * @param density voxel density
+	*/
+	void setRelativeVoxel(int x, int y, int z, int id, int density);
 
-	void sphere(float xP, float yP, float zP, float radius, int id);
-
-	void receiveDeleteNotification(int x, int y, int z);
-
-	void sendDeleteNotification();
-
+	/**
+	 * @brief Adds chunk to this chunk's neighbour storage.
+	 * @param c chunk to add
+	 * @param localChunk this chunk
+	*/
 	void addNeighbour(Chunk* c, Chunk* const localChunk);
 
+	/**
+	 * @brief Notify chunk that one of it's neighbour has been deleted.
+	 * @param x deleted chunk position
+	 * @param y deleted chunk position
+	 * @param z deleted chunk position
+	*/
+	void receiveDeleteNotification(int x, int y, int z);
+
+	/**
+	 * @brief Sends delete notification to all neighbours.
+	*/
+	void sendDeleteNotification();
+
+	/**
+	 * @brief Deletes chunk and notifies neighbours.
+	*/
+	void destroy();
+
+	/**
+	 * @brief Regenerates chunk if needed.
+	*/
+	void refresh();
+
+	/**
+	 * @brief Checks if neighbours are loaded.
+	 * @return true if all neighbours are loaded, false if not.
+	*/
 	bool neighboursLoaded();
-
-	void setDensity(int x, int y, int z, float density);
-
-	void setDensity(int x, int y, int z, unsigned short id, unsigned short density);
-
-	void clearDensity();
 
 	bool threadSafe();
 
-	void fill(int x, int y, int z, int nx, int ny, int nz, int id, int density);
+	/**
+	 * @brief Sets voxels between two points to ID based off strength value.
+	 * @param ax  Point A's x position
+	 * @param ay  Point A's y position
+	 * @param az  Point A's z position
+	 * @param bx Point B's x position
+	 * @param by Point B's y position
+	 * @param bz Point B's z position
+	 * @param id voxel ID to fill
+	 * @param strength fill strength
+	*/
+	void fill(int ax, int ay, int az, int bx, int by, int bz, int id, int strength);
 
-	void clear(int x, int y, int z, int nx, int ny, int nz, int id, int density);
+	/**
+	 * @brief Clears voxels between two points based off strength value.
+	 * @param ax  Point A's x position
+	 * @param ay  Point A's y position
+	 * @param az  Point A's z position
+	 * @param bx Point B's x position
+	 * @param by Point B's y position
+	 * @param bz Point B's z position
+	 * @param strength clear strength
+	*/
+	void clear(int x, int y, int z, int nx, int ny, int nz, int strength);
 
-	static void setPredef();
-
-	void setRelativeVoxel(int x, int y, int z, int id, int density);
-
-	void updateRelativeVoxel(int x, int y, int z);
-
-	int getRelativeVoxelID(int x, int y, int z);
+	/**
+	 * @brief Creates sphere of voxels at given point and of given radius.
+	 * @param x sphere center position
+	 * @param y sphere center position
+	 * @param z sphere center position
+	 * @param radius sphere's radius
+	 * @param id voxel ID 
+	*/
+	void sphere(float x, float y, float z, float radius, int id);
 
 private:
 
@@ -110,7 +193,25 @@ private:
 
 	Voxel* at(int x, int y, int z);
 
+	void clearDensity();
+
 	int relativeDensity(int x, int y, int z);
+
+	int getRelativeVoxelID(int x, int y, int z);
+
+	void updateRelativeVoxel(int x, int y, int z);
+
+	std::vector<std::vector<float>> generateLiquid();
+
+	void addVertex(const Vec3f& pos, std::vector<float>& vec, const float x, const float y, const float z);
+
+	void addTriangle(const Voxel* v1, const Voxel* v2, const Voxel* v3, const Voxel* v4, std::vector<float>& vec, const float x, const float y, const float z);
+
+	void addTriangleL(const Voxel* v1, const Voxel* v2, const Voxel* v3, const Voxel* v4, std::vector<float>& vec, const float x, const float y, const float z);
+
+	float calcDensity(int x, int y, int z, int xX, int yY, int zZ);
+
+	int scan(int x, int y, int z, int axis, int axisA, int axisB, int& material);
 
 	void zeroNeighbours();
 };

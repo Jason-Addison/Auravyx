@@ -417,7 +417,7 @@ void GameState::render()
 			{
 				size = 1;
 			}
-			c->clear(x, y - 7, z, size, size, size, 0, 0);
+			c->clear(x, y - 7, z, size, size, size, 0);
 			c->chunkUpdate = true;
 			c->priorityLoad = true;
 			c->loaded = false;

@@ -397,12 +397,12 @@ void Chunk::sphere(float xP, float yP, float zP, float radius, int id)
 
 				if (distance < radius)
 				{
-					setDensity(nX, nY, nZ, 6, ((distance) - (float) (int) (distance)) * 255);
+					setVoxel(nX, nY, nZ, 6, ((distance) - (float) (int) (distance)) * 255);
 					//std::cout << (((distance)-(float)(int)(distance)) * 255) << "\n";
 				}
 				if (distance <= radius - 0.75)
 				{
-					setDensity(nX, nY, nZ, 5, 255);
+					setVoxel(nX, nY, nZ, 5, 255);
 				}
 			}
 		}
@@ -459,11 +459,7 @@ bool Chunk::neighboursLoaded()
 	}
 	return true;
 }
-void Chunk::setDensity(int x, int y, int z, float density)
-{
-	setDensity(x, y, z, density, 255);
-}
-void Chunk::setDensity(int x, int y, int z, unsigned short id, unsigned short density)
+void Chunk::setVoxel(char x, char y, char z, unsigned short id, unsigned short density)
 {
 	emptyChunk = false;
 	unsigned short value = (id << 8) + density;
@@ -481,54 +477,54 @@ bool Chunk::threadSafe()
 {
 	return isThreadSafe;
 }
-void Chunk::clear(int x, int y, int z, int nx, int ny, int nz, int id, int density)
+void Chunk::clear(int ax, int ay, int az, int bx, int by, int bz, int strength)
 {
-	for (int xx = x - nx; xx < x + nx; xx++)
+	for (int x = ax - bx; x < ax + bx; x++)
 	{
-		for (int yy = y - ny; yy < y + ny; yy++)
+		for (int y = ay - by; y < ay + by; y++)
 		{
-			for (int zz = z - nz; zz < z + nz; zz++)
+			for (int z = az - bz; z < az + bz; z++)
 			{
-				if (getRelativeVoxelID(xx - 1, yy, zz) == 0 || getRelativeVoxelID(xx + 1, yy, zz) == 0 || getRelativeVoxelID(xx, yy - 1, zz) == 0 ||
-					getRelativeVoxelID(xx, yy + 1, zz) == 0 || getRelativeVoxelID(xx, yy, zz - 1) == 0 || getRelativeVoxelID(xx, yy, zz + 1) == 0)
+				if (getRelativeVoxelID(x - 1, y, z) == 0 || getRelativeVoxelID(x + 1, y, z) == 0 || getRelativeVoxelID(x, y - 1, z) == 0 ||
+					getRelativeVoxelID(x, y + 1, z) == 0 || getRelativeVoxelID(x, y, z - 1) == 0 || getRelativeVoxelID(x, y, z + 1) == 0)
 				{
-					int d = relativeDensity(xx, yy, zz) & 0x00ff;
+					int d = relativeDensity(x, y, z) & 0x00ff;
 					d -= Clock::get(255) * 4;
-					int id = relativeDensity(xx, yy, zz) >> 8;
+					int id = relativeDensity(x, y, z) >> 8;
 					if (d < 10)
 					{
 						d = 0;
 						id = 0;
 					}
-					setRelativeVoxel(xx, yy, zz, id, d);
+					setRelativeVoxel(x, y, z, id, d);
 				}
 			}
 		}
 	}
-	for (int xx = x - nx - 2; xx < x + nx + 2; xx++)
+	for (int x = ax - bx - 2; x < ax + bx + 2; x++)
 	{
-		for (int yy = y - ny - 2; yy < y + ny + 2; yy++)
+		for (int y = ay - by - 2; y < ay + by + 2; y++)
 		{
-			for (int zz = z - nz - 2; zz < z + nz + 2; zz++)
+			for (int z = az - bz - 2; z < az + bz + 2; z++)
 			{
-				updateRelativeVoxel(xx, yy, zz);
+				updateRelativeVoxel(x, y, z);
 			}
 		}
 	}
 }
-void Chunk::fill(int x, int y, int z, int nx, int ny, int nz, int id, int density)
+void Chunk::fill(int ax, int ay, int az, int bx, int by, int bz, int id, int density)
 {
-	for (int xx = x - nx; xx < x + nx -1; xx++)
+	for (int x = ax - bx; x < ax + bx - 1; x++)
 	{
-		for (int yy = y - ny; yy < y + ny - 1; yy++)
+		for (int y = ay - by; y < ay + by - 1; y++)
 		{
-			for (int zz = z - nz; zz < z + nz - 1; zz++)
+			for (int z = az - bz; z < az + bz - 1; z++)
 			{
 				//if (getRelativeVoxelID(xx - 1, yy, zz) == 0 || getRelativeVoxelID(xx + 1, yy, zz) == 0 || getRelativeVoxelID(xx, yy - 1, zz) == 0 ||
 				//	getRelativeVoxelID(xx, yy + 1, zz) == 0 || getRelativeVoxelID(xx, yy, zz - 1) == 0 || getRelativeVoxelID(xx, yy, zz + 1) == 0)
 				{
-					int d = relativeDensity(xx, yy, zz) & 0x00ff;
-					int t = (((nx)-(abs(xx - x))) + ((ny)-(abs(yy - y))) + ((nz)-(abs(zz - z))) + 1);
+					int d = relativeDensity(x, y, z) & 0x00ff;
+					int t = (((bx)-(abs(x - ax))) + ((by)-(abs(y - ay))) + ((bz)-(abs(z - az))) + 1);
 					if (t <= 0)
 					{
 						t = 1;
@@ -541,19 +537,19 @@ void Chunk::fill(int x, int y, int z, int nx, int ny, int nz, int id, int densit
 					}
 					if (d > 0)
 					{
-						setRelativeVoxel(xx, yy, zz, id, 0);
+						setRelativeVoxel(x, y, z, id, 0);
 					}
 				}
 			}
 		}
 	}
-	for (int xx = x - nx - 2; xx < x + nx + 2; xx++)
+	for (int x = ax - bx - 2; x < ax + bx + 2; x++)
 	{
-		for (int yy = y - ny - 2; yy < y + ny + 2; yy++)
+		for (int y = ay - by - 2; y < ay + by + 2; y++)
 		{
-			for (int zz = z - nz - 2; zz < z + nz + 2; zz++)
+			for (int z = az - bz - 2; z < az + bz + 2; z++)
 			{
-				updateRelativeVoxel(xx, yy, zz);
+				updateRelativeVoxel(x, y, z);
 			}
 		}
 	}
@@ -573,7 +569,7 @@ void Chunk::setRelativeVoxel(int x, int y, int z, int id, int density)
 		int rY = y - (cY << 6);
 		int rZ = z - (cZ << 6);
 
-		setDensity(rX, rY, rZ, id, density);
+		setVoxel(rX, rY, rZ, id, density);
 	}
 	if (neighbours[cX + 1][cY + 1][cZ + 1] != nullptr && !neighbours[cX + 1][cY + 1][cZ + 1]->emptyChunk)
 	{
@@ -583,7 +579,7 @@ void Chunk::setRelativeVoxel(int x, int y, int z, int id, int density)
 		//neighbours[cX + 1][cY + 1][cZ + 1]->chunkUpdate = true;
 		//neighbours[cX + 1][cY + 1][cZ + 1]->priorityLoad = true;
 		//neighbours[cX + 1][cY + 1][cZ + 1]->loaded = false;
-		return neighbours[cX + 1][cY + 1][cZ + 1]->setDensity(rX, rY, rZ, id, density);
+		return neighbours[cX + 1][cY + 1][cZ + 1]->setVoxel(rX, rY, rZ, id, density);
 	}
 }
 void Chunk::updateRelativeVoxel(int x, int y, int z)
@@ -1340,7 +1336,7 @@ void Chunk::generateTerrain(const std::shared_ptr<ChunkHeight>& heights)
 			excess *= 255;
 			for (int y = 0; y < BASE_SIZE; y++)
 			{
-				setDensity(x, y, z, 0, 0);
+				setVoxel(x, y, z, 0, 0);
 
 				if (y + this->y * CHUNK_SIZE < height)
 				{
@@ -1364,7 +1360,7 @@ void Chunk::generateTerrain(const std::shared_ptr<ChunkHeight>& heights)
 					{
 						setDensity(x, y, z, 2, excess);
 					}*/
-					setDensity(x, y, z, 18, excess);
+					setVoxel(x, y, z, 18, excess);
 				}
 				if (y + this->y * CHUNK_SIZE < (int) (height))
 				{
@@ -1374,7 +1370,7 @@ void Chunk::generateTerrain(const std::shared_ptr<ChunkHeight>& heights)
 					}
 					//else
 					{
-						setDensity(x, y, z, 18, 255);
+						setVoxel(x, y, z, 18, 255);
 					}
 					/*if (abs(this->z % 4) == 3)
 					{
@@ -1459,7 +1455,7 @@ void Chunk::generateTerrain(const std::shared_ptr<ChunkHeight>& heights)
 	}
 	dataLoaded = true;
 }
-void Chunk::render(const Camera& camera, const Matrix4f& projectionMatrix)
+void Chunk::render()
 {
 	glDisable(GL_CULL_FACE);
 	glBindVertexArray(liquidMesh.getVAO());

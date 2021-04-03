@@ -6,19 +6,6 @@
 #include "Utilities/Profiler.h"
 #include "Auravyx.h"
 #include <Utilities\Log.h>
-Camera::Camera()
-{
-	x = 0;
-	y = 0;
-	cX = 0;
-	cY = 0;
-}
-
-
-Camera::~Camera()
-{
-}
-double pp = 0;
 
 bool f3Lock = false;
 bool f5Lock = false;

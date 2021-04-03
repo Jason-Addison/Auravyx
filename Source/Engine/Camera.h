@@ -3,8 +3,8 @@
 class Camera
 {
 public:
-	Camera();
-	~Camera();
+	Camera() = default;
+	~Camera() = default;
 
 	double x, y, z;
 	double xPos, yPos, zPos;
@@ -14,6 +14,7 @@ public:
 	double speed = 4;
 	double speedMultiplier = 1;
 	double fov = 110;
+	Matrix4f projectionMatrix;
 
 	void getPlayerInput();
 

@@ -17,8 +17,6 @@ public:
 
 	Auravyx();
 
-	int valll = 8;
-
 	GFX overlayGraphics;
 
 	WindowManager window;

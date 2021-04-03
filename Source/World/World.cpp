@@ -200,7 +200,7 @@ void World::render(const Camera& cam, const Matrix4f& projectionMatrix)
 	{
 		if (c != nullptr && c->ready)
 		{
-			c->render(GFX::getOverlay()->CAM, projectionMatrix);
+			c->render();
 		}
 	}
 	Renderer::getRenderer()->getShaders()->voxelShader->stop();
@@ -430,18 +430,18 @@ void World::sphere(const float xP, const float yP, const float zP, const float r
 						//if (nX >= 0 && nY >= 0 && nZ >= 0 &&
 						//	nX < size && nY < size && nZ < size)
 						{
-							c->setDensity(nX, nY, nZ, c->getDensity(nX, nY, nZ) + power * 0.01 * ((radius - distance) / radius));
+							c->setVoxel(nX, nY, nZ, c->getDensity(nX, nY, nZ) + power * 0.01 * ((radius - distance) / radius), 255);
 							if (c->getDensity(nX, nY, nZ) > 1)
 							{
-								c->setDensity(nX, nY, nZ, 1);
+								c->setVoxel(nX, nY, nZ, 1, 255);
 							}
 							else if (c->getDensity(nX, nY, nZ) < 0)
 							{
-								c->setDensity(nX, nY, nZ, 0);
+								c->setVoxel(nX, nY, nZ, 0, 255);
 							}
 							if (c->getDensity(nX, nY, nZ) < 0.1 && power < 0)
 							{
-								c->setDensity(nX, nY, nZ, 0);
+								c->setVoxel(nX, nY, nZ, 0, 255);
 							}
 						}
 					}
