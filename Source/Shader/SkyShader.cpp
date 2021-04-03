@@ -13,33 +13,32 @@ SkyShader::~SkyShader()
 {
 }
 
-void SkyShader::loadProjectionMatrix(Matrix4f matrix)
+void SkyShader::loadProjectionMatrix(const Matrix4f& matrix)
 {
 	loadMatrix4f(projectionMatrix, matrix);
 }
 
-void SkyShader::loadTransformationMatrix(Matrix4f matrix)
+void SkyShader::loadTransformationMatrix(const Matrix4f& matrix)
 {
 	loadMatrix4f(transformationMatrix, matrix);
 }
 
-void SkyShader::loadCamera(Matrix4f matrix)
+void SkyShader::loadCamera(const Matrix4f& matrix)
 {
 	loadMatrix4f(viewMatrix, matrix);
 }
 
-void SkyShader::loadTime(double time)
+void SkyShader::loadTime(const double time)
 {
-	//std::cout << time << "\n";
 	loadFloat(this->time, (float) time);
 }
 
-void SkyShader::loadSun(float x, float y, float z)
+void SkyShader::loadSun(const float x, const float y, const float z)
 {
 	loadVec3f(sun, x, y, z);
 }
 
-void SkyShader::loadScreenResolution(float x, float y)
+void SkyShader::loadScreenResolution(const float x, const float y)
 {
 	loadVec2f(screenResolution, x, y);
 }

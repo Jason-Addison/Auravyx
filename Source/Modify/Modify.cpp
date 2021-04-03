@@ -39,7 +39,7 @@ void Modify::loadAllMods()
        
     }
 }
-int Modify::loadMod(std::string dir)
+int Modify::loadMod(const std::string& dir)
 {
     HINSTANCE hGetProcIDDLL = LoadLibrary((LPCSTR)dir.c_str());
     if (!hGetProcIDDLL)
@@ -81,7 +81,7 @@ int Modify::loadMod(std::string dir)
     return 0;
 }
 
-void Modify::unloadMod(int id)
+void Modify::unloadMod(const int id)
 {
 }
 

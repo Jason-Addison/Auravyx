@@ -27,28 +27,28 @@ void VoxelShader::loadAllUniformLocations()
 	//bindAttribute(10, "cameraVector");
 }
 
-void VoxelShader::loadProjectionMatrix(Matrix4f matrix)
+void VoxelShader::loadProjectionMatrix(const Matrix4f& matrix)
 {
 	loadMatrix4f(projectionMatrix, matrix);
 }
 
-void VoxelShader::loadShadowDepthMVP(Matrix4f inDepthMVP)
+void VoxelShader::loadShadowDepthMVP(const Matrix4f& inDepthMVP)
 {
 	loadMatrix4f(depthMVP, inDepthMVP);
 }
 
-void VoxelShader::loadCamera(Matrix4f matrix)
+void VoxelShader::loadCamera(const Matrix4f& matrix)
 {
 	loadMatrix4f(viewMatrix, matrix);
 }
 
-void VoxelShader::loadReflectivity(float shine, float damper)
+void VoxelShader::loadReflectivity(const float shine, const float damper)
 {
 	loadFloat(this->shine, shine);
 	loadFloat(this->damper, damper);
 }
 
-void VoxelShader::loadCamera(float x, float y, float z, float farPlane)
+void VoxelShader::loadCamera(const float x, const float y, const float z, const float farPlane)
 {
 	loadVec3f(cameraPosition, x, y, z);
 	loadFloat(this->farPlane, farPlane);

@@ -15,7 +15,6 @@ void DeferredShader::loadAllUniformLocations()
 	sunDirection = getUniformLocation("sunDirection");
 	cameraPosition = getUniformLocation("cameraPosition");
 	farPlane = getUniformLocation("farPlane");
-	//glBindAttribLocation(shaderProgram, 1, "normal");
 	normal = getUniformLocation("normal");
 	viewMatrix = getUniformLocation("viewMatrix");
 	depthMVP = getUniformLocation("depthMVP");
@@ -30,19 +29,19 @@ void DeferredShader::loadAllUniformLocations()
 	loadTexture("shadowMap", 5);
 }
 
-void DeferredShader::loadSunDirection(float x, float y, float z)
+void DeferredShader::loadSunDirection(const float x, const float y, const float z)
 {
 	loadVec3f(sunDirection, x, y, z);
 }
 
-void DeferredShader::loadCamera(float x, float y, float z, float farPlane, Matrix4f viewMatrix)
+void DeferredShader::loadCamera(const float x, const float y, const float z, const float farPlane, const Matrix4f& viewMatrix)
 {
 	loadVec3f(cameraPosition, x, y, z);
 	loadFloat(this->farPlane, farPlane);
 	loadMatrix4f(this->viewMatrix, viewMatrix);
 }
 
-void DeferredShader::loadDepthMVP(Matrix4f mat)
+void DeferredShader::loadDepthMVP(const Matrix4f& mat)
 {
 	loadMatrix4f(this->depthMVP, mat);
 }
@@ -69,7 +68,7 @@ void DeferredShader::loadDepthMVP(Matrix4f mat)
 	loadFloat(pointLightCount, i);
 }*/
 
-void DeferredShader::loadAmbientLight(float light, float r, float g, float b)
+void DeferredShader::loadAmbientLight(const float light, const float r, const float g, const float b)
 {
 	loadVec4f(ambientLight, light, r, g, b);
 }

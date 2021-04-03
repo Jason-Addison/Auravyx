@@ -68,3 +68,108 @@ Vec4f Vec4f::rgbaColour(float r, float g, float b, float a)
 {
 	return Vec4f(r / (float) 255, g / (float) 255, b / (float) 255, a / (float) 255);
 }
+Vec4f& Vec4f::operator+=(const Vec4f b)
+{
+	this->x += b.x;
+	this->y += b.y;
+	this->z += b.z;
+	this->w += b.w;
+	return *this;
+}
+Vec4f& Vec4f::operator-=(const Vec4f b)
+{
+	this->x -= b.x;
+	this->y -= b.y;
+	this->z -= b.z;
+	this->w -= b.w;
+	return *this;
+}
+Vec4f& Vec4f::operator*=(const Vec4f b)
+{
+	this->x *= b.x;
+	this->y *= b.y;
+	this->z *= b.z;
+	this->w *= b.w;
+	return *this;
+}
+Vec4f& Vec4f::operator/=(const Vec4f b)
+{
+	this->x /= b.x;
+	this->y /= b.y;
+	this->z /= b.z;
+	this->w /= b.w;
+	return *this;
+}
+
+Vec4f& Vec4f::operator+=(const float b)
+{
+	this->x += b;
+	this->y += b;
+	this->z += b;
+	this->w += b;
+	return *this;
+}
+Vec4f& Vec4f::operator-=(const float b)
+{
+	this->x -= b;
+	this->y -= b;
+	this->z -= b;
+	this->w -= b;
+	return *this;
+}
+Vec4f& Vec4f::operator*=(const float b)
+{
+	this->x *= b;
+	this->y *= b;
+	this->z *= b;
+	this->w *= b;
+	return *this;
+}
+Vec4f& Vec4f::operator/=(const float b)
+{
+	this->x /= b;
+	this->y /= b;
+	this->z /= b;
+	this->w /= b;
+	return *this;
+}
+
+Vec4f operator+(const Vec4f a, const Vec4f b)
+{
+	return Vec4f(a.x + b.x, a.y + b.y, a.z + b.z, a.w + b.w);
+}
+
+Vec4f operator-(const Vec4f a, const Vec4f b)
+{
+	return Vec4f(a.x - b.x, a.y - b.y, a.z - b.z, a.w - b.w);
+}
+
+Vec4f operator*(const Vec4f a, const Vec4f b)
+{
+	return Vec4f(a.x * b.x, a.y * b.y, a.z * b.z, a.w * b.w);
+}
+
+Vec4f operator/(const Vec4f a, const Vec4f b)
+{
+	return Vec4f(a.x / b.x, a.y / b.y, a.z / b.z, a.w / b.w);
+}
+
+Vec4f operator+(const Vec4f a, const float b)
+{
+	return Vec4f(a.x + b, a.y + b, a.z + b, a.w + b);
+}
+
+Vec4f operator-(const Vec4f a, const float b)
+{
+	return Vec4f(a.x - b, a.y - b, a.z - b, a.w - b);
+}
+
+Vec4f operator*(const Vec4f a, const float b)
+{
+	return Vec4f(a.x * b, a.y * b, a.z * b, a.w * b);
+}
+
+Vec4f operator/(const Vec4f a, const float b)
+{
+	return Vec4f(a.x / b, a.y / b, a.z / b, a.w * b);
+}

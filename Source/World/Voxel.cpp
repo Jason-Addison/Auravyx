@@ -55,7 +55,7 @@ Vec3f Voxel::getLiquidAverage()
     return this->averageLiquid;
 }
 
-void Voxel::addAverage(float x, float y, float z, int id)
+void Voxel::addAverage(const float x, const float y, const float z, const int id)
 {
     addLiquidAverage(x, y, z);
    
@@ -67,7 +67,7 @@ void Voxel::addAverage(float x, float y, float z, int id)
     }
 }
 
-void Voxel::addMaterial(int m)
+void Voxel::addMaterial(const int m)
 {
     for (int i = 0; i < totalMaterial.size(); i++)
     {
@@ -80,7 +80,7 @@ void Voxel::addMaterial(int m)
     totalMaterialCounter.emplace_back(1);
 }
 #include <iostream>
-void Voxel::addLiquidAverage(float x, float y, float z)
+void Voxel::addLiquidAverage(const float x, const float y, const float z)
 {
     averageLiquid.x += x;
     averageLiquid.y += y;
@@ -93,7 +93,7 @@ void Voxel::addLiquidAverage(Voxel* vox)
     avgLiq.emplace_back(vox);
 }
 
-void Voxel::addLiquidMaterial(int m)
+void Voxel::addLiquidMaterial(const int m)
 {
     for (int i = 0; i < totalLiquidMaterial.size(); i++)
     {

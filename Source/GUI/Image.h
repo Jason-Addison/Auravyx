@@ -13,6 +13,6 @@ public:
 
 	void render();
 
-	void setBounds(float x, float y, float width, float height);
+	void setBounds(const float x, const float y, const float width, const float height);
 };
 

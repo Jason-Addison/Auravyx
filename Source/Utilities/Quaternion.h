@@ -4,14 +4,14 @@ class Quaternion
 {
 public:
 
-	Quaternion(float x, float y, float z, float w);
+	Quaternion(const float x, const float y, const float z, const float w);
 
 	void normalize();
 
 	Matrix4f toRotationMatrix();
 
-	static Quaternion fromMatrix(Matrix4f m);
-	static Quaternion interpolate(Quaternion a, Quaternion b, float blend);
+	static Quaternion fromMatrix(const Matrix4f& m);
+	static Quaternion interpolate(const Quaternion& a, const Quaternion& b, const float blend);
 
 private:
 

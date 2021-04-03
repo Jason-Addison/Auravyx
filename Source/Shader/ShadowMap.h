@@ -11,7 +11,7 @@ public:
 	Matrix4f depthMVP;
 
 	ShadowMap();
-	ShadowMap(int width, int height);
+	ShadowMap(const int width, const int height);
 	~ShadowMap();
 
 	void create();

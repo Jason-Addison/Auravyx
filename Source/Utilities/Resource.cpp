@@ -250,7 +250,7 @@ void Resource::loadAllTextures()
 	texturesLoaded = true;
 }
 
-void Resource::loadTextureSilent(std::string texture)
+void Resource::loadTextureSilent(const std::string& texture)
 {
 	int tex = loadTexture(texture);
 	int width = 0;
@@ -353,7 +353,7 @@ void Resource::clearPreloadedResources()
 	whatIsLoadingPrimary.clear();
 	whatIsLoadingSecondary.clear();
 }
-void Resource::printLoadingMessage(std::vector<std::string> lines, double delay, std::vector<Vec3f> colours)
+void Resource::printLoadingMessage(const std::vector<std::string>& lines, const double delay, const std::vector<Vec3f>& colours)
 {
 	loadingMessage lm;
 	lm.messageLines = lines;
@@ -390,7 +390,7 @@ void Resource::loadBootAssets()
 	FontLoader::loadFont(Resource::getResources()->DIR + "\\Assets\\Boot\\font_plain.fnt");
 }
 
-int Resource::loadTexture(std::string dir)
+int Resource::loadTexture(const std::string& dir)
 {
 	unsigned int tex = SOIL_load_OGL_texture(dir.c_str(), SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_INVERT_Y);
 	if (tex == 0)
@@ -522,7 +522,7 @@ void Resource::loadAllAudio()
 	}
 }
 
-std::map<std::string, std::string> Resource::loadShaders(std::string dir)
+std::map<std::string, std::string> Resource::loadShaders(const std::string& dir)
 {
 	whatIsLoadingPrimary = "Loading shaders";
 	int pass = 0;

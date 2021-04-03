@@ -5,12 +5,12 @@ Font::Font()
 {
 }
 
-
 Font::~Font()
 {
 }
 
-Font::Font(Texture texture, int resolution, float largestValue, float size, std::vector<FontChar> characters, float lPad, float rPad, float uPad, float dPad)
+Font::Font(const Texture& texture, const int resolution, const float largestValue, const float size, const std::vector<FontChar>& characters, const float lPad,
+	const float rPad, const float uPad, const float dPad)
 {
 	this->texture = texture;
 	this->resolution = resolution;

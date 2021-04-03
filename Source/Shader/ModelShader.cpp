@@ -9,17 +9,17 @@ ModelShader::~ModelShader()
 {
 }
 
-void ModelShader::loadProjectionMatrix(Matrix4f matrix)
+void ModelShader::loadProjectionMatrix(const Matrix4f& matrix)
 {
 	loadMatrix4f(projectionMatrix, matrix);
 }
 
-void ModelShader::loadTransformationMatrix(Matrix4f matrix)
+void ModelShader::loadTransformationMatrix(const Matrix4f& matrix)
 {
 	loadMatrix4f(transformationMatrix, matrix);
 }
 
-void ModelShader::loadCamera(Matrix4f matrix)
+void ModelShader::loadCamera(const Matrix4f& matrix)
 {
 	loadMatrix4f(viewMatrix, matrix);
 }
@@ -33,13 +33,13 @@ void ModelShader::loadAllUniformLocations()
 	farPlane = getUniformLocation("farPlane");
 	diffuseColor = getUniformLocation("diffuseColor");
 }
-void ModelShader::loadCamera(float x, float y, float z, float farPlane)
+void ModelShader::loadCamera(const float x, const float y, const float z, const float farPlane)
 {
 	loadVec3f(cameraPosition, x, y, z);
 	loadFloat(this->farPlane, farPlane);
 }
 
-void ModelShader::loadDiffuseColor(float r, float g, float b, float a)
+void ModelShader::loadDiffuseColor(const float r, const float g, const float b, const float a)
 {
 	loadVec4f(diffuseColor, r, g, b, a);
 }

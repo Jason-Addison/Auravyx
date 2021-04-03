@@ -94,13 +94,13 @@ void FBO::update(const int width, const int height)
 	}
 }
 
-void FBO::resolve(const int readBuffer, const FBO & output)
+void FBO::resolve(const int readBuffer, const FBO& output)
 {
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, output.framebuffer);
 	glBindFramebuffer(GL_READ_FRAMEBUFFER, this->framebuffer);
 	glReadBuffer(readBuffer);
 	glBlitFramebuffer(0, 0, width, height, 0, 0, output.width, output.height, GL_COLOR_BUFFER_BIT, GL_LINEAR);
-	//unbind();
+	unbind();
 }
 void FBO::clear()
 {

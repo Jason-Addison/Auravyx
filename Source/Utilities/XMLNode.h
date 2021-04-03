@@ -10,25 +10,25 @@ public:
 
 	std::string getData();
 
-	std::string getAttribute(std::string attrib);
+	std::string getAttribute(const std::string& attrib);
 
-	XMLNode getChild(std::string childName);
+	XMLNode getChild(const std::string& childName);
 
-	XMLNode getChildWithAttribute(std::string childName, std::string attrib, std::string value);
+	XMLNode getChildWithAttribute(const std::string& childName, const std::string& attrib, const std::string& value);
 
-	std::list<XMLNode> getChildren(std::string name);
+	std::list<XMLNode> getChildren(const std::string& name);
 
 protected:
 
 	XMLNode();
 
-	XMLNode(std::string name);
+	XMLNode(const std::string& name);
 
-	void addAttribute(std::string attrib, std::string value);
+	void addAttribute(const std::string& attrib, const std::string& value);
 
-	void addChild(XMLNode child);
+	void addChild(const XMLNode& child);
 
-	void setData(std::string data);
+	void setData(const std::string& data);
 
 private:
 

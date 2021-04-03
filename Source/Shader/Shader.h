@@ -10,7 +10,7 @@ public:
 	Shader();
 	~Shader();
 	GLuint shaderProgram;
-	void createShader(std::map<std::string, std::string> shaders);
+	void createShader(const std::map<std::string, std::string>& shaders);
 
 	void start();
 
@@ -22,27 +22,27 @@ public:
 
 protected:
 
-	GLint getUniformLocation(GLchar *name);
+	GLint getUniformLocation(const GLchar *name);
 
-	GLint getUniformLocation(std::string name);
+	GLint getUniformLocation(const std::string& name);
 
 	std::string shader = "No shader specified";
 
-	void loadFloat(GLint location, float value);
+	void loadFloat(const GLint location, const float value);
 
-	void loadVec4f(GLint location, float x, float y, float z, float w);
+	void loadVec4f(const GLint location, const float x, const float y, const float z, const float w);
 
-	void loadVec3f(GLint location, float x, float y, float z);
+	void loadVec3f(const GLint location, const float x, const float y, const float z);
 
-	void loadVec2f(GLint location, float x, float y);
+	void loadVec2f(const GLint location, const float x, const float y);
 
-	void loadMatrix4f(GLint location, Matrix4f value);
+	void loadMatrix4f(const GLint location, const Matrix4f& value);
 
-	void loadTexture(GLchar* location, int unit);
+	void loadTexture(const GLchar* location, const int unit);
 
-	void loadTexture(std::string location, int unit);
+	void loadTexture(const std::string& location, const int unit);
 
-	void bindAttribute(int attribute, GLchar* variableName);
+	void bindAttribute(const int attribute, const GLchar* variableName);
 
 
 };

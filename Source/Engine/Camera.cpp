@@ -158,7 +158,7 @@ double Camera::getZ()
 	return z;
 }
 
-Matrix4f Camera::getViewMatrix()
+Matrix4f Camera::getViewMatrix() const
 {
 	Matrix4f matrix;
 	matrix.createViewMatrix(x, y, z, xRot, yRot, zRot);

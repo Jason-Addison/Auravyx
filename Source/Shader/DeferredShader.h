@@ -8,6 +8,20 @@ public:
 	DeferredShader();
 	~DeferredShader();
 
+	virtual void loadAllUniformLocations();
+
+	void loadSunDirection(const float x, const float y, const float z);
+
+	void loadCamera(const float x, const float y, const float z, const float farPlane, const Matrix4f& viewMatrix);
+
+	void loadDepthMVP(const Matrix4f& mat);
+
+	//void loadPointLights(const std::vector<PointLight>& lights);
+
+	void loadAmbientLight(const float light, const float r, const float g, const float b);
+
+private:
+
 	GLint sunDirection;
 	GLint normal;
 	GLint farPlane;
@@ -16,19 +30,5 @@ public:
 	GLint depthMVP;
 	GLint pointLightCount;
 	GLint ambientLight;
-
-	void loadTransformation(Matrix4f matrix);
-
-	virtual void loadAllUniformLocations();
-
-	void loadSunDirection(float x, float y, float z);
-
-	void loadCamera(float x, float y, float z, float farPlane, Matrix4f viewMatrix);
-
-	void loadDepthMVP(Matrix4f mat);
-
-	//void loadPointLights(std::vector<PointLight> lights);
-
-	void loadAmbientLight(float light, float r, float g, float b);
 };
 

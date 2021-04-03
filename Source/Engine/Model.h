@@ -9,8 +9,8 @@ class Model
 public:
 
 	Model();
-	Model(GLuint vao, int vertexCount);
-	Model(GLuint vao, GLuint elementBuffer, int vertexCount);
+	Model(const GLuint vao, const int vertexCount);
+	Model(const GLuint vao, const GLuint elementBuffer, const int vertexCount);
 	~Model();
 
 	std::vector<ModelMaterial> materials;
@@ -28,34 +28,34 @@ public:
 	GLuint elementBuffer;
 	GLuint getElementBuffer();
 
-	void setTexture(int index, Texture texture);
+	void setTexture(const int index, const Texture& texture);
 
-	static Model load2DModel(std::vector<float> vertices);
+	static Model load2DModel(const std::vector<float>& vertices);
 
-	static Model load2DModel(std::vector<float> vertices, std::vector<float> texCoords);
+	static Model load2DModel(const std::vector<float>& vertices, const std::vector<float>& texCoords);
 
-	static Model loadIndexed3DModel(std::vector<float> vertices, std::vector<float> normals, std::vector<unsigned int> indices);
+	static Model loadIndexed3DModel(const std::vector<float>& vertices, const std::vector<float>& normals, const std::vector<unsigned int>& indices);
 
-	static Model loadIndexed3DModel(std::vector<float> vertices, std::vector<float> normals, std::vector<float> textures, 
-		std::vector<float> colors, std::vector<unsigned int> indices);
+	static Model loadIndexed3DModel(const std::vector<float>& vertices, const std::vector<float>& normals, const std::vector<float>& textures,
+		const std::vector<float>& colors, const std::vector<unsigned int>& indices);
 
-	static Model load3DModel(std::vector<float> vertices, std::vector<float> normals);
+	static Model load3DModel(const std::vector<float>& vertices, const std::vector<float>& normals);
 
-	static Model load3DLineModel(std::vector<float> vertices, std::vector<float> colours);
+	static Model load3DLineModel(const std::vector<float>& vertices, const std::vector<float>& colours);
 
-	static Model load3DModelT(std::vector<float> vertices, std::vector<float> normals, std::vector<float> uv);
+	static Model load3DModelT(const std::vector<float>& vertices, const std::vector<float>& normals, const std::vector<float>& uv);
 
-	static Model load3DModel(std::vector<float> vertices, std::vector<float> normals, std::vector<float> materials);
+	static Model load3DModel(const std::vector<float>& vertices, const std::vector<float>& normals, const std::vector<float>& materials);
 
-	static Model load3DModel(std::vector<float> vertices, std::vector<float> normals, std::vector<float> posA,
-		std::vector<float> posB, std::vector<float> posC, std::vector<unsigned int> materials);
+	static Model load3DModel(const std::vector<float>& vertices, const std::vector<float>& normals, const std::vector<float>& posA,
+		const std::vector<float>& posB, const std::vector<float>& posC, const std::vector<unsigned int>& materials);
 	//static Model load3DModel(std::vector<float> vertices, std::vector<float> normals, std::vector<float> tex);
 
-	static Model load3DModel(std::vector<float> vertices, std::vector<float> normals, std::vector<float> tex, std::vector<float> materials);
+	static Model load3DModel(const std::vector<float>& vertices, const std::vector<float>& normals, const std::vector<float>& tex, const std::vector<float>& materials);
 
-	static Model load3DModel(std::vector<float> vertices);
+	static Model load3DModel(const std::vector<float>& vertices);
 
-	void setMaterials(std::vector<ModelMaterial> materials);
+	void setMaterials(const std::vector<ModelMaterial>& materials);
 
 	std::vector<ModelMaterial> getMaterials();
 
@@ -65,8 +65,8 @@ private:
 
 	static GLuint generateVAO();
 
-	static GLuint addVertexAttribute(int attrib, int size, Model& m, std::vector<float> attribs);
-	static GLuint addVertexAttribute(int attrib, int size, Model& m, std::vector<unsigned int> attribs);
-	static GLuint addIndicesBuffer(std::vector<unsigned int> indices);
+	static GLuint addVertexAttribute(const int attrib, const int size, Model& m, const std::vector<float>& attribs);
+	static GLuint addVertexAttribute(const int attrib, const int size, Model& m, const std::vector<unsigned int>& attribs);
+	static GLuint addIndicesBuffer(const std::vector<unsigned int>& indices);
 };
 

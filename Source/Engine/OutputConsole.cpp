@@ -380,7 +380,7 @@ bool OutputConsole::isReady()
 	return r;
 }
 
-void OutputConsole::message(std::string msg, int level)
+void OutputConsole::message(const std::string& msg, const int level)
 {
 	ConsoleMessage m;
 	auto now = std::chrono::system_clock::now();

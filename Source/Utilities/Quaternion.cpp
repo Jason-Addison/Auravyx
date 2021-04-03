@@ -1,6 +1,6 @@
 #include "Quaternion.h"
 #include <cmath>
-Quaternion::Quaternion(float x, float y, float z, float w)
+Quaternion::Quaternion(const float x, const float y, const float z, const float w)
 {
 	this->x = x;
 	this->y = y;
@@ -48,7 +48,7 @@ Matrix4f Quaternion::toRotationMatrix()
 	return m;
 }
 
-Quaternion Quaternion::fromMatrix(Matrix4f m)
+Quaternion Quaternion::fromMatrix(const Matrix4f& m)
 {
 	float w, x, y, z;
 	float diagonal = m.m00 + m.m11 + m.m22;
@@ -86,7 +86,7 @@ Quaternion Quaternion::fromMatrix(Matrix4f m)
 	return Quaternion(x, y, z, w);
 }
 
-Quaternion Quaternion::interpolate(Quaternion a, Quaternion b, float blend)
+Quaternion Quaternion::interpolate(const Quaternion& a, const Quaternion& b, const float blend)
 {
 	Quaternion result = Quaternion(0, 0, 0, 1);
 	float dot = a.w * b.w + a.x * b.x + a.y * b.y + a.z * b.z;

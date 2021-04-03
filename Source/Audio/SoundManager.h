@@ -16,9 +16,9 @@ public:
 
 	void destroyAllSounds();
 
-	void addSound(ALuint source);
+	void addSound(const ALuint source);
 
-	void removeSound(ALuint source);
+	void removeSound(const ALuint source);
 
 	static SoundManager* getSoundManager();
 

@@ -25,8 +25,8 @@ public:
 	Shaders();
 	~Shaders();
 
-	void init(std::map<std::string, std::string> shaders);
+	void init(const std::map<std::string, std::string>& shaders);
 
-	void initBootShaders(std::map<std::string, std::string> shaders);
+	void initBootShaders(const std::map<std::string, std::string>& shaders);
 };
 

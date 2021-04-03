@@ -20,19 +20,19 @@ public:
 
 	void create();
 
-	void play(WAVE wave);
+	void play(const WAVE& wave);
 
-	void play(std::shared_ptr<WAVE> wave);
+	void play(const std::shared_ptr<WAVE>& wave);
 
 	void stop();
 
-	void setGain(float gain);
+	void setGain(const float gain);
 
-	void setPitch(float pitch);
+	void setPitch(const float pitch);
 
-	void setPosition(float x, float y, float z);
+	void setPosition(const float x, const float y, const float z);
 
-	void setVelocity(float x, float y, float z);
+	void setVelocity(const float x, const float y, const float z);
 
 	void pause();
 
@@ -40,7 +40,7 @@ public:
 
 	ALfloat getTime();
 
-	void setTime(ALfloat time);
+	void setTime(const ALfloat time);
 
 	void destroy();
 

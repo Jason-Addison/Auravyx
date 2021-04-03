@@ -9,7 +9,7 @@ PhysicsWorld::~PhysicsWorld()
 {
 }
 
-void PhysicsWorld::addObject(std::shared_ptr<PhysicsObject> object)
+void PhysicsWorld::addObject(const std::shared_ptr<PhysicsObject>& object)
 {
 	objects.emplace_back(object);
 }

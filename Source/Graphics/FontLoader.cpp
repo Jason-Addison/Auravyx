@@ -12,7 +12,8 @@ FontLoader::FontLoader()
 FontLoader::~FontLoader()
 {
 }
-FontChar loadCharacter(char character, float x, float y, float width, float height, float xOff, float yOff, float xAdv, float resolution)
+FontChar loadCharacter(const char character, const float x, const float y, const float width, const float height,
+	const float xOff, const float yOff, const float xAdv, const float resolution)
 {
 	float fontSize = -1;
 	float texCoords[] = {x, y, x, y + height, x + width, y, x + width, y + height, x, y + height, x + width, y};
@@ -29,7 +30,7 @@ FontChar loadCharacter(char character, float x, float y, float width, float heig
 	return fontCharacter;
 }
 
-void FontLoader::loadFont(std::string file)
+void FontLoader::loadFont(const std::string& file)
 {
 	std::vector<std::string> lines = Util::splitString(Util::readTextFile(file), "\n");
 	std::vector<FontChar> characters(500);

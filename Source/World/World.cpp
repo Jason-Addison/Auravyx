@@ -55,7 +55,7 @@ void World::create()
 	shadowMap = ShadowMap(2048 * 2, 2048 * 2);
 }
 
-void World::render(Camera* cam, Matrix4f* projectionMatrix)
+void World::render(const Camera& cam, const Matrix4f& projectionMatrix)
 {
 	fbo.unbind();
 
@@ -68,7 +68,7 @@ void World::render(Camera* cam, Matrix4f* projectionMatrix)
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	
 	Vec3f dir(0, -90, -m);
-	Renderer::getRenderer()->getShaders()->shadowShader->render(*this, shadowMap, *cam, dir);
+	Renderer::getRenderer()->getShaders()->shadowShader->render(*this, shadowMap, cam, dir);
 	
 	shadowMap.unbind();
 	fbo.update(WindowManager::getWindow()->getWidth(), WindowManager::getWindow()->getHeight());
@@ -78,8 +78,8 @@ void World::render(Camera* cam, Matrix4f* projectionMatrix)
 	fbo.clear();
 
 	Renderer::getRenderer()->getShaders()->skyShader->start();
-	Renderer::getRenderer()->getShaders()->skyShader->loadProjectionMatrix(*projectionMatrix);
-	Camera altCam = *cam;
+	Renderer::getRenderer()->getShaders()->skyShader->loadProjectionMatrix(projectionMatrix);
+	Camera altCam = cam;
 	altCam.x = 0; altCam.y = 0; altCam.z = 0;
 
 	double p = 0.0174532925;
@@ -95,17 +95,17 @@ void World::render(Camera* cam, Matrix4f* projectionMatrix)
 	if (Profiler::showChunkMetrics)
 	{
 		Renderer::getRenderer()->getShaders()->lineShader->start();
-		Renderer::getRenderer()->getShaders()->lineShader->loadCamera(cam->getViewMatrix());
-		Renderer::getRenderer()->getShaders()->lineShader->loadProjectionMatrix(*projectionMatrix);
+		Renderer::getRenderer()->getShaders()->lineShader->loadCamera(cam.getViewMatrix());
+		Renderer::getRenderer()->getShaders()->lineShader->loadProjectionMatrix(projectionMatrix);
 		Renderer::getRenderer()->getShaders()->lineShader->loadOffset(GFX::getOverlay()->CAM.cX, GFX::getOverlay()->CAM.cY, GFX::getOverlay()->CAM.cZ);
 		Renderer::getRenderer()->getShaders()->lineShader->render();
 	}
 	Renderer::getRenderer()->getShaders()->lineShader->stop();
 
 	Renderer::getRenderer()->getShaders()->voxelShader->start();
-	Renderer::getRenderer()->getShaders()->voxelShader->loadProjectionMatrix(*projectionMatrix); // *projectionMatrix);
-	Renderer::getRenderer()->getShaders()->voxelShader->loadCamera(cam->getViewMatrix());
-	Renderer::getRenderer()->getShaders()->voxelShader->loadCamera(cam->xPos, cam->yPos, cam->zPos, GFX::getOverlay()->viewDistance * 64);
+	Renderer::getRenderer()->getShaders()->voxelShader->loadProjectionMatrix(projectionMatrix); // *projectionMatrix);
+	Renderer::getRenderer()->getShaders()->voxelShader->loadCamera(cam.getViewMatrix());
+	Renderer::getRenderer()->getShaders()->voxelShader->loadCamera(cam.xPos, cam.yPos, cam.zPos, GFX::getOverlay()->viewDistance * 64);
 
 	std::vector<int> toRemove;
 	int distance;
@@ -200,7 +200,7 @@ void World::render(Camera* cam, Matrix4f* projectionMatrix)
 	{
 		if (c != nullptr && c->ready)
 		{
-			c->render(GFX::getOverlay()->CAM, *projectionMatrix);
+			c->render(GFX::getOverlay()->CAM, projectionMatrix);
 		}
 	}
 	Renderer::getRenderer()->getShaders()->voxelShader->stop();
@@ -209,16 +209,17 @@ void World::render(Camera* cam, Matrix4f* projectionMatrix)
 	//	&(GFX::getOverlay()->CAM), projectionMatrix, Assets::getAssets()->getAssets()->getTexture("mod").get());
 
 		GFX::getOverlay()->renderModelIndex(GFX::getOverlay()->CAM.xPos, GFX::getOverlay()->CAM.yPos, GFX::getOverlay()->CAM.zPos,
-			1, 1, 1, 0, 90, (GFX::getOverlay()->CAM.yRot + 180) * 0, Assets::getAssets()->getAssets()->getModel("mesh").get(),
-			&(GFX::getOverlay()->CAM), projectionMatrix, Assets::getAssets()->getAssets()->getTexture("face").get());
+			1, 1, 1, 0, 90, (GFX::getOverlay()->CAM.yRot + 180) * 0, *Assets::getAssets()->getAssets()->getModel("mesh").get(),
+			(GFX::getOverlay()->CAM), projectionMatrix, *Assets::getAssets()->getAssets()->getTexture("face").get());
 	
 		GFX::getOverlay()->renderModelIndex(0, 0, 0,
-			1, 1, 1, 0, 0, (0 + 180) * 0, Assets::getAssets()->getAssets()->getModel("mesh").get(),
-			&(GFX::getOverlay()->CAM), projectionMatrix, Assets::getAssets()->getAssets()->getTexture("face").get());
+			1, 1, 1, 0, 0, (0 + 180) * 0, *Assets::getAssets()->getAssets()->getModel("mesh").get(),
+			(GFX::getOverlay()->CAM), projectionMatrix, *Assets::getAssets()->getAssets()->getTexture("face").get());
 	//s1.setPosition(GFX::getOverlay()->CAM.x, GFX::getOverlay()->CAM.y - 5, GFX::getOverlay()->CAM.z);
 	
-	GFX::getOverlay()->renderModel(s1->getX(), s1->getY(), s1->getZ(), 1, 1, 1, 0, 0, 0, Assets::getAssets()->getAssets()->getModel("sky").get(), &(GFX::getOverlay()->CAM), projectionMatrix, Assets::getAssets()->getAssets()->getTexture("light_blue").get());
-	if (s1->checkCollision(s2.get()))
+	GFX::getOverlay()->renderModel(s1->getX(), s1->getY(), s1->getZ(), 1, 1, 1, 0, 0, 0, *Assets::getAssets()->getAssets()->getModel("sky").get(),
+		(GFX::getOverlay()->CAM), projectionMatrix, *Assets::getAssets()->getAssets()->getTexture("light_blue").get());
+	if (s1->checkCollision(*s2.get()))
 	{
 		//GFX::getOverlay()->renderModel(0, 0, 0, 1, 1, 1, 0, 0, 0, Assets::getAssets()->getAssets()->getModel("sky").get(), &GFX::getOverlay()->CAM, projectionMatrix, Assets::getAssets()->getAssets()->getTexture("yellow").get());
 	}
@@ -237,7 +238,7 @@ void World::render(Camera* cam, Matrix4f* projectionMatrix)
 	Renderer::getRenderer()->getShaders()->deferredShader->loadDepthMVP(shadowMap.depthMVP);
 	//Renderer::getRenderer()->getShaders()->deferredShader->loadPointLights(lights);
 	Renderer::getRenderer()->getShaders()->deferredShader->loadSunDirection(cos(M::toRadians(m)), -sin(M::toRadians(m)), 0);
-	Renderer::getRenderer()->getShaders()->deferredShader->loadCamera(cam->xPos, cam->yPos, cam->zPos, GFX::getOverlay()->viewDistance * 64, cam->getViewMatrix());
+	Renderer::getRenderer()->getShaders()->deferredShader->loadCamera(cam.xPos, cam.yPos, cam.zPos, GFX::getOverlay()->viewDistance * 64, cam.getViewMatrix());
 	double lightFactor = (1 - 1) * 0.9 + 0.1;
 	   
 	double step = (double)(getOverworldTime() % getOverworldDayCycle()) / (double)getOverworldDayCycle();
@@ -293,7 +294,7 @@ bool ny;
 int xP;
 int yP;
 
-void World::addChunk(Chunk chunk)
+void World::addChunk(const Chunk& chunk)
 {
 	//if (getChunk(chunk->x, chunk->y) == nullptr)
 	{
@@ -317,7 +318,7 @@ void World::addChunk(Chunk chunk)
 	}
 }
 
-Chunk* World::getChunk(int x, int y, int z)
+Chunk* World::getChunk(const int x, const int y, const int z)
 {
 	for (auto &c : overworld)
 	{
@@ -329,7 +330,7 @@ Chunk* World::getChunk(int x, int y, int z)
 	return nullptr;
 }
 
-std::shared_ptr<ChunkHeight> World::getChunkHeightmap(int x, int z)
+std::shared_ptr<ChunkHeight> World::getChunkHeightmap(const int x, const int z)
 {
 	for (auto c : overworldHeightmap)
 	{
@@ -341,7 +342,7 @@ std::shared_ptr<ChunkHeight> World::getChunkHeightmap(int x, int z)
 	return nullptr;
 }
 
-bool World::isLoaded(int x, int y, int z)
+bool World::isLoaded(const int x, const int y, const int z)
 {
 	return getChunk(x, y, z) != nullptr;
 }
@@ -351,7 +352,7 @@ std::shared_ptr<World> World::getOverworld()
 	return nullptr;
 }
 
-void World::setVoxel(int x, int y, int z, int type, float density)
+void World::setVoxel(const int x, const int y, const int z, const int type, const float density)
 {
 	Chunk* c = getChunk(((float) x / (float) c->CHUNK_SIZE) * 2, (float)y / (float)c->CHUNK_SIZE * 2, (float)z / (float) c->CHUNK_SIZE * 2);
 	if (c != nullptr)
@@ -360,7 +361,7 @@ void World::setVoxel(int x, int y, int z, int type, float density)
 	}
 }
 
-void World::setOverworldTime(long long int time)
+void World::setOverworldTime(const long long int time)
 {
 	this->overworldTime = time;
 }
@@ -406,7 +407,7 @@ void World::setup()
 	fboStrings.emplace_back("position");
 }
 
-void World::sphere(float xP, float yP, float zP, float radius, float power)
+void World::sphere(const float xP, const float yP, const float zP, const float radius, const float power)
 {
 	Chunk* c = nullptr;
 	for (int x = floor(-radius / 2); x < ceil(radius / 2); x++)

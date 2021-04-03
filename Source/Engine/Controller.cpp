@@ -36,7 +36,7 @@ void Controller::loadControls()
 		//controls.emplace(std::pair<std::string, std::vector<Control>>(Util::removeFromString(controlType, "_", " "), controllers));
 	}
 }
-bool Controller::active(std::string action)
+bool Controller::active(const std::string& action)
 {
 	std::vector<Control> controlList = controls.at(action);
 	for (int i = 0; i < controlList.size(); i++)
@@ -57,7 +57,7 @@ bool Controller::active(std::string action)
 	
 	return false;
 }
-void Controller::inputText(char c, int mod)
+void Controller::inputText(const char c, const int mod)
 {
 	
 }
@@ -95,7 +95,7 @@ void Controller::update()
 	//std::string s = std::to_string(x) + std::to_string(y);
 	///glfwSetWindowTitle(WindowManager::getWindow()->window, s.c_str());
 }
-bool Controller::isMouseDown(int code)
+bool Controller::isMouseDown(const int code)
 {
 	int mouse = glfwGetMouseButton(WindowManager::getWindow()->window, code);
 	if (mouse == GLFW_PRESS)
@@ -104,7 +104,7 @@ bool Controller::isMouseDown(int code)
 	}
 	return false;
 }
-bool Controller::isKeyDown(int keyCode)
+bool Controller::isKeyDown(const int keyCode)
 {
 	if (Controller::keys[keyCode] != 0)
 	{
@@ -138,7 +138,7 @@ double Controller::getMouseY()
 	glfwGetCursorPos(WindowManager::getWindow()->window, 0, &y);
 	return y;
 }
-void Controller::keyboardInput(int key, int scancode, int action, int mods)
+void Controller::keyboardInput(const int key, const int scancode, const int action, const int mods)
 {
 	for (auto & i : inputTexts)
 	{

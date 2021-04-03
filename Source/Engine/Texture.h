@@ -5,7 +5,7 @@ class Texture
 {
 public:
 	Texture();
-	Texture(GLuint texture, int width, int height);
+	Texture(const GLuint texture, const int width, const int height);
 	~Texture();
 
 	GLuint texture;

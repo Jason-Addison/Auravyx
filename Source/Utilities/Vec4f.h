@@ -48,6 +48,32 @@ public:
 	}
 	void add(Vec4f v);
 
-	static Vec4f rgbaColour(float r, float g, float b, float a);
+	static Vec4f rgbaColour(float r, float g, float b, float a); 
+
+	Vec4f& operator+=(const Vec4f b);
+
+	Vec4f& operator-=(const Vec4f b);
+
+	Vec4f& operator*=(const Vec4f b);
+
+	Vec4f& operator/=(const Vec4f b);
+
+	Vec4f& operator+=(const float b);
+
+	Vec4f& operator-=(const float b);
+
+	Vec4f& operator*=(const float b);
+
+	Vec4f& operator/=(const float b);
 };
+
+Vec4f operator+(const Vec4f a, const Vec4f b);
+
+Vec4f operator-(const Vec4f a, const Vec4f b);
+
+Vec4f operator*(const Vec4f a, const Vec4f b);
+
+Vec4f operator/(const Vec4f a, const Vec4f b);
+
+Vec4f operator+(const Vec4f a, const float b);
 

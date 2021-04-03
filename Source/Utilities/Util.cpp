@@ -8,12 +8,12 @@
 #include <Utilities\Log.h>
 static HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
 
-void Util::logNNL(int colour, std::string text)
+void Util::logNNL(const int colour, const std::string& text)
 {
 	Log::out(text);
 }
 
-void Util::logNNL(int colour, std::string who, std::string message)
+void Util::logNNL(const int colour, const std::string& who, const std::string& message)
 {
 	//logNNL(Colour::WHITE, "[");
 	//logNNL(colour, who);
@@ -21,25 +21,25 @@ void Util::logNNL(int colour, std::string who, std::string message)
 	//logNNL(Colour::WHITE, message);
 }
 
-void Util::log(int colour, std::string text)
+void Util::log(const int colour, const std::string& text)
 {
 	Log::out(text);
 }
 
-void Util::log(std::string text)
+void Util::log(const std::string& text)
 {
 	//log(Colour::WHITE, text);
 }
-void Util::log(int out)
+void Util::log(const int out)
 {
 	//log(Colour::WHITE, std::to_string(out));
 }
-void Util::log(float out)
+void Util::log(const float out)
 {
 	//log(Colour::WHITE, std::to_string(out));
 }
 
-void Util::log(int colour, std::string who, std::string message)
+void Util::log(const int colour, const std::string& who, const std::string& message)
 {
 	//logNNL(Colour::WHITE, "[");
 	//logNNL(colour, who);
@@ -47,7 +47,7 @@ void Util::log(int colour, std::string who, std::string message)
 	//log(Colour::WHITE, message);
 }
 
-std::string Util::readTextFile(std::string location)
+std::string Util::readTextFile(const std::string& location)
 {
 	std::ifstream inStream(location, std::ifstream::in);
 	std::stringstream stream;
@@ -56,7 +56,7 @@ std::string Util::readTextFile(std::string location)
 	return stream.str();
 }
 
-int Util::typeOfFile(std::string path)
+int Util::typeOfFile(const std::string& path)
 {
 	struct stat s;
 	if (stat(path.c_str(), &s) == 0)
@@ -79,7 +79,7 @@ int Util::typeOfFile(std::string path)
 		return -1;
 	}
 }
-std::vector<std::string> Util::listDirectory(std::string dir)
+std::vector<std::string> Util::listDirectory(const std::string& dir)
 {
 	std::vector<std::string> items;
 	for (auto& p : std::filesystem::directory_iterator(dir))
@@ -91,7 +91,7 @@ std::vector<std::string> Util::listDirectory(std::string dir)
 	return items;
 }
 
-void Util::writeToFile(std::string dir, std::string data)
+void Util::writeToFile(const std::string& dir, const std::string& data)
 {
 	std::ofstream file;
 	file.open(dir);
@@ -99,7 +99,7 @@ void Util::writeToFile(std::string dir, std::string data)
 	file.close();
 }
 
-int Util::createFolder(std::string dir)
+int Util::createFolder(std::string& dir)
 {
 	std::wstring wdir(dir.length(), L' ');
 	std::copy(dir.begin(), dir.end(), dir.begin());
@@ -113,7 +113,7 @@ int Util::createFolder(std::string dir)
 	}
 }
 
-std::string Util::replaceAll(std::string str, std::string a, std::string b)
+std::string Util::replaceAll(std::string& str, const std::string& a, const std::string& b)
 {
 	try
 	{
@@ -127,7 +127,7 @@ std::string Util::replaceAll(std::string str, std::string a, std::string b)
 	return NULL;
 }
 
-std::string Util::removeAll(std::string str, char a)
+std::string Util::removeAll(std::string str, const char a)
 {
 	try
 	{
@@ -141,12 +141,12 @@ std::string Util::removeAll(std::string str, char a)
 	return NULL;
 }
 
-size_t Util::countCharsInString(std::string string, char c)
+size_t Util::countCharsInString(const std::string& string, const char c)
 {
 	return std::count(string.begin(), string.end(), c);
 }
 
-bool Util::isCommentedLine(std::string line)
+bool Util::isCommentedLine(const std::string& line)
 {
 	int slashCount = 0;
 	for (int i = 0; i < line.length(); i++)
@@ -174,7 +174,7 @@ bool Util::isCommentedLine(std::string line)
 	return false;
 }
 
-std::string Util::getFileNameNoEXT(std::string path, std::string ext)
+std::string Util::getFileNameNoEXT(const std::string& path, const std::string& ext)
 {
 	char sep = '/';
 
@@ -185,15 +185,16 @@ std::string Util::getFileNameNoEXT(std::string path, std::string ext)
 	}
 
 	unsigned long long k = path.rfind(sep, path.length());
+	std::string fileNameNoExt = path;
 	if (k != std::string::npos)
 	{
-		path = path.substr(k + 1, path.length() - k);
-		path = path.substr(path.length() - ext.length());
+		fileNameNoExt = fileNameNoExt.substr(k + 1, fileNameNoExt.length() - k);
+		fileNameNoExt = fileNameNoExt.substr(fileNameNoExt.length() - ext.length());
 	}
-	return path;
+	return fileNameNoExt;
 }
 
-bool Util::endsWith(std::string & fullString, std::string & ending)
+bool Util::endsWith(const std::string& fullString, const std::string& ending)
 {
 	if (fullString.length() >= ending.length())
 	{
@@ -208,7 +209,7 @@ bool Util::endsWith(std::string & fullString, std::string & ending)
 		return false;
 	}
 }
-std::vector<std::string> Util::splitString(std::string string, std::string splitter)
+std::vector<std::string> Util::splitString(const std::string& string, const std::string& splitter)
 {
 	std::vector<std::string> splitStr;
 	int lastIndex = 0;
@@ -231,7 +232,7 @@ std::vector<std::string> Util::splitString(std::string string, std::string split
 	}
 	return splitStr;
 }
-std::vector<std::string> Util::splitString(std::string string, char splitter)
+std::vector<std::string> Util::splitString(const std::string& string, const char splitter)
 {
 	std::vector<std::string> strings;
 
@@ -246,7 +247,7 @@ std::vector<std::string> Util::splitString(std::string string, char splitter)
 	strings.push_back(string.substr(prev));
 	return strings;
 }
-std::string Util::removeFromString(std::string string, std::string remove, std::string replace)
+std::string Util::removeFromString(std::string& string, const std::string& remove, const std::string& replace)
 {
 	for (int i = 0; i < string.length(); i++)
 	{
@@ -257,7 +258,7 @@ std::string Util::removeFromString(std::string string, std::string remove, std::
 	}
 	return string;
 }
-bool Util::startsWith(std::string string, std::string startsWith)
+bool Util::startsWith(const std::string& string, const std::string& startsWith)
 {
 	for (int i = 0; i < startsWith.length(); i++)
 	{
@@ -280,7 +281,7 @@ std::string Util::createUUID()
 	return std::string(str);
 }
 
-bool Util::pointAABB(float px, float py, float x, float y, float width, float height)
+bool Util::pointAABB(const float px, const float py, const float x, const float y, const float width, const float height)
 {
 	if (px >= x && py >= y &&
 		px <= x + width && py <= y + height)
@@ -290,7 +291,7 @@ bool Util::pointAABB(float px, float py, float x, float y, float width, float he
 	return false;
 }
 
-std::string Util::removeDecimal(double x, int precision)
+std::string Util::removeDecimal(const double x, const int precision)
 {
 	std::stringstream ss;
 	ss << std::fixed;
@@ -299,12 +300,12 @@ std::string Util::removeDecimal(double x, int precision)
 	return ss.str();
 }
 
-std::string Util::getFile(COMDLG_FILTERSPEC pFilter, LPCWSTR title, LPCWSTR defaultExtension, LPCWSTR dir)
+std::string Util::getFile(const COMDLG_FILTERSPEC& pFilter, const LPCWSTR& title, const LPCWSTR& defaultExtension, const LPCWSTR& dir)
 {
 	return getFile(pFilter, title, defaultExtension, dir, 0);
 }
 
-std::string Util::getFolder(LPCWSTR title, LPCWSTR dir)
+std::string Util::getFolder(const LPCWSTR& title, const LPCWSTR& dir)
 {
 	HRESULT hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED |
 		COINIT_DISABLE_OLE1DDE);
@@ -358,7 +359,7 @@ std::string Util::getFolder(LPCWSTR title, LPCWSTR dir)
 	return "Not found";
 }
 
-std::string Util::getFile(COMDLG_FILTERSPEC pFilter, LPCWSTR title, LPCWSTR defaultExtension, LPCWSTR dir, int mode)
+std::string Util::getFile(const COMDLG_FILTERSPEC& pFilter, const LPCWSTR& title, const LPCWSTR& defaultExtension, const LPCWSTR& dir, const int mode)
 {
 	HRESULT hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED |
 		COINIT_DISABLE_OLE1DDE);

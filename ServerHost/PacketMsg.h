@@ -7,10 +7,10 @@ public:
 	~PacketMsg();
 
 	static int id;
-	static void sendMessage(std::string msg);
+	static void sendMessage(const std::string& msg);
 
-	void receive(char* data);
+	void receive(const char* data);
 
-	static void set(int i);
+	static void set(const int i);
 };
 

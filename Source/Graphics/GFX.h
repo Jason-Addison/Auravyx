@@ -37,60 +37,60 @@ public:
 
 	GLuint terrainMaterials = -1;
 
-	void fillRect(float x, float y, float width, float height, float xScale, float yScale, float r, float g, float b, float a);
+	void fillRect(const float x, const float y, const float width, const float height, const float xScale, const float yScale, const float r, const float g, const float b, const float a);
 
-	void fillRect(float x, float y, float xScale, float yScale, float r, float g, float b, float a);
+	void fillRect(const float x, const float y, const float xScale, const float yScale, const float r, const float g, const float b, const float a);
 
 
-	void drawImage(float x, float y, float width, float height, int texture);
+	void drawImage(const float x, const float y, const float width, const float height, const int texture);
 
-	void drawImage(float x, float y, float width, float height, float rot, int texture);
+	void drawImage(const float x, const float y, const float width, const float height, const float rot, const int texture);
 
-	void drawImage(float x, float y, float width, float height, float rotation, int texture, int xScale, int yScale);
+	void drawImage(const float x, const float y, const float width, const float height, const float rotation, const int texture, const int xScale, const int yScale);
 
-	void drawImage(float x, float y, float xVel, float yVel, float width, float height, int texture);
+	void drawImage(const float x, const float y, const float xVel, const float yVel, const float width, const float height, const int texture);
 	
-	void drawString(std::string string, float x, float y, float size, float r, float g, float b, float a);
+	void drawString(const std::string& string, const float x, const float y, const float size, const float r, const float g, const float b, const float a);
 
-	void drawString(std::string string, float x, float y, float size, float r, float g, float b, float a, float windowWidth, float windowHeight);
+	void drawString(const std::string& string, const float x, const float y, const float size, const float r, const float g, const float b, const float a, const float windowWidth, const float windowHeight);
 
-	void drawStringBG(std::string string, float x, float y, float size, float r, float g, float b, float a, 
-		float xB, float yB, float xSB, float ySB, float rB, float gB, float bB, float aB);
+	void drawStringBG(const std::string& string, const float x, const float y, const float size, const float r, const float g, const float b, const float a, 
+		const float xB, const float yB, const float xSB, const float ySB, const float rB, const float gB, const float bB, const float aB);
 
-	void drawStringBGR(std::string string, float x, float y, float size, float r, float g, float b, float a,
-		float xB, float yB, float xSB, float ySB, float rB, float gB, float bB, float aB);
+	void drawStringBGR(const std::string& string, const float x, const float y, const float size, const float r, const float g, const float b, const float a,
+		const float xB, const float yB, const float xSB, const float ySB, const float rB, const float gB, const float bB, const float aB);
 
-	void drawStringR(std::string string, float x, float y, float size, float r, float g, float b, float a);
+	void drawStringR(const std::string& string, const float x, const float y, const float size, const float r, const float g, const float b, const float a);
 
-	void drawStringC(std::string string, float x, float y, float size, float width, float r, float g, float b, float a);
+	void drawStringC(const std::string& string, const float x, const float y, const float size, const float width, const float r, const float g, const float b, const float a);
 
-	void drawStringBGC(std::string string, float x, float y, float size, float width, float r, float g, float b, float a,
-		float xB, float yB, float xSB, float ySB, float rB, float gB, float bB, float aB);
+	void drawStringBGC(const std::string& string, const float x, const float y, const float size, const float width, const float r, const float g, const float b, const float a,
+		const float xB, const float yB, const float xSB, const float ySB, const float rB, const float gB, const float bB, const float aB);
 
-	float stringWidth(std::string string, float size);
+	float stringWidth(const std::string& string, const float size);
 
-	void renderModel(float x, float y, float z, float xScale, float yScale,
-		float zScale, float xRot, float yRot, float zRot, Model* m, Camera *c, Matrix4f *projection, Texture *tex);
+	void renderModel(const float x, const float y, const float z, const float xScale, const float yScale,
+		const float zScale, const float xRot, const float yRot, const float zRot, Model& m, Camera& c, const Matrix4f& projection, const Texture& tex);
 
-	void renderModelIndex(float x, float y, float z, float xScale, float yScale,
-		float zScale, float xRot, float yRot, float zRot, Model* m, Camera* c, Matrix4f* projection, Texture* tex);
+	void renderModelIndex(const float x, const float y, const float z, const float xScale, const float yScale,
+		const float zScale, const float xRot, const float yRot, const float zRot, Model& m, Camera& c, const Matrix4f& projection, const Texture& tex);
 
 	void init();
 
-	void setFPS(double fps);
+	void setFPS(const double fps);
 
-	//static void enableScissor(int x, int y, int width, int height);
+	//static void enableScissor(const int x, const int y, const int width, const int height);
 
 	//static void disableScissor();
-	void enableScissor(float x, float y, float width, float height);
+	void enableScissor(const float x, const float y, const float width, const float height);
 
 	void disableScissor();
 
 	static GFX* getOverlay();
 
-	GLenum checkForGLError(std::string *s);
+	GLenum checkForGLError(std::string* s);
 
-	GLenum checkForGLError(std::string* s, int l);
+	GLenum checkForGLError(std::string* s, const int l);
 
 private:
 	static GFX * gfx;

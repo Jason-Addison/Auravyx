@@ -219,7 +219,7 @@ void WindowManager::centerCursor()
 	glfwSetCursorPos(window, width / 2, height / 2);
 }
 
-void WindowManager::setWindowTitle(std::string title)
+void WindowManager::setWindowTitle(const std::string& title)
 {
 	glfwSetWindowTitle(window, title.c_str());
 }

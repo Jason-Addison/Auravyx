@@ -11,7 +11,7 @@ public:
 	static void start();
 
 
-	static void setFPS(double fps);
+	static void setFPS(const double fps);
 
 	static double getFPS();
 

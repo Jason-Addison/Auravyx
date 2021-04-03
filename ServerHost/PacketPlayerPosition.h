@@ -8,8 +8,8 @@ public:
 
 	std::string pData;
 
-	void read(int length, char * data);
+	void read(const int length, const char * data);
 
-	void write(int x, int y, int z);
+	void write(const int x, const int y, const int z);
 };
 

@@ -21,17 +21,17 @@ public:
 
 	static std::string logData;
 
-	static void log(std::wstring msg);
+	static void log(const std::wstring& msg);
 
-	static std::string getTime(std::string format);
+	static std::string getTime(const std::string& format);
 
 	void setup();
 
 	void updateServer();
 
-	int detectPlayer(sockaddr_in player);
+	int detectPlayer(const sockaddr_in& player);
 
-	void connectPlayer(sockaddr_in player, std::string data);
+	void connectPlayer(const sockaddr_in& player, const std::string& data);
 
 	void stop();
 

@@ -11,7 +11,7 @@ StringUtil::~StringUtil()
 {
 }
 
-int StringUtil::startsWith(std::string string, std::string start)
+int StringUtil::startsWith(const std::string& string, const std::string& start)
 {
 	bool flag = true;
 	for (int i = 0; i < string.length(); i++)
@@ -28,7 +28,7 @@ int StringUtil::startsWith(std::string string, std::string start)
 	return flag;
 }
 
-int StringUtil::endsWith(std::string string, std::string end)
+int StringUtil::endsWith(const std::string& string, const std::string& end)
 {
 	bool flag = true;
 	int j = 0;

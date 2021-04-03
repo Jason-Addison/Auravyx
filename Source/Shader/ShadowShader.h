@@ -17,15 +17,15 @@ public:
 
 	void loadAllUniformLocations();
 
-	void loadDepthMVP(Matrix4f matrix);
+	void loadDepthMVP(const Matrix4f& matrix);
 
-	void render(World &world, ShadowMap &shadowMap, Camera &camera, Vec3f &position);
+	void render(const World &world, ShadowMap &shadowMap, const Camera &camera, const Vec3f &position);
 
-	void loadWind(float power, float xDir, float zDir);
+	void loadWind(const float power, const float xDir, const float zDir);
 
-	void loadTime(double time);
+	void loadTime(const double time);
 
-	void loadTransformation(Matrix4f matrix);
+	void loadTransformation(const Matrix4f& matrix);
 
 };
 

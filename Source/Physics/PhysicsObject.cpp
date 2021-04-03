@@ -23,10 +23,10 @@ void PhysicsObject::updateAABB()
 	this->zBounds = 1;
 }
 
-bool PhysicsObject::checkCollision(PhysicsObject* object)
+bool PhysicsObject::checkCollision(const PhysicsObject& object)
 {
 	
-	switch (object->type)
+	switch (object.type)
 	{
 		case(OBJECT): 
 		{
@@ -49,59 +49,59 @@ bool PhysicsObject::checkCollision(PhysicsObject* object)
 	return false;
 }
 
-void PhysicsObject::setPosition(double x, double y, double z)
+void PhysicsObject::setPosition(const double x, const double y, const double z)
 {
 	this->x = x;
 	this->y = y;
 	this->z = z;
 }
 
-void PhysicsObject::addImpulse(double x, double y, double z)
+void PhysicsObject::addImpulse(const double x, const double y, const double z)
 {
 	impulses.emplace_back(struct Impulse(x, y, z));
 }
 
-double PhysicsObject::getX()
+double PhysicsObject::getX() const
 {
 	return x;
 }
 
-double PhysicsObject::getY()
+double PhysicsObject::getY() const
 {
 	return y;
 }
 
-double PhysicsObject::getZ()
+double PhysicsObject::getZ() const
 {
 	return z;
 }
 
-double PhysicsObject::getXVelocity()
+double PhysicsObject::getXVelocity() const
 {
 	return xVelocity;
 }
 
-double PhysicsObject::getYVelocity()
+double PhysicsObject::getYVelocity() const
 {
 	return yVelocity;
 }
 
-double PhysicsObject::getZVelocity()
+double PhysicsObject::getZVelocity() const
 {
 	return zVelocity;
 }
 
-void PhysicsObject::setXVelocity(double vel)
+void PhysicsObject::setXVelocity(const double vel)
 {
 	this->xVelocity = vel;
 }
 
-void PhysicsObject::setYVelocity(double vel)
+void PhysicsObject::setYVelocity(const double vel)
 {
 	this->yVelocity = vel;
 }
 
-void PhysicsObject::setZVelocity(double vel)
+void PhysicsObject::setZVelocity(const double vel)
 {
 	this->zVelocity = vel;
 }
@@ -121,19 +121,19 @@ void PhysicsObject::update()
 	z += zVelocity;
 }
 
-bool PhysicsObject::sphereCollision(PhysicsObject* sphere)
+bool PhysicsObject::sphereCollision(const PhysicsObject& sphere)
 {
 	Physics::messagePhysics("Sphere collision using base class.");
 	return false;
 }
 
-bool PhysicsObject::prismCollision(PhysicsObject* prism)
+bool PhysicsObject::prismCollision(const PhysicsObject& prism)
 {
 	Physics::messagePhysics("Prism collision using base class.");
 	return false;
 }
 
-bool PhysicsObject::trianglesCollision(PhysicsObject* triangles)
+bool PhysicsObject::trianglesCollision(const PhysicsObject& triangles)
 {
 	Physics::messagePhysics("Triangles collision using base class.");
 	return false;

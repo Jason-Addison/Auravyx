@@ -10,7 +10,7 @@ Settings::Settings()
 Settings::~Settings()
 {
 }
-std::string Settings::getSetting(std::string setting)
+std::string Settings::getSetting(const std::string& setting)
 {
 	try
 	{
@@ -22,7 +22,7 @@ std::string Settings::getSetting(std::string setting)
 	}
 	return std::string("Error : Setting not found");
 }
-bool Settings::getBool(std::string setting)
+bool Settings::getBool(const std::string& setting)
 {
 	std::string b = getSetting(setting);
 	std::string bc;

@@ -114,7 +114,7 @@ void ScrollBar::render()
 	}
 }
 
-void ScrollBar::setBounds(float x, float y, float width, float height)
+void ScrollBar::setBounds(const float x, const float y, const float width, const float height)
 {
 	this->x = x;
 	this->y = y;
@@ -122,12 +122,12 @@ void ScrollBar::setBounds(float x, float y, float width, float height)
 	this->height = height;
 }
 
-void ScrollBar::setMode(char mode)
+void ScrollBar::setMode(const char mode)
 {
 	this->mode = mode;
 }
 
-void ScrollBar::setProgress(float p)
+void ScrollBar::setProgress(const float p)
 {
 	progress = (p * 1.5) * ((width - spacing - width / range) * (float)100);
 }

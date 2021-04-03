@@ -14,16 +14,18 @@ Model::Model()
 {
 
 }
-Model::Model(GLuint vao, int count)
+Model::Model(const GLuint vao, const int count)
 {
 	this->vao = vao;
 	this->count = count;
+	this->indexCount = 0;
 }
-Model::Model(GLuint vao, GLuint elementBuffer, int count)
+Model::Model(const GLuint vao, const GLuint elementBuffer, const int count)
 {
 	this->vao = vao;
 	this->count = count;
 	this->elementBuffer = elementBuffer;
+	this->indexCount = 0;
 }
 
 Model::~Model()
@@ -45,7 +47,7 @@ GLuint Model::getElementBuffer()
 {
 	return elementBuffer;
 }
-void Model::setMaterials(std::vector<ModelMaterial> materials)
+void Model::setMaterials(const std::vector<ModelMaterial>& materials)
 {
 	this->materials = materials;
 }
@@ -64,12 +66,12 @@ void Model::destroy()
 	}
 }
 
-void Model::setTexture(int index, Texture texture)
+void Model::setTexture(const int index, const Texture& texture)
 {
 	/////////////////materials.at(index).texture = texture;
 }
 
-Model Model::load2DModel(std::vector<float> vertices)
+Model Model::load2DModel(const std::vector<float>& vertices)
 {
 	GLuint vao = generateVAO();
 	Model m(vao, vertices.size());
@@ -79,7 +81,7 @@ Model Model::load2DModel(std::vector<float> vertices)
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	return m;
 }
-Model Model::load2DModel(std::vector<float> vertices, std::vector<float> texCoords)
+Model Model::load2DModel(const std::vector<float>& vertices, const std::vector<float>& texCoords)
 {
 	GLuint vao = generateVAO();
 	Model m(vao, vertices.size());
@@ -91,7 +93,7 @@ Model Model::load2DModel(std::vector<float> vertices, std::vector<float> texCoor
 	return m;
 }
 
-Model Model::loadIndexed3DModel(std::vector<float> vertices, std::vector<float> normals, std::vector<unsigned int> indices)
+Model Model::loadIndexed3DModel(const std::vector<float>& vertices, const std::vector<float>& normals, const std::vector<unsigned int>& indices)
 {
 	GLuint vao = generateVAO();
 	GLuint elementBuffer = 0;
@@ -107,8 +109,8 @@ Model Model::loadIndexed3DModel(std::vector<float> vertices, std::vector<float> 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	return m;
 }
-Model Model::loadIndexed3DModel(std::vector<float> vertices, std::vector<float> normals, std::vector<float> textures,
-	std::vector<float> colors, std::vector<unsigned int> indices) 
+Model Model::loadIndexed3DModel(const std::vector<float>& vertices, const std::vector<float>& normals, const std::vector<float>& textures,
+	const std::vector<float>& colors, const std::vector<unsigned int>& indices)
 {
 	GLuint vao = generateVAO();
 	GLuint elementBuffer = 0;
@@ -126,7 +128,7 @@ Model Model::loadIndexed3DModel(std::vector<float> vertices, std::vector<float> 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	return m;
 }
-Model Model::load3DModel(std::vector<float> vertices, std::vector<float> normals)
+Model Model::load3DModel(const std::vector<float>& vertices, const std::vector<float>& normals)
 {
 	GLuint vao = generateVAO();
 	Model m(vao, vertices.size());
@@ -145,7 +147,7 @@ Model Model::load3DModel(std::vector<float> vertices, std::vector<float> normals
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	return m;
 }
-Model Model::load3DLineModel(std::vector<float> vertices, std::vector<float> colours)
+Model Model::load3DLineModel(const std::vector<float>& vertices, const std::vector<float>& colours)
 {
 	GLuint vao = generateVAO();
 	Model m(vao, vertices.size());
@@ -164,7 +166,7 @@ Model Model::load3DLineModel(std::vector<float> vertices, std::vector<float> col
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	return m;
 }
-Model Model::load3DModelT(std::vector<float> vertices, std::vector<float> normals, std::vector<float> uv)
+Model Model::load3DModelT(const std::vector<float>& vertices, const std::vector<float>& normals, const std::vector<float>& uv)
 {
 	GLuint vao = generateVAO();
 	Model m(vao, vertices.size());
@@ -184,7 +186,7 @@ Model Model::load3DModelT(std::vector<float> vertices, std::vector<float> normal
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	return m;
 }
-Model Model::load3DModel(std::vector<float> vertices, std::vector<float> normals, std::vector<float> materials)
+Model Model::load3DModel(const std::vector<float>& vertices, const std::vector<float>& normals, const std::vector<float>& materials)
 {
 	GLuint vao = generateVAO();
 	Model m(vao, vertices.size());
@@ -216,7 +218,7 @@ Model Model::load3DModel(std::vector<float> vertices, std::vector<float> normals
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	return Model(vao, vertices.size());
 }*/
-Model Model::load3DModel(std::vector<float> vertices, std::vector<float> normals, std::vector<float> tex, std::vector<float> materials)
+Model Model::load3DModel(const std::vector<float>& vertices, const std::vector<float>& normals, const std::vector<float>& tex, const std::vector<float>& materials)
 {
 	GLuint vao = generateVAO();
 	Model m(vao, vertices.size());
@@ -230,8 +232,8 @@ Model Model::load3DModel(std::vector<float> vertices, std::vector<float> normals
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	return m;
 }
-Model Model::load3DModel(std::vector<float> vertices, std::vector<float> normals, std::vector<float> posA,
-	std::vector<float> posB, std::vector<float> posC, std::vector<unsigned int> materials)
+Model Model::load3DModel(const std::vector<float>& vertices, const std::vector<float>& normals, const std::vector<float>& posA,
+	const std::vector<float>& posB, const std::vector<float>& posC, const std::vector<unsigned int>& materials)
 {
 	GLuint vao = generateVAO();
 	Model m(vao, vertices.size());
@@ -249,7 +251,7 @@ Model Model::load3DModel(std::vector<float> vertices, std::vector<float> normals
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	return m;
 }
-Model Model::load3DModel(std::vector<float> vertices)
+Model Model::load3DModel(const std::vector<float>& vertices)
 {
 	GLuint vao = generateVAO();
 	Model m(vao, vertices.size());
@@ -269,7 +271,7 @@ GLuint Model::generateVAO()
 	return vao;
 }
 
-GLuint Model::addVertexAttribute(int attrib, int size, Model& m, std::vector<float> attribs)
+GLuint Model::addVertexAttribute(const int attrib, const int size, Model& m, const std::vector<float>& attribs)
 {
 	GLuint vbo = 0;
 	glGenBuffers(1, &vbo);
@@ -280,7 +282,7 @@ GLuint Model::addVertexAttribute(int attrib, int size, Model& m, std::vector<flo
 	m.attributes.emplace_back(vbo);
 	return vbo;
 }
-GLuint Model::addVertexAttribute(int attrib, int size, Model& m, std::vector<unsigned int> attribs)
+GLuint Model::addVertexAttribute(const int attrib, const int size, Model& m, const std::vector<unsigned int>& attribs)
 {
 	GLuint vbo = 0;
 	glGenBuffers(1, &vbo);
@@ -291,7 +293,7 @@ GLuint Model::addVertexAttribute(int attrib, int size, Model& m, std::vector<uns
 	m.attributes.emplace_back(vbo);
 	return vbo;
 }
-GLuint Model::addIndicesBuffer(std::vector<unsigned int> indices)
+GLuint Model::addIndicesBuffer(const std::vector<unsigned int>& indices)
 {
 	GLuint elementBuffer;
 	glGenBuffers(1, &elementBuffer);

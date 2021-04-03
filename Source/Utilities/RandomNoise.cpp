@@ -10,7 +10,7 @@ RandomNoise::RandomNoise()
 	seed = random();
 }
 
-RandomNoise::RandomNoise(int seed)
+RandomNoise::RandomNoise(const int seed)
 {
 	setSeed(seed);
 }
@@ -20,12 +20,12 @@ RandomNoise::~RandomNoise()
 {
 }
 
-void RandomNoise::setSeed(int seed)
+void RandomNoise::setSeed(const int seed)
 {
 	this->seed = seed;
 }
 
-double RandomNoise::getSmoothNoise(double x, double y, double z)
+double RandomNoise::getSmoothNoise(const double x, const double y, const double z)
 {
 	double corners = (createNoise(x - 1, y, z - 1) + createNoise(x + 1, y, z - 1) + createNoise(x - 1, y, z + 1) + createNoise(x + 1, y, z + 1)) / 16;
 	double sides = (createNoise(x - 1, y, z) + createNoise(x, y, z - 1) + createNoise(x, y, z + 1) + createNoise(x + 1, y, z)) / 8;
@@ -33,26 +33,26 @@ double RandomNoise::getSmoothNoise(double x, double y, double z)
 	return corners + sides + center;
 }
 
-double RandomNoise::costerp(double a, double b, double blend)
+double RandomNoise::costerp(const double a, const double b, const double blend)
 {
 	double theta = blend * (double) PI;
 	double f = (double)(1.0 - cos(theta)) * 0.5;
 	return a * (1 - f) + b * f;
 }
 
-double RandomNoise::createNoise(double x, double y, double z)
+double RandomNoise::createNoise(const double x, const double y, const double z)
 {
 	//std::cout << x << " " << z << "\n";
 	random.seed((unsigned long long) ((x * 3.0) + (int) ((int) y * 35.0) + (int) (z * 3.1)) + seed);
 	return (double) (((double) random() / (double) 0xfffffffffffffff) * 2 - 1) / 32.0;
 }
 
-double interp(double a, double b, double amt)
+double interp(const double a, const double b, const double amt)
 {
 	return a * (1 - amt) + b * amt;
 }
 
-double RandomNoise::getInterpolatedNoise(double x, double y, double z)
+double RandomNoise::getInterpolatedNoise(const double x, const double y, const double z)
 {
 	int intX = (int)x;
 	int intY = (int)y;
@@ -81,12 +81,12 @@ double RandomNoise::getInterpolatedNoise(double x, double y, double z)
 	return costerp(i1, i2, yFrac);*/
 }
 
-double RandomNoise::noise(double x, double y, double z, int octaves, double roughness)
+double RandomNoise::noise(const double x, const double y, const double z, const int octaves, const double roughness)
 {
 	return getInterpolatedNoise(x, y, z);
 }
 
-double RandomNoise::noise(double x, double y, double z)
+double RandomNoise::noise(const double x, const double y, const double z)
 {
 	return getInterpolatedNoise(x, y, z);
 }

@@ -12,10 +12,10 @@ Matrix4f::~Matrix4f()
 	
 }
 
-Matrix4f::Matrix4f(float m00, float m10, float m20, float m30,
-	float m01, float m11, float m21, float m31,
-	float m02, float m12, float m22, float m32,
-	float m03, float m13, float m23, float m33)
+Matrix4f::Matrix4f(const float m00, const float m10, const float m20, const float m30,
+	const float m01, const float m11, const float m21, const float m31,
+	const float m02, const float m12, const float m22, const float m32,
+	const float m03, const float m13, const float m23, const float m33)
 {
 	this->m00 = m00;
 	this->m01 = m01;
@@ -36,6 +36,30 @@ Matrix4f::Matrix4f(float m00, float m10, float m20, float m30,
 	this->m31 = m31;
 	this->m32 = m32;
 	this->m33 = m33;
+}
+
+Matrix4f& Matrix4f::operator*=(const Matrix4f b)
+{
+	m00 = m00 * b.m00 + m10 * b.m01 + m20 * b.m02 + m30 * b.m03;
+	m10 = m00 * b.m10 + m10 * b.m11 + m20 * b.m12 + m30 * b.m13;
+	m20 = m00 * b.m20 + m10 * b.m21 + m20 * b.m22 + m30 * b.m23;
+	m30 = m00 * b.m30 + m10 * b.m31 + m20 * b.m32 + m30 * b.m33;
+
+	m01 = m01 * b.m00 + m11 * b.m01 + m21 * b.m02 + m31 * b.m03;
+	m11 = m01 * b.m10 + m11 * b.m11 + m21 * b.m12 + m31 * b.m13;
+	m21 = m01 * b.m20 + m11 * b.m21 + m21 * b.m22 + m31 * b.m23;
+	m31 = m01 * b.m30 + m11 * b.m31 + m21 * b.m32 + m31 * b.m33;
+
+	m02 = m02 * b.m00 + m12 * b.m01 + m22 * b.m02 + m32 * b.m03;
+	m12 = m02 * b.m10 + m12 * b.m11 + m22 * b.m12 + m32 * b.m13;
+	m22 = m02 * b.m20 + m12 * b.m21 + m22 * b.m22 + m32 * b.m23;
+	m32 = m02 * b.m30 + m12 * b.m31 + m22 * b.m32 + m32 * b.m33;
+
+	m03 = m03 * b.m00 + m13 * b.m01 + m23 * b.m02 + m33 * b.m03;
+	m13 = m03 * b.m10 + m13 * b.m11 + m23 * b.m12 + m33 * b.m13;
+	m23 = m03 * b.m20 + m13 * b.m21 + m23 * b.m22 + m33 * b.m23;
+	m33 = m03 * b.m30 + m13 * b.m31 + m23 * b.m32 + m33 * b.m33;
+	return *this;
 }
 
 void Matrix4f::setIdentity()
@@ -66,7 +90,7 @@ void Matrix4f::setIdentity()
 	w = 1;
 }
 
-void Matrix4f::scale(float xS, float yS, float zS)
+void Matrix4f::scale(const float xS, const float yS, const float zS)
 {
 	m00 *= xS;
 	m01 *= xS;
@@ -84,7 +108,7 @@ void Matrix4f::scale(float xS, float yS, float zS)
 	m23 *= zS;
 }
 
-void Matrix4f::rotate(float angle, float x, float y, float z)
+void Matrix4f::rotate(const float angle, const float x, const float y, const float z)
 {
 	float s = sin(toRadians(angle));
 	float c = cos(toRadians(angle));
@@ -111,14 +135,14 @@ void Matrix4f::rotate(float angle, float x, float y, float z)
 	m33 = 1.0;
 }
 
-void Matrix4f::translate(float x, float y, float z)
+void Matrix4f::translate(const float x, const float y, const float z)
 {
 	m30 += x;
 	m31 += y;
 	m32 += z;
 }
 
-void Matrix4f::set(Matrix4f mat)
+void Matrix4f::set(const Matrix4f& mat)
 {
 	m00 = mat.m00;
 	m01 = mat.m01;
@@ -141,9 +165,9 @@ void Matrix4f::set(Matrix4f mat)
 	m33 = mat.m33;
 }
 
-void Matrix4f::set(float m00, float m10, float m20,
-	float m01, float m11, float m21,
-	float m02, float m12, float m22)
+void Matrix4f::set(const float m00, const float m10, const float m20,
+	const float m01, const float m11, const float m21,
+	const float m02, const float m12, const float m22)
 {
 	this->m00 = m00;
 	this->m01 = m01;
@@ -162,13 +186,12 @@ void Matrix4f::set(float m00, float m10, float m20,
 	this->m32 = m32;
 }
 
-float Matrix4f::toRadians(float angle)
+float Matrix4f::toRadians(const float angle)
 {
 	return angle / 180 * 3.14159265;
 }
 
-
-void Matrix4f::createProjectionMatrix(float screenWidth, float screenHeight, float farPlane, float nearPlane, float FOV)
+void Matrix4f::createProjectionMatrix(const float screenWidth, const float screenHeight, const float farPlane, const float nearPlane, const float FOV)
 {
 	float aspectRatio = (float)screenWidth / (float)screenHeight;
 	float y_scale = (float)((float)1 / tan(toRadians(FOV / (float)2)));
@@ -183,7 +206,7 @@ void Matrix4f::createProjectionMatrix(float screenWidth, float screenHeight, flo
 	m33 = 0;
 }
 
-void Matrix4f::createViewMatrix(float x, float y, float z, float xRot, float yRot, float zRot)
+void Matrix4f::createViewMatrix(const float x, const float y, const float z, const float xRot, const float yRot, const float zRot)
 {
 	Matrix4f translation;
 	translation.translate(-x, -y, -z);
@@ -203,7 +226,7 @@ void Matrix4f::createViewMatrix(float x, float y, float z, float xRot, float yRo
 	multiply(translation);
 }
 
-void Matrix4f::createOrthographicMatrix(float left, float right, float top, float bottom, float nearPlane, float farPlane)
+void Matrix4f::createOrthographicMatrix(const float left, const float right, const float top, const float bottom, const float nearPlane, const float farPlane)
 {
 	m00 = 2.0f / (right - left);
 	m11 = 2.0f / (top - bottom);
@@ -212,7 +235,7 @@ void Matrix4f::createOrthographicMatrix(float left, float right, float top, floa
 	m33 = 1.0f;
 }
 
-Matrix4f Matrix4f::multiply(Matrix4f mat)
+Matrix4f Matrix4f::multiply(const Matrix4f& mat)
 {
 	Matrix4f ret;
 
@@ -271,12 +294,12 @@ void Matrix4f::setSymmetric(const float a00, const float a01, const float a02,
 	this->m22 = a22;
 }
 
-void Matrix4f::setSymmetric(Matrix4f m)
+void Matrix4f::setSymmetric(const Matrix4f& m)
 {
 	this->setSymmetric(m.m00, m.m01, m.m02, m.m11, m.m12, m.m22);
 }
 
-void Matrix4f::set(float x, float y, float z)
+void Matrix4f::set(const float x, const float y, const float z)
 {
 	m00 = x;
 	m10 = x;
@@ -291,9 +314,16 @@ void Matrix4f::set(float x, float y, float z)
 	m22 = z;
 }
 
-void Matrix4f::vmul_symmetric(Vec3f& out, const Matrix4f& a, const Vec3f& v)
+void Matrix4f::vMulSymmetric(Vec3f& out, const Matrix4f& a, const Vec3f& v)
 {
 	out.x = (a.m00 * v.x) + (a.m01 * v.y) + (a.m02 * v.z);
 	out.y = (a.m01 * v.x) + (a.m11 * v.y) + (a.m12 * v.z);
 	out.z = (a.m02 * v.x) + (a.m12 * v.y) + (a.m22 * v.z);
+}
+
+Matrix4f& operator*(const Matrix4f a, const Matrix4f b)
+{
+	Matrix4f m = a;
+	m *= b;
+	return m;
 }

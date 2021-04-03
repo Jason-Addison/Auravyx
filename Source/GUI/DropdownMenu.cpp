@@ -12,7 +12,7 @@ void DropdownMenu::handleResize()
 	list->handleResize();
 }
 
-DropdownMenu::DropdownMenu(std::string text)
+DropdownMenu::DropdownMenu(const std::string& text)
 {
 	x = 0;
 	y = 0;

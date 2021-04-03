@@ -4,22 +4,22 @@ class RandomNoise
 {
 public:
 	RandomNoise();
-	RandomNoise(int seed);
+	RandomNoise(const int seed);
 	~RandomNoise();
 
-	void setSeed(int seed);
+	void setSeed(const int seed);
 
-	double costerp(double a, double b, double blend);
+	double costerp(const double a, const double b, const double blend);
 
-	double createNoise(double x, double y, double z);
+	double createNoise(const double x, const double y, const double z);
 
-	double noise(double x, double y, double z, int octaves, double roughness);
+	double noise(const double x, const double y, const double z, const int octaves, const double roughness);
 
-	double noise(double x, double y, double z);
+	double noise(const double x, const double y, const double z);
 
-	double getSmoothNoise(double x, double y, double z);
+	double getSmoothNoise(const double x, const double y, const double z);
 
-	double getInterpolatedNoise(double x, double y, double z);
+	double getInterpolatedNoise(const double x, const double y, const double z);
 
 private:
 

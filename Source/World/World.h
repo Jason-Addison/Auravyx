@@ -25,25 +25,25 @@ public:
 
 	void create();
 
-	void render(Camera * cam, Matrix4f* projectionMatrix);
+	void render(const Camera& cam, const Matrix4f& projectionMatrix);
 	
-	void addChunk(Chunk chunk);
+	void addChunk(const Chunk& chunk);
 
-	Chunk* getChunk(int x, int y, int z);
+	Chunk* getChunk(const int x, const int y, const int z);
 
-	std::shared_ptr<ChunkHeight> getChunkHeightmap(int x, int z);
+	std::shared_ptr<ChunkHeight> getChunkHeightmap(const int x, const int z);
 
-	bool isLoaded(int x, int y, int z);
+	bool isLoaded(const int x, const int y, const int z);
 
-	void sphere(float xP, float yP, float zP, float radius, float power);
+	void sphere(const float xP, const float yP, const float zP, const float radius, const float power);
 
-	void cuboid(float xP, float yP, float zP, float xS, float yS, float zS, float power);
+	void cuboid(const float xP, const float yP, const float zP, const float xS, const float yS, const float zS, const float power);
 
 	std::shared_ptr<World> getOverworld();
 
-	void setVoxel(int x, int y, int z, int type, float density);
+	void setVoxel(const int x, const int y, const int z, const int type, const float density);
 
-	void setOverworldTime(long long int time);
+	void setOverworldTime(const long long int time);
 
 	long long int getOverworldTime();
 
@@ -51,7 +51,7 @@ public:
 
 	void test();
 
-	Chunk *getChunk(int i);
+	Chunk *getChunk(const int i);
 
 	void setup();
 

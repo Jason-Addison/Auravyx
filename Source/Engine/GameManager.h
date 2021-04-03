@@ -15,7 +15,7 @@ public:
 
 	static std::shared_ptr<State> getCurrentState();
 
-	static void setCurrentState(std::shared_ptr<State> s);
+	static void setCurrentState(const std::shared_ptr<State>& s);
 
 	static double getUPS();
 

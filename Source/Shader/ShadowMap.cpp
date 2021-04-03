@@ -9,13 +9,12 @@ ShadowMap::ShadowMap()
 	//create();
 }
 
-ShadowMap::ShadowMap(int width, int height)
+ShadowMap::ShadowMap(const int width, const int height)
 {
 	this->width = width;
 	this->height = height;
 	create();
 }
-
 
 ShadowMap::~ShadowMap()
 {

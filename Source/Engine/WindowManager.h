@@ -43,7 +43,7 @@ public:
 
 	void centerCursor();
 
-	void setWindowTitle(std::string title);
+	void setWindowTitle(const std::string& title);
 
 	void setContext();
 

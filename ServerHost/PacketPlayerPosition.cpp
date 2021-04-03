@@ -11,7 +11,7 @@ PacketPlayerPosition::PacketPlayerPosition()
 PacketPlayerPosition::~PacketPlayerPosition()
 {
 }
-void PacketPlayerPosition::write(int x, int y, int z)
+void PacketPlayerPosition::write(const int x, const int y, const int z)
 {
 	int tile = 0;
 	int floor = 0;
@@ -25,7 +25,7 @@ void PacketPlayerPosition::write(int x, int y, int z)
 	pData += zz.at(0); pData += zz.at(1); pData += zz.at(2); pData += zz.at(3);
 }
 
-void PacketPlayerPosition::read(int length, char* data)
+void PacketPlayerPosition::read(const int length, const char* data)
 {
 	int x = M::bytesToInt(data);
 	int y = M::bytesToInt(data + 4);

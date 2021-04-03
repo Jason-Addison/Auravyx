@@ -12,16 +12,16 @@ RectShader::~RectShader()
 
 void RectShader::loadAllUniformLocations()
 {
-	transformationMatrix = getUniformLocation((GLchar*) "transformationMatrix");
-	colour = getUniformLocation((GLchar*) "colour");
+	transformationMatrix = getUniformLocation("transformationMatrix");
+	colour = getUniformLocation("colour");
 }
 
-void RectShader::loadTransformation(Matrix4f matrix)
+void RectShader::loadTransformation(const Matrix4f& matrix)
 {
 	loadMatrix4f(transformationMatrix, matrix);
 }
 
-void RectShader::loadColour(float r, float g, float b, float a)
+void RectShader::loadColour(const float r, const float g, const float b, const float a)
 {
 	loadVec4f(colour, r, g, b, a);
 }

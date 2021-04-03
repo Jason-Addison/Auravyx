@@ -8,8 +8,8 @@ public:
 
 	std::string pData;
 
-	virtual void read(int length, char* data) override;
+	virtual void read(const int length, const char* data) override;
 
-	void write(int x, int y, int z, int pos, int id);
+	void write(const int x, const int y, const int z, const int pos, const int id);
 };
 

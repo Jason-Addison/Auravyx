@@ -7,6 +7,24 @@ public:
 	VoxelShader();
 	~VoxelShader();
 
+	void loadTransformation(const Matrix4f& matrix);
+
+	void loadProjectionMatrix(const Matrix4f& matrix);
+
+	void loadShadowDepthMVP(const Matrix4f& inDepthMVP);
+
+	void loadCamera(const Matrix4f& matrix);
+
+	void loadReflectivity(const float shine, const float damper);
+
+	void loadCamera(const float x, const float y, const float z, const float farPlane);
+
+	//void loadWind(const float power, const float xDir, const float zDir);
+
+	//void loadTime(const double time);
+
+protected:
+
 	GLint transformationMatrix;
 	GLint projectionMatrix;
 	GLint viewMatrix;
@@ -18,24 +36,6 @@ public:
 
 	GLint farPlane;
 	GLint cameraPosition;
-
-	void loadTransformation(Matrix4f matrix);
-
-	void loadProjectionMatrix(Matrix4f matrix);
-
-	void loadShadowDepthMVP(Matrix4f inDepthMVP);
-
-	void loadCamera(Matrix4f matrix);
-
-	void loadReflectivity(float shine, float damper);
-
-	void loadCamera(float x, float y, float z, float farPlane);
-
-	void loadWind(float power, float xDir, float zDir);
-
-	void loadTime(double time);
-
-protected:
 
 	virtual void loadAllUniformLocations();
 

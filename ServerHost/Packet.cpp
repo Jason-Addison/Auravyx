@@ -12,12 +12,12 @@ Packet::~Packet()
 
 //void Packet::seend(char* data, int& length)
 
-void Packet::receive(int length, char* data)
+void Packet::receive(const int length, const char* data)
 {
 	printf("%i\nerror", length);
 }
 
-void Packet::read(int length, char* data)
+void Packet::read(const int length, const char* data)
 {
 	printf("%i\nerror", length);
 }
@@ -40,7 +40,7 @@ void Packet::loadPackets()
 	addPacket(std::shared_ptr<Packet>(new PacketTileChange()));
 }
 
-void Packet::addPacket(std::shared_ptr<Packet> p)
+void Packet::addPacket(const std::shared_ptr<Packet>& p)
 {
 	packets.at(p->id) = p;
 }

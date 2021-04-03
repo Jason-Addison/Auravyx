@@ -33,14 +33,14 @@ public:
 
 	//virtual void encode
 
-	virtual void receive(int length, char * data);
+	virtual void receive(const int length, const char * data);
 
-	virtual void read(int length, char* data);
+	virtual void read(const int length, const char* data);
 
 	void send();
 
 	static void loadPackets();
 private:
-	static void addPacket(std::shared_ptr<Packet> p);
+	static void addPacket(const std::shared_ptr<Packet>& p);
 };
 

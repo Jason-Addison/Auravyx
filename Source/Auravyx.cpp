@@ -21,6 +21,7 @@
 #include <Engine/GameState.h>
 #include <Engine\OutputConsole.h>
 #include <Graphics\Model\ColladaParser.h>
+#include <Utilities/M.h>
 double thisFrame = 0;
 double nextFrame = 0;
 
@@ -61,7 +62,7 @@ void updater()
 		{
 			lastTimeUPS = thisTimeUPS;
 			Auravyx::getManager().getCurrentState()->update();
-			m.update(&(GameManager::world));
+			m.update((GameManager::world));
 		}
 		else
 		{
@@ -69,7 +70,7 @@ void updater()
 			std::this_thread::sleep_for(std::chrono::milliseconds(time));
 		}
 		Clock::lerp = lerp;
-		m.update(&(GameManager::world));
+		m.update((GameManager::world));
 	}
 	updateEnd = true;
 }
@@ -134,8 +135,6 @@ void loadAssetsAsync()
 }
 int main(int argc, char* argv[])
 {
-	Vec3f a;
-	Vec3f b;
 	Auravyx::start();
 	ThreadManager::getThreadManager()->registerThread(std::this_thread::get_id(), "Main");
 	Resource::getResources()->DIR = std::string(argv[0]) + "\\..";

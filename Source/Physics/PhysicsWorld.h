@@ -8,7 +8,7 @@ public:
 	PhysicsWorld();
 	~PhysicsWorld();
 
-	void addObject(std::shared_ptr<PhysicsObject> object);
+	void addObject(const std::shared_ptr<PhysicsObject>& object);
 
 	void update();
 

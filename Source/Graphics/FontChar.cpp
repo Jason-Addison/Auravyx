@@ -7,7 +7,7 @@ FontChar::FontChar()
 	
 }
 
-FontChar::FontChar(int xAdvance, int xOffset, int yOffset, int width, int height, int vaoID)
+FontChar::FontChar(const int xAdvance, const int xOffset, const int yOffset, const int width, const int height, const int vaoID)
 {
 	this->xAdvance = xAdvance;
 	this->xOffset = xOffset;

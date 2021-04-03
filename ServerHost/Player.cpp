@@ -14,7 +14,7 @@ Player::~Player()
 	//disconnect();
 }
 
-void Player::send(std::shared_ptr<Packet> p)
+void Player::send(const std::shared_ptr<Packet>& p)
 {
 	outPackets.emplace_back(p);
 }
@@ -43,7 +43,7 @@ void Player::update()
 	
 }
 
-void Player::send(std::string data)
+void Player::send(const std::string& data)
 {
 	std::cout << "ERROR should not send!\n";
 	sockaddr_in client;
@@ -52,12 +52,12 @@ void Player::send(std::string data)
 	int sendOK = sendto(out, data.c_str(), data.length(), 0, (sockaddr*)& address, sizeof(address));
 }
 
-void Player::send(int id, std::string data)
+void Player::send(const int id, const std::string& data)
 {
 	send((char)id + data);
 }
 
-void Player::receive(std::string data)
+void Player::receive(const std::string& data)
 {
 	std::wstringstream wss;
 	wss.clear();

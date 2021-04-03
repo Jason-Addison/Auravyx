@@ -13,7 +13,7 @@ FileIO::~FileIO()
 {
 }
 
-std::vector<std::string> FileIO::listDirectory(std::string directory, std::string fileType)
+std::vector<std::string> FileIO::listDirectory(const std::string& directory, const std::string& fileType)
 {
 	std::vector<std::string> list;
 	std::vector<std::string> files = listDirectory(directory);
@@ -35,7 +35,7 @@ std::vector<std::string> FileIO::listDirectory(std::string directory, std::strin
 	return list;
 }
 
-std::vector<std::string> FileIO::listDirectory(std::string directory)
+std::vector<std::string> FileIO::listDirectory(const std::string& directory)
 {
 	std::vector<std::string> items;
 	for (auto& p : std::filesystem::directory_iterator(directory))
@@ -47,7 +47,7 @@ std::vector<std::string> FileIO::listDirectory(std::string directory)
 	return items;
 }
 
-int FileIO::typeOfFile(std::string path)
+int FileIO::typeOfFile(const std::string& path)
 {
 	struct stat s;
 	if (stat(path.c_str(), &s) == 0)
@@ -71,7 +71,7 @@ int FileIO::typeOfFile(std::string path)
 	}
 }
 
-std::string FileIO::getFileName(std::string file)
+std::string FileIO::getFileName(const std::string& file)
 {
 	char sep = '\\';
 
@@ -84,19 +84,19 @@ std::string FileIO::getFileName(std::string file)
 	unsigned long long k = file.rfind(sep, file.length());
 	if (k != std::string::npos)
 	{
-		file = file.substr(k + 1, file.length() - k);
+		return file.substr(k + 1, file.length() - k);
 	}
-	return file;
+	return "File name not found!";
 }
 
-std::string FileIO::getFileNameNoEXT(std::string file)
+std::string FileIO::getFileNameNoEXT(const std::string& file)
 {
 	std::string s = getFileName(file);
 	s = s.substr(0, s.length() - 4);
 	return s;
 }
 
-std::string FileIO::readTextFile(std::string location)
+std::string FileIO::readTextFile(const std::string& location)
 {
 	std::ifstream inStream(location, std::ifstream::in);
 	std::stringstream stream;
@@ -105,7 +105,7 @@ std::string FileIO::readTextFile(std::string location)
 	return stream.str();
 }
 
-void FileIO::writeToFile(std::string dir, std::string data)
+void FileIO::writeToFile(const std::string& dir, const std::string& data)
 {
 	std::ofstream file;
 	file.open(dir);
@@ -113,7 +113,7 @@ void FileIO::writeToFile(std::string dir, std::string data)
 	file.close();
 }
 
-std::map<std::string, std::string> FileIO::readConfig(std::string dir)
+std::map<std::string, std::string> FileIO::readConfig(const std::string& dir)
 {
 	std::map<std::string, std::string> config;
 	std::vector<std::string> lines = readLines(dir);
@@ -128,7 +128,7 @@ std::map<std::string, std::string> FileIO::readConfig(std::string dir)
 	return config;
 }
 
-std::vector<std::string> FileIO::readLines(std::string location)
+std::vector<std::string> FileIO::readLines(const std::string& location)
 {
 	std::string file = readTextFile(location);
 	std::vector<std::string> lines = Util::splitString(file, "\n");

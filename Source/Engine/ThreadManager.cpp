@@ -16,12 +16,12 @@ ThreadManager* ThreadManager::getThreadManager()
 	return threadManager;
 }
 
-void ThreadManager::registerThread(std::thread::id id, std::string name)
+void ThreadManager::registerThread(const std::thread::id& id, const std::string& name)
 {
 	threads.emplace(id, name);
 }
 
-std::string ThreadManager::getThreadName(std::thread::id id)
+std::string ThreadManager::getThreadName(const std::thread::id& id)
 {
 	std::string s = "";
 	std::map<std::thread::id, std::string>::const_iterator iter = threads.find(id);

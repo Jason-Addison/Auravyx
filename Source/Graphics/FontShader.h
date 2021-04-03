@@ -6,19 +6,21 @@ public:
 	FontShader();
 	~FontShader();
 
+	void loadTransformation(const Matrix4f& matrix);
+
+	void loadColour(const float r, const float g, const float b, const float a);
+
+	void loadColour(const char colour);
+
+	void loadThickness(const float inner, const float blur);
+
+	virtual void loadAllUniformLocations();
+
+private:
+
 	GLint transformationMatrix;
 	GLint colour;
 	GLint thickness;
 	GLint mode;
-
-	void loadTransformation(Matrix4f matrix);
-
-	void loadColour(float r, float g, float b, float a);
-
-	void loadColour(char colour);
-
-	void loadThickness(float inner, float blur);
-
-	virtual void loadAllUniformLocations();
 };
 

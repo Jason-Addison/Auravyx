@@ -54,7 +54,7 @@ void GLManager::start()
 }
 
 
-void GLManager::setFPS(double fps)
+void GLManager::setFPS(const double fps)
 {
 	visibleFPS = fps;
 }

@@ -38,13 +38,13 @@ std::string title;
 std::string ServerManager::logData;
 
 std::wstringstream wss;
-void ServerManager::log(std::wstring msg)
+void ServerManager::log(const std::wstring& msg)
 {
 	//wss.clear();
 	//Log::out(msg);
 }
 
-std::string ServerManager::getTime(std::string format)
+std::string ServerManager::getTime(const std::string& format)
 {
 	std::tm bt{};
 	auto t = std::time(nullptr);
@@ -67,7 +67,7 @@ void ServerManager::updateServer()
 
 	//SetConsoleTitle(sw);
 }
-int ServerManager::detectPlayer(sockaddr_in player)
+int ServerManager::detectPlayer(const sockaddr_in& player)
 {
 	int i = 0;
 	for (auto& p : Server::players)
@@ -83,20 +83,20 @@ int ServerManager::detectPlayer(sockaddr_in player)
 SOCKET in;
 sockaddr_in serverHint;
 
-void ServerManager::connectPlayer(sockaddr_in player, std::string data)
+void ServerManager::connectPlayer(const sockaddr_in& player, const std::string& data)
 {
 	std::wstringstream wss;
 	char clientIP[256];
 	ZeroMemory(clientIP, 256);
 	inet_ntop(AF_INET, &(player.sin_addr), clientIP, 256);
-	data = data.substr(1, data.length() - 1);
-	std::string inc = "Player '" + data + "' connecting [IP: " + clientIP + "] [PORT:  " + std::to_string(htons(player.sin_port)) + "]";
+	std::string dataTrim = data.substr(1, data.length() - 1);
+	std::string inc = "Player '" + dataTrim + "' connecting [IP: " + clientIP + "] [PORT:  " + std::to_string(htons(player.sin_port)) + "]";
 	wss << inc.c_str();
 	Log::out(SERVER, wss, OKAY);
 	std::shared_ptr<Player> p(new Player());
 	p->ip = player.sin_addr.S_un.S_addr;
 	p->port = htons(player.sin_port);
-	p->name = data.c_str();
+	p->name = dataTrim.c_str();
 	p->address = player;
 	//p->address.sin_port = htons(PORT);
 	p->out = in;

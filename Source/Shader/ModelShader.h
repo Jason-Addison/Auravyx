@@ -7,24 +7,24 @@ public:
 	ModelShader();
 	~ModelShader();
 
+	void loadProjectionMatrix(const Matrix4f& matrix);
+
+	void loadTransformationMatrix(const Matrix4f& matrix);
+
+	void loadCamera(const Matrix4f& matrix);
+
+	void loadCamera(const float x, const float y, const float z, const float farPlane);
+
+	void loadDiffuseColor(const float r, const float g, const float b, const float a);
+
+protected:
+
 	GLint projectionMatrix;
 	GLint viewMatrix;
 	GLint transformationMatrix;
 	GLint cameraPosition;
 	GLint farPlane;
 	GLint diffuseColor;
-
-	void loadProjectionMatrix(Matrix4f matrix);
-
-	void loadTransformationMatrix(Matrix4f matrix);
-
-	void loadCamera(Matrix4f matrix);
-
-	void loadCamera(float x, float y, float z, float farPlane);
-
-	void loadDiffuseColor(float r, float g, float b, float a);
-
-protected:
 
 	virtual void loadAllUniformLocations();
 };

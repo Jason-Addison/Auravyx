@@ -17,7 +17,7 @@ void Image::render()
 	GFX::getOverlay()->drawImage(x, y, width, height, texture);// , WindowManager::getWindow()->getWidth(), WindowManager::getWindow()->getHeight());
 }
 
-void Image::setBounds(float x, float y, float width, float height)
+void Image::setBounds(const float x, const float y, const float width, const float height)
 {
 	this->x = x;
 	this->y = y;

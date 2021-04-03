@@ -14,43 +14,45 @@ public:
 	Matrix4f();
 	~Matrix4f();
 
-	Matrix4f(float m00, float m10, float m20, float m30,
-		float m01, float m11, float m21, float m31,
-		float m02, float m12, float m22, float m32,
-		float m03, float m13, float m23, float m33);
+	Matrix4f(const float m00, const float m10, const float m20, const float m30,
+		const float m01, const float m11, const float m21, const float m31,
+		const float m02, const float m12, const float m22, const float m32,
+		const float m03, const float m13, const float m23, const float m33);
+
+	Matrix4f& operator*=(const Matrix4f b);
 
 	void setIdentity();
 
-	void set(Matrix4f mat);
+	void set(const Matrix4f& mat);
 
-	void set(float m00, float m10, float m20,
-		float m01, float m11, float m21,
-		float m02, float m12, float m22);
+	void set(const float m00, const float m10, const float m20,
+		const float m01, const float m11, const float m21,
+		const float m02, const float m12, const float m22);
 
-	void scale(float x, float y, float z);
+	void scale(const float x, const float y, const float z);
 
-	void rotate(float angle, float x, float y, float z);
+	void rotate(const float angle, const float x, const float y, const float z);
 
-	void translate(float x, float y, float z);
+	void translate(const float x, const float y, const float z);
 
-	Matrix4f multiply(Matrix4f mat);
+	Matrix4f multiply(const Matrix4f& mat);
 
-	void createProjectionMatrix(float screenWidth, float screenHeight, float farPlane, float nearPlane, float FOV);
+	void createProjectionMatrix(const float screenWidth, const float screenHeight, const float farPlane, const float nearPlane, const float FOV);
 
-	void createViewMatrix(float x, float y, float z, float xRot, float yRot, float zRot);
+	void createViewMatrix(const float x, const float y, const float z, const float xRot, const float yRot, const float zRot);
 
-	void createOrthographicMatrix(float left, float right, float top, float bottom, float nearPlane, float farPlane);
+	void createOrthographicMatrix(const float left, float right, float top, float bottom, float nearPlane, float farPlane);
 
-	float toRadians(float angle);
+	float toRadians(const float angle);
 
 	void setSymmetric(const float a00, const float a01, const float a02,
 		const float a11, const float a12, const float a22);
 
-	void setSymmetric(Matrix4f m);
+	void setSymmetric(const Matrix4f& m);
 
-	void set(float x, float y, float z);
+	void set(const float x, const float y, const float z);
 
-	static void vmul_symmetric(Vec3f& out, const Matrix4f& a, const Vec3f& v);
+	static void vMulSymmetric(Vec3f& out, const Matrix4f& a, const Vec3f& v);
 
 	/*
 	_________________
@@ -61,10 +63,10 @@ public:
 	-----------------
 	^
 	|
-	Vec
-
-
+	Vector portion
 
 	*/
 };
+
+Matrix4f& operator*(const Matrix4f a, const Matrix4f b);
 

@@ -1,11 +1,11 @@
 #include "Physics/Physics.h"
 
-void Physics::addCallback(std::function<void(std::string)> callback)
+void Physics::addCallback(const std::function<void(std::string)>& callback)
 {
 	physicsCallbacks.emplace_back(callback);
 }
 
-void Physics::messagePhysics(std::string message)
+void Physics::messagePhysics(const std::string& message)
 {
 	for (auto &c : physicsCallbacks)
 	{

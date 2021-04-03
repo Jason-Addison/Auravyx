@@ -8,7 +8,7 @@ OBJMaterial::OBJMaterial()
 	this->length = 1;
 }
 
-OBJMaterial::OBJMaterial(Texture texture, int length)
+OBJMaterial::OBJMaterial(const Texture& texture, const int length)
 {
 	this->texture = texture;
 	this->length = length * 3;

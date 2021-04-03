@@ -17,12 +17,12 @@ public:
 
 	static int id;
 
-	static void sendToOthers(std::string data, sockaddr_in except);
+	static void sendToOthers(const std::string& data, const sockaddr_in& except);
 
-	static void sendToAll(char id, std::string data);
+	static void sendToAll(const char id, const std::string& data);
 
-	static void sendToAll(std::shared_ptr<Packet> p);
-	static void add(std::shared_ptr<Packet> c)
+	static void sendToAll(const std::shared_ptr<Packet>& p);
+	static void add(const std::shared_ptr<Packet>& c)
 	{
 		c->id = id++;
 		packets.emplace_back(c);

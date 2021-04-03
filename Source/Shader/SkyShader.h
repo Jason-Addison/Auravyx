@@ -6,28 +6,28 @@ public:
 	SkyShader();
 	~SkyShader();
 
+	void loadProjectionMatrix(const Matrix4f& matrix);
+
+	void loadTransformationMatrix(const Matrix4f& matrix);
+
+	void loadCamera(const Matrix4f& matrix);
+
+	void loadTime(const double time);
+
+	void loadSun(const float x, const float y, const float z);
+
+	void loadScreenResolution(const float x, const float y);
+
+	void render();
+
+protected:
+
 	GLint projectionMatrix;
 	GLint viewMatrix;
 	GLint time;
 	GLint sun;
 	GLint screenResolution;
 	GLint transformationMatrix;
-
-	void loadProjectionMatrix(Matrix4f matrix);
-
-	void loadTransformationMatrix(Matrix4f matrix);
-
-	void loadCamera(Matrix4f matrix);
-
-	void loadTime(double time);
-
-	void loadSun(float x, float y, float z);
-
-	void loadScreenResolution(float x, float y);
-
-	void render();
-
-protected:
 
 	virtual void loadAllUniformLocations();
 };

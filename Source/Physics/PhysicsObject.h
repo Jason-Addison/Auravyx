@@ -12,44 +12,43 @@ class PhysicsObject
 {
 public:
 
-	PhysicsObject();
-	~PhysicsObject();
-
-
 	void getBoundsAABB(double& x, double& y, double& z);
 
-	bool checkCollision(PhysicsObject* object);
+	bool checkCollision(const PhysicsObject& object);
 
-	void setPosition(double x, double y, double z);
+	void setPosition(const double x, const double y, const double z);
 
-	void addImpulse(double x, double y, double z);
+	void addImpulse(const double x, const double y, const double z);
 
-	double getX();
+	double getX() const;
 
-	double getY();
+	double getY() const;
 
-	double getZ();
+	double getZ() const;
 
-	double getXVelocity();
+	double getXVelocity() const;
 
-	double getYVelocity();
+	double getYVelocity() const;
 
-	double getZVelocity();
+	double getZVelocity() const;
 
-	void setXVelocity(double vel);
+	void setXVelocity(const double vel);
 
-	void setYVelocity(double vel);
+	void setYVelocity(const double vel);
 
-	void setZVelocity(double vel);
+	void setZVelocity(const double vel);
 
 	void update();
 
 protected:
 
+	PhysicsObject();
+	~PhysicsObject();
+
 	struct Impulse
 	{
 		double xi, yi, zi;
-		Impulse(double x, double y, double z)
+		Impulse(const double x, const  double y, const double z)
 		{
 			xi = x;
 			yi = y;
@@ -85,11 +84,11 @@ protected:
 
 	virtual void updateAABB();
 
-	virtual bool sphereCollision(PhysicsObject* sphere);
+	virtual bool sphereCollision(const PhysicsObject& sphere);
 
-	virtual bool prismCollision(PhysicsObject* prism);
+	virtual bool prismCollision(const PhysicsObject& prism);
 
-	virtual bool trianglesCollision(PhysicsObject* triangles);
+	virtual bool trianglesCollision(const PhysicsObject& triangles);
 
 	enum Type
 	{

@@ -26,7 +26,7 @@ GFX::~GFX()
 
 GFX* GFX::gfx;
 
-void GFX::drawImage(float x, float y, float width, float height, float rotation, int texture, int xScale, int yScale)
+void GFX::drawImage(const float x, const float y, const float width, const float height, const float rotation, const int texture, const int xScale, const int yScale)
 {
 	//x = (int)x;
 	//y = (int)y;
@@ -48,7 +48,7 @@ void GFX::drawImage(float x, float y, float width, float height, float rotation,
 	glEnable(GL_DEPTH_TEST);
 }
 
-void GFX::drawImage(float x, float y, float xVel, float yVel, float width, float height, int texture)
+void GFX::drawImage(const float x, const float y, const float xVel, const float yVel, const float width, const float height, const int texture)
 {
 	//drawImage((int) x, (int) y, width, height, texture);
 	//drawImage((int) (Clock::lerp * (x + xVel) + (1 - Clock::lerp) * (x)),
@@ -58,15 +58,15 @@ void GFX::drawImage(float x, float y, float xVel, float yVel, float width, float
 }
 float u = 0.4;
 float i = 6;
-void GFX::drawString(std::string string, float x, float y, float size, float r, float g, float b, float a)
+void GFX::drawString(const std::string& string, const float x, const float y, const float size, const float r, const float g, const float b, const float a)
 {
 	drawString(string, x, y, size, r, g, b, a, WindowManager::getWindow()->getWidth(), WindowManager::getWindow()->getHeight());
 }
 
-void GFX::drawString(std::string string, float x, float y, float size, float r, float g, float b, float a, float windowWidth, float windowHeight)
+void GFX::drawString(const std::string& string, const float x, const float y, const float size, const float r, const float g, const float b, const float a, const float windowWidth, const float windowHeight)
 {
 	Font font = *Assets::getAssets()->getAssets()->getFont("font_plain");
-	size *= 1 / (font.largestValue / size) * 2;
+	float resized = size * (1 / (font.largestValue / size) * 2);
 
 	glDisable(GL_DEPTH_TEST);
 
@@ -93,7 +93,7 @@ void GFX::drawString(std::string string, float x, float y, float size, float r, 
 	{
 		i -= 0.0003;
 	}
-	Renderer::getRenderer()->getShaders()->fontShader->loadThickness(u, 0.5 / (0.5 * size) * i);
+	Renderer::getRenderer()->getShaders()->fontShader->loadThickness(u, 0.5 / (0.5 * resized) * i);
 	Renderer::getRenderer()->getShaders()->fontShader->loadColour(r, g, b, a);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, font.texture.texture);
@@ -110,13 +110,13 @@ void GFX::drawString(std::string string, float x, float y, float size, float r, 
 		if (fchar.width != -1)
 		{
 			float newX = -1 + (x + totalX) / windowWidth * 2;
-			float newY = 1 - ((y + (fchar.yOffset) * (size / font.size)) / windowHeight * 2);
-			float newWidth = (size / font.size) / windowWidth * 2;
-			float newHeight = (size / font.size) / windowHeight * 2;
+			float newY = 1 - ((y + (fchar.yOffset) * (resized / font.size)) / windowHeight * 2);
+			float newWidth = (resized / font.size) / windowWidth * 2;
+			float newHeight = (resized / font.size) / windowHeight * 2;
 
 			transformation = M::createTransformationMatrix(newX, newY, 0, newWidth, newHeight, 1, 0, 0, 0);
 			Renderer::getRenderer()->getShaders()->fontShader->loadTransformation(transformation);
-			totalX += ((float)fchar.xAdvance) * (size / font.size) * 1; //////////////////////////////////////////////////////////
+			totalX += ((float)fchar.xAdvance) * (resized / font.size) * 1; //////////////////////////////////////////////////////////
 			
 			glBindVertexArray(fchar.vaoID);
 			glEnableVertexArrayAttrib(fchar.vaoID, 0);
@@ -128,42 +128,42 @@ void GFX::drawString(std::string string, float x, float y, float size, float r, 
 	glEnable(GL_DEPTH_TEST);
 }
 
-void GFX::drawStringBG(std::string string, float x, float y, float size, float r, float g, float b, float a, float xB, float yB, float xSB, float ySB, float rB, float gB, float bB, float aB)
+void GFX::drawStringBG(const std::string& string, const float x, const float y, const float size, const float r, const float g, const float b, const float a, const float xB, const float yB, const float xSB, const float ySB, const float rB, const float gB, const float bB, const float aB)
 {
 	float width = stringWidth(string, size) + 10;
 	fillRect(x + xB, y + yB, width + xSB, size + ySB, rB, gB, bB, aB);
 	drawString(string, x, y, size, r, g, b, a);
 }
 
-void GFX::drawStringBGR(std::string string, float x, float y, float size, float r, float g, float b, float a, float xB, float yB, float xSB, float ySB, float rB, float gB, float bB, float aB)
+void GFX::drawStringBGR(const std::string& string, const float x, const float y, const float size, const float r, const float g, const float b, const float a, const float xB, const float yB, const float xSB, const float ySB, const float rB, const float gB, const float bB, const float aB)
 {
 	float width = stringWidth(string, size) + 7;
 	fillRect(WindowManager::getWindow()->getWidth() - width - x + xB, y + yB, width + xSB, size + ySB, rB, gB, bB, aB);
 	drawStringR(string, x, y, size, r, g, b, a);
 }
 
-void GFX::drawStringR(std::string string, float x, float y, float size, float r, float g, float b, float a)
+void GFX::drawStringR(const std::string& string, const float x, const float y, const float size, const float r, const float g, const float b, const float a)
 {
 	drawString(string, WindowManager::getWindow()->getWidth() - stringWidth(string, size) - x - 7, y, size, r, g, b, a);
 }
 
-void GFX::drawStringC(std::string string, float x, float y, float size, float width, float r, float g, float b, float a)
+void GFX::drawStringC(const std::string& string, const float x, const float y, const float size, const float width, const float r, const float g, const float b, const float a)
 {
 	drawString(string, x + width / 2 - stringWidth(string, size) / 2, y, size, r, g, b, a);
 }
 
-void GFX::drawStringBGC(std::string string, float x, float y, float size, float width, float r, float g, float b, float a,
-	float xB, float yB, float xSB, float ySB, float rB, float gB, float bB, float aB)
+void GFX::drawStringBGC(const std::string& string, const float x, const float y, const float size, const float width, const float r, const float g, const float b, const float a,
+	const float xB, const float yB, const float xSB, const float ySB, const float rB, const float gB, const float bB, const float aB)
 {
 	float w = stringWidth(string, size);
 	fillRect(width / 2 - w / 2 - x + xB, y + yB, w + xSB + 7, size + ySB, rB, gB, bB, aB);
 	drawString(string, x + width / 2 - w / 2, y, size, r, g, b, a);
 }
 
-float GFX::stringWidth(std::string string, float size)
+float GFX::stringWidth(const std::string& string, const float size)
 {
 	Font font = *Assets::getAssets()->getAssets()->getFont("font_plain");
-	size *= 1 / (font.largestValue / size) * 2;
+	float resized = size * (1 / (font.largestValue / size) * 2);
 
 	float totalX = 0;
 
@@ -177,71 +177,72 @@ float GFX::stringWidth(std::string string, float size)
 		if (fchar.width != -1)
 		{
 			float newX = -1 + ((x) / WindowManager::getWindow()->getWidth() * 2) + ((totalX) / WindowManager::getWindow()->getWidth() * 2);
-			float newY = 1 - ((y + (fchar.yOffset - 12) * (size / font.size)) / WindowManager::getWindow()->getHeight() * 2);
-			float newWidth = (size / font.size) / WindowManager::getWindow()->getWidth() * 2;
-			float newHeight = (size / font.size) / WindowManager::getWindow()->getHeight() * 2;
+			float newY = 1 - ((y + (fchar.yOffset - 12) * (resized / font.size)) / WindowManager::getWindow()->getHeight() * 2);
+			float newWidth = (resized / font.size) / WindowManager::getWindow()->getWidth() * 2;
+			float newHeight = (resized / font.size) / WindowManager::getWindow()->getHeight() * 2;
 
-			totalX += ((float)fchar.xAdvance) * (size / font.size) * 1;
+			totalX += ((float)fchar.xAdvance) * (resized / font.size) * 1;
 		}
 	}
 	return totalX;
 	return -1 + ((x) / WindowManager::getWindow()->getWidth() * 2) + ((totalX) / WindowManager::getWindow()->getWidth() * 2);
 }
 
-void GFX::renderModel(float x, float y, float z, float xScale, float yScale, 
-	float zScale, float xRot, float yRot, float zRot, Model* m, Camera* c, Matrix4f* projection, Texture *tex)
+void GFX::renderModel(const float x, const float y, const float z, const float xScale, const float yScale, const float zScale, const float xRot,
+	const float yRot, const float zRot, Model& m, Camera& c, const Matrix4f& const projection, const Texture& tex)
 {
 	Renderer::getRenderer()->getShaders()->modelShader->start();
-	Renderer::getRenderer()->getShaders()->modelShader->loadCamera(c->getViewMatrix());
-	Renderer::getRenderer()->getShaders()->modelShader->loadProjectionMatrix(*projection);
+	Renderer::getRenderer()->getShaders()->modelShader->loadCamera(c.getViewMatrix());
+	Renderer::getRenderer()->getShaders()->modelShader->loadProjectionMatrix(projection);
 	Matrix4f t = M::createTransformationMatrix(x, y, z, xScale, yScale, zScale, xRot, yRot, zRot);
 	Renderer::getRenderer()->getShaders()->modelShader->loadTransformationMatrix(t);
-	Renderer::getRenderer()->getShaders()->modelShader->loadCamera(c->x, c->y, c->z, GFX::getOverlay()->viewDistance * 64);
+	Renderer::getRenderer()->getShaders()->modelShader->loadCamera(c.x, c.y, c.z, GFX::getOverlay()->viewDistance * 64);
 	glEnable(GL_DEPTH_TEST);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glDisable(GL_CULL_FACE);
 
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, tex->texture);
+	glBindTexture(GL_TEXTURE_2D, tex.texture);
 	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
-	glBindVertexArray(m->getVAO());
-	glEnableVertexArrayAttrib(m->getVAO(), 0);
-	glEnableVertexArrayAttrib(m->getVAO(), 1);
-	glEnableVertexArrayAttrib(m->getVAO(), 2);
-	glDrawArrays(GL_TRIANGLES, 0, m->getCount());
+	glBindVertexArray(m.getVAO());
+	glEnableVertexArrayAttrib(m.getVAO(), 0);
+	glEnableVertexArrayAttrib(m.getVAO(), 1);
+	glEnableVertexArrayAttrib(m.getVAO(), 2);
+	glDrawArrays(GL_TRIANGLES, 0, m.getCount());
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
 	Renderer::getRenderer()->getShaders()->modelShader->stop();
 }
 
-void GFX::renderModelIndex(float x, float y, float z, float xScale, float yScale, float zScale, float xRot, float yRot, float zRot, Model* m, Camera* c, Matrix4f* projection, Texture* tex)
+void GFX::renderModelIndex(const float x, const float y, const float z, const float xScale, const float yScale, const float zScale, const float xRot,
+	const float yRot, const float zRot, Model& m, Camera& c, const Matrix4f& projection, const Texture& tex)
 {
 	Renderer::getRenderer()->getShaders()->modelShader->start();
-	Renderer::getRenderer()->getShaders()->modelShader->loadCamera(c->getViewMatrix());
-	Renderer::getRenderer()->getShaders()->modelShader->loadProjectionMatrix(*projection);
+	Renderer::getRenderer()->getShaders()->modelShader->loadCamera(c.getViewMatrix());
+	Renderer::getRenderer()->getShaders()->modelShader->loadProjectionMatrix(projection);
 	Matrix4f t = M::createTransformationMatrix(x, y, z, xScale, yScale, zScale, xRot, yRot, zRot);
 	Renderer::getRenderer()->getShaders()->modelShader->loadTransformationMatrix(t);
-	Renderer::getRenderer()->getShaders()->modelShader->loadCamera(c->x, c->y, c->z, viewDistance * 64);
+	Renderer::getRenderer()->getShaders()->modelShader->loadCamera(c.x, c.y, c.z, viewDistance * 64);
 	glEnable(GL_DEPTH_TEST);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glDisable(GL_CULL_FACE);
 
-	glBindVertexArray(m->getVAO());
-	glEnableVertexArrayAttrib(m->getVAO(), 0);
-	glEnableVertexArrayAttrib(m->getVAO(), 1);
-	glEnableVertexArrayAttrib(m->getVAO(), 2);
-	glEnableVertexArrayAttrib(m->getVAO(), 3);
+	glBindVertexArray(m.getVAO());
+	glEnableVertexArrayAttrib(m.getVAO(), 0);
+	glEnableVertexArrayAttrib(m.getVAO(), 1);
+	glEnableVertexArrayAttrib(m.getVAO(), 2);
+	glEnableVertexArrayAttrib(m.getVAO(), 3);
 	int index = 0;
 	GLuint tt = Assets::getAssets()->getTexture("npc_zelda_miko_body_alb")->texture;
 
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_BLEND);
 	glActiveTexture(GL_TEXTURE0);
-	for (auto mat : m->materials)
+	for (auto mat : m.materials)
 	{
 		glBindTexture(GL_TEXTURE_2D, mat.albedo);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -256,7 +257,7 @@ void GFX::renderModelIndex(float x, float y, float z, float xScale, float yScale
 	Renderer::getRenderer()->getShaders()->modelShader->stop();
 }
 
-void GFX::fillRect(float x, float y, float width, float height, float xScale, float yScale, float r, float g, float b, float a)
+void GFX::fillRect(const float x, const float y, const float width, const float height, const float xScale, const float yScale, const float r, const float g, const float b, const float a)
 {
 	glDisable(GL_DEPTH_TEST);
 	Matrix4f transformation = M::createTransformationMatrix(0, 0, 0, width / (float)xScale * 2, height / (float)yScale * 2, 1, 0, 0, 0);
@@ -274,16 +275,16 @@ void GFX::fillRect(float x, float y, float width, float height, float xScale, fl
 	glDisable(GL_BLEND);
 }
 
-void GFX::fillRect(float x, float y, float xScale, float yScale, float r, float g, float b, float a)
+void GFX::fillRect(const float x, const float y, const float xScale, const float yScale, const float r, const float g, const float b, const float a)
 {
 	fillRect(x, WindowManager::getWindow()->getHeight() - y, xScale, -yScale, WindowManager::getWindow()->getWidth(), WindowManager::getWindow()->getHeight(), r, g, b, a);
 }
 
-void GFX::drawImage(float x, float y, float width, float height, int texture)
+void GFX::drawImage(const float x, const float y, const float width, const float height, const int texture)
 {
 	drawImage(x, y, width, height, 0, texture, WindowManager::getWindow()->getWidth(), WindowManager::getWindow()->getHeight());
 }
-void GFX::drawImage(float x, float y, float width, float height, float rot, int texture)
+void GFX::drawImage(const float x, const float y, const float width, const float height, const float rot, const int texture)
 {
 	drawImage(x, y, width, height, rot, texture, WindowManager::getWindow()->getWidth(), WindowManager::getWindow()->getHeight());
 }
@@ -297,12 +298,12 @@ void GFX::init()
 	quad = Model::load2DModel(quadVert);
 }
 
-void GFX::setFPS(double fps)
+void GFX::setFPS(const double fps)
 {
 	this->FPS = fps;
 }
 
-void GFX::enableScissor(float x, float y, float width, float height)
+void GFX::enableScissor(const float x, const float y, const float width, const float height)
 {
 	glScissor(x, WindowManager::getWindow()->getHeight() - y - height, width, height);
 	glEnable(GL_SCISSOR_TEST);

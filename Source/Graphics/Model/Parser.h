@@ -5,6 +5,6 @@ class Parser
 {
 public:
 
-	static std::vector<float> getFloatArray(std::string s);
+	static std::vector<float> getFloatArray(const std::string& s);
 };
 

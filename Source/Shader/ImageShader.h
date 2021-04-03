@@ -7,11 +7,11 @@ public:
 	ImageShader();
 	~ImageShader();
 
-	GLint transformationMatrix;
-
-	void loadTransformation(Matrix4f matrix);
+	void loadTransformation(const Matrix4f& matrix);
 
 	virtual void loadAllUniformLocations();
 
+private:
+	GLint transformationMatrix;
 };
 

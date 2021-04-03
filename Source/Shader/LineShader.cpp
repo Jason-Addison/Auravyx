@@ -63,17 +63,17 @@ LineShader::~LineShader()
 {
 }
 
-void LineShader::loadProjectionMatrix(Matrix4f matrix)
+void LineShader::loadProjectionMatrix(const Matrix4f&  matrix)
 {
 	loadMatrix4f(projectionMatrix, matrix);
 }
 
-void LineShader::loadOffset(float x, float y, float z)
+void LineShader::loadOffset(const float x, const float y, const float z)
 {
 	loadVec3f(offset, x, y, z);
 }
 
-void LineShader::loadCamera(Matrix4f matrix)
+void LineShader::loadCamera(const Matrix4f& matrix)
 {
 	loadMatrix4f(viewMatrix, matrix);
 }
@@ -91,7 +91,7 @@ void LineShader::render()
 	glEnable(GL_CULL_FACE);
 }
 
-void LineShader::renderPoint(float x, float y, float z, Matrix4f projectionMatrix)
+void LineShader::renderPoint(const float x, const float y, const float z, const Matrix4f& projectionMatrix)
 {
 	start();
 	loadCamera(GFX::getOverlay()->CAM.getViewMatrix());
@@ -108,7 +108,7 @@ void LineShader::renderPoint(float x, float y, float z, Matrix4f projectionMatri
 	glEnable(GL_CULL_FACE);
 }
 
-void addSegments(std::vector<float>& vertices, std::vector<float>& colours, float r, float g, float b, float a, int segments)
+void addSegments(std::vector<float>& vertices, std::vector<float>& colours, const float r, const float g, const float b, const float a, const int segments)
 {
 	for (int i = 0; i < Chunk::CHUNK_SIZE / segments + 1; i++)
 	{

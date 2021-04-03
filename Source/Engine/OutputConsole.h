@@ -20,7 +20,7 @@ public:
 	bool isReady();
 	static std::atomic_bool ready;
 
-	void message(std::string msg, int level);
+	void message(const std::string& msg, const int level);
 
 	static OutputConsole* getConsole();
 

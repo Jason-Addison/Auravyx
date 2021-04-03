@@ -13,61 +13,61 @@ class Util
 {
 public:
 
-	static void logNNL(int colour, std::string text);
+	static void logNNL(const int colour, const std::string& text);
 
-	static void logNNL(int colour, std::string who, std::string message);
+	static void logNNL(const int colour, const std::string& who, const std::string& message);
 
-	static void log(int colour, std::string text);
+	static void log(const int colour, const std::string& text);
 
-	static void log(std::string text);
+	static void log(const std::string& text);
 
-	static void log(int out);
+	static void log(const int out);
 
-	static void log(float out);
+	static void log(const float out);
 
-	static void log(int colour, std::string who, std::string message);
+	static void log(const int colour, const std::string& who, const std::string& message);
 
-	static int typeOfFile(std::string path);
+	static int typeOfFile(const std::string& path);
 
-	static std::vector<std::string> listDirectory(std::string dir);
+	static std::vector<std::string> listDirectory(const std::string& dir);
 
-	static std::string readTextFile(std::string location);
+	static std::string readTextFile(const std::string& location);
 
-	static void writeToFile(std::string dir, std::string data);
+	static void writeToFile(const std::string& dir, const std::string& data);
 
-	static int createFolder(std::string dir);
+	static int createFolder(std::string& dir);
 
-	static std::string removeFromString(std::string string, std::string remove, std::string replace);
+	static std::string removeFromString(std::string& string, const std::string& remove, const std::string& replace);
 
-	static bool endsWith(std::string& fullString, std::string& ending);
+	static bool endsWith(const std::string& fullString, const std::string& ending);
 
-	static bool startsWith(std::string string, std::string startsWith);
+	static bool startsWith(const std::string& string, const std::string& startsWith);
 
-	static std::vector<std::string> splitString(std::string string, std::string splitter);
+	static std::vector<std::string> splitString(const std::string& string, const std::string& splitter);
 
-	static std::vector<std::string> splitString(std::string string, char splitter);
+	static std::vector<std::string> splitString(const std::string& string, const char splitter);
 
 	static std::string createUUID();
 
-	static std::string getFolder(LPCWSTR title, LPCWSTR dir);
+	static std::string getFolder(const LPCWSTR& title, const LPCWSTR& dir);
 
-	static std::string getFile(COMDLG_FILTERSPEC pFilter, LPCWSTR title, LPCWSTR defaultExtension, LPCWSTR dir);
+	static std::string getFile(const COMDLG_FILTERSPEC& pFilter, const LPCWSTR& title, const LPCWSTR& defaultExtension, const LPCWSTR& dir);
 
-	static std::string getFile(COMDLG_FILTERSPEC pFilter, LPCWSTR title, LPCWSTR defaultExtension, LPCWSTR dir, int mode);
+	static std::string getFile(const COMDLG_FILTERSPEC& pFilter, const LPCWSTR& title, const LPCWSTR& defaultExtension, const LPCWSTR& dir, const int mode);
 
 	static bool saveFile();
 
-	static std::string replaceAll(std::string str, std::string a, std::string b);
+	static std::string replaceAll(std::string& str, const std::string& a, const std::string& b);
 
-	static std::string removeAll(std::string str, char a);
+	static std::string removeAll(std::string str, const char a);
 
-	static size_t countCharsInString(std::string string, char c);
+	static size_t countCharsInString(const std::string& string, const char c);
 
-	static bool isCommentedLine(std::string line);
+	static bool isCommentedLine(const std::string& line);
 
-	static std::string getFileNameNoEXT(std::string path, std::string ext);
+	static std::string getFileNameNoEXT(const std::string& path, const std::string& ext);
 
-	static bool pointAABB(float px, float py, float x, float y, float width, float height);
+	static bool pointAABB(const float px, const float py, const float x, const float y, const float width, const float height);
 
-	static std::string removeDecimal(double x, int precision);
+	static std::string removeDecimal(const double x, const int precision);
 };

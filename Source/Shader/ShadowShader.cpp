@@ -27,7 +27,7 @@ void ShadowShader::loadAllUniformLocations()
 	transformationMatrix = getUniformLocation("transformationMatrix");
 }
 
-void ShadowShader::loadDepthMVP(Matrix4f matrix)
+void ShadowShader::loadDepthMVP(const Matrix4f& matrix)
 {
 	loadMatrix4f(depthMVP, matrix);
 }
@@ -37,7 +37,7 @@ Matrix4f biasMatrix(
 	0.0, 0.0, 0.5, 0.5,
 	0.0, 0.0, 0.0, 1.0
 );
-void ShadowShader::render(World &world, ShadowMap &shadowMap, Camera &camera, Vec3f &position)
+void ShadowShader::render(const World &world, ShadowMap &shadowMap, const Camera &camera, const Vec3f &position)
 {
 	start();
 	Matrix4f depthMVP;
@@ -121,17 +121,17 @@ void ShadowShader::render(World &world, ShadowMap &shadowMap, Camera &camera, Ve
 	//GFX::getOverlay()->renderModel(GFX::getOverlay()->CAM.xPos, GFX::getOverlay()->CAM.yPos, GFX::getOverlay()->CAM.zPos, 1, 1, 1, -90, 0, (GFX::getOverlay()->CAM.yRot + 180) * 0, Assets::getAssets()->getAssets()->getModel("model").get(), &(GFX::getOverlay()->CAM), projectionMatrix, Assets::getAssets()->getAssets()->getTexture("mod").get());
 }
 
-void ShadowShader::loadWind(float power, float xDir, float zDir)
+void ShadowShader::loadWind(const float power, const float xDir, const float zDir)
 {
 	loadVec3f(wind, power, xDir, zDir);
 }
 
-void ShadowShader::loadTime(double time)
+void ShadowShader::loadTime(const double time)
 {
 	loadFloat(this->time, time);
 }
 
-void ShadowShader::loadTransformation(Matrix4f matrix)
+void ShadowShader::loadTransformation(const Matrix4f& matrix)
 {
 	loadMatrix4f(transformationMatrix, matrix);
 }

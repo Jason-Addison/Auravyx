@@ -32,8 +32,6 @@ public:
 	static bool mouseInput;
 	static bool controllerInput;
 
-
-
 	static std::vector<std::string*> inputTexts;
 
 	double x = 0, y = 0;
@@ -46,15 +44,15 @@ public:
 
 	void loadControls();
 
-	bool isKeyDown(int keyCode);
+	bool isKeyDown(const int keyCode);
 
-	bool isControl(int keyCode, int controllerCode);
+	bool isControl(const int keyCode, const int controllerCode);
 
 	float getMouseDX();
 
 	float getMouseDY();
 
-	bool isMouseDown(int code);
+	bool isMouseDown(const int code);
 
 	void getMousePos(double &x, double &y);
 
@@ -62,7 +60,7 @@ public:
 
 	void getMouseY(double &y);
 
-	bool active(std::string action);
+	bool active(const std::string& action);
 
 	double getMouseX();
 
@@ -70,15 +68,15 @@ public:
 
 	void inputText(char c, int mod);
 
-	void addText(std::string & str);
+	void addText(std::string& str);
 
-	void removeText(std::string & str);
+	void removeText(std::string& str);
 
 	void update();
 
 	void init();
 
-	static void keyboardInput(int key, int scancode, int action, int mods);
+	static void keyboardInput(const int key, const int scancode, const int action, const int mods);
 
 	void resetMouse();
 

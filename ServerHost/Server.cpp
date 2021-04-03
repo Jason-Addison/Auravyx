@@ -13,7 +13,7 @@ Server::~Server()
 {
 }
 int Server::id = 0;
-void Server::sendToOthers(std::string data, sockaddr_in address)
+void Server::sendToOthers(const std::string& data, const sockaddr_in& address)
 {
 	for (auto& p : Server::players)
 	{
@@ -28,7 +28,7 @@ void Server::sendToOthers(std::string data, sockaddr_in address)
 	}
 }
 
-void Server::sendToAll(char id, std::string data)
+void Server::sendToAll(const char id, const std::string& data)
 {
 	for (auto p : players)
 	{
@@ -36,7 +36,7 @@ void Server::sendToAll(char id, std::string data)
 	}
 }
 
-void Server::sendToAll(std::shared_ptr<Packet> p)
+void Server::sendToAll(const std::shared_ptr<Packet>& p)
 {
 	for (auto pl : players)
 	{

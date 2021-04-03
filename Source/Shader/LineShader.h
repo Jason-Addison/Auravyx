@@ -8,28 +8,27 @@ public:
 	LineShader();
 	~LineShader();
 
-	GLint projectionMatrix;
-	GLint viewMatrix;
-	GLint offset;
+	void loadProjectionMatrix(const Matrix4f& matrix);
 
-	Model model;
+	void loadOffset(const float x, const float y, const float z);
 
-	Model point;
-
-	void loadProjectionMatrix(Matrix4f matrix);
-
-	void loadOffset(float x, float y, float z);
-
-	void loadCamera(Matrix4f matrix);
+	void loadCamera(const Matrix4f& matrix);
 
 	void render();
 
-	void renderPoint(float x, float y, float z, Matrix4f projectionMatrix);
+	void renderPoint(const float x, const float y, const float z, const Matrix4f& projectionMatrix);
 
 	void init();
 
 protected:
 
 	virtual void loadAllUniformLocations();
+
+	GLint projectionMatrix;
+	GLint viewMatrix;
+	GLint offset;
+
+	Model model;
+	Model point;
 };
 

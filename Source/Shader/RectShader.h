@@ -7,14 +7,15 @@ public:
 	RectShader();
 	~RectShader();
 
-	GLint transformationMatrix;
-	GLint colour;
+	void loadTransformation(const Matrix4f& matrix);
 
-	void loadTransformation(Matrix4f matrix);
-
-	void loadColour(float r, float g, float b, float a);
+	void loadColour(const float r, const float g, const float b, const float a);
 
 	virtual void loadAllUniformLocations();
 
+protected:
+
+	GLint transformationMatrix;
+	GLint colour;
 };
 

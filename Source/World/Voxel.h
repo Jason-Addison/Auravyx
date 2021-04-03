@@ -52,15 +52,15 @@ public:
 
 	Vec3f getLiquidAverage();
 
-	void addAverage(float x, float y, float z, int id);
+	void addAverage(const float x, const float y, const float z, const int id);
 
-	void addMaterial(int m);
+	void addMaterial(const int m);
 
-	void addLiquidAverage(float x, float y, float z);
+	void addLiquidAverage(const float x, const float y, const float z);
 
 	void addLiquidAverage(Voxel* vox);
 
-	void addLiquidMaterial(int m);
+	void addLiquidMaterial(const int m);
 
 	void findMostCommonMaterial();
 

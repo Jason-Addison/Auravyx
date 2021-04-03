@@ -41,7 +41,7 @@ void ChunkIO::saveArea()
 	fclose(chunkOutput);
 }
 
-void ChunkIO::saveChunk(const std::shared_ptr<Chunk>& chunk, const std::string& name)
+void ChunkIO::saveChunk(const Chunk* chunk, const std::string& name)
 {
 	std::string dir = Resource::getResources()->DIR + "\\Saves\\" + name + "\\data\\c" +
 		std::to_string(chunk->x) + "." + std::to_string(chunk->y) + "." + std::to_string(chunk->z) + ".voxc";

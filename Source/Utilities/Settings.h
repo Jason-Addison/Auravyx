@@ -14,8 +14,8 @@ public:
 
 	static std::map<std::string, std::string> settings;
 
-	static std::string getSetting(std::string setting);
+	static std::string getSetting(const std::string& setting);
 
-	static bool getBool(std::string setting);
+	static bool getBool(const std::string& setting);
 };
 

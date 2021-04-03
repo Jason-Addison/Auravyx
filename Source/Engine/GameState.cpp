@@ -56,7 +56,7 @@ Chunk ch;
 
 World w;
 
-void chunkLoading(int xC, int yC, int zC)
+void chunkLoading(const int xC, const int yC, const int zC)
 {
 	int size = GFX::getOverlay()->viewDistance * 2;
 	double avg = 0;
@@ -245,7 +245,7 @@ void world()
 		fov /= 3.6666;
 	}
 	m4.createProjectionMatrix(WindowManager::getWindow()->getWidth(), WindowManager::getWindow()->getHeight(), GFX::getOverlay()->viewDistance * 1000, 0.1, fov);
-	w.render(&GFX::getOverlay()->CAM, &m4);
+	w.render(GFX::getOverlay()->CAM, m4);
 	
 	Camera cam = GFX::getOverlay()->CAM;
 }

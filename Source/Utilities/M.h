@@ -1,30 +1,34 @@
 #pragma once
-#include "Matrix4f.h"
+#include "pch.h"
+#include "Utilities/Vec3f.h"
+#include "Utilities/Matrix4f.h"
 #include <vector>
 class M
 {
 public:
+	static float toRadians(const float degrees);
+
+	static int randomInt(const int min, const int max);
+
+	static float randomFloat(const float min, const float max);
+
+	static float distance(const Vec3f& a, const Vec3f& b);
+
+	static Matrix4f createTransformationMatrix(const float x, const float y, const float z, const float width, const float height, const float depth, const float xRot, const float yRot, const float zRot);
+
+	static float mag(const float x, const float y, const float z);
+
+	static Vec3f normalize(const Vec3f& vector);
+
+	static std::vector<char> intToBytes(const int x);
+
+	static int bytesToInt(const char* bytes);
+
+	static double roundToDecimal(const double x, const int precision);
+
+protected:
+
 	M();
-	~M();
-	//static double toRadians(double degrees);
-	static float toRadians(float degrees);
-
-	static int randomInt(int min, int max);
-
-	static float randomFloat(float min, float max);
-
-	static float distance(Vec3f a, Vec3f b);
-
-	static Matrix4f createTransformationMatrix(float x, float y, float z, float width, float height, float depth, float xRot, float yRot, float zRot);
-
-	static float mag(float x, float y, float z);
-
-	static Vec3f normalize(Vec3f vector);
-
-	static std::vector<char> intToBytes(int x);
-
-	static int bytesToInt(char * bytes);
-
-	static double roundToDecimal(double x, int precision);
+	virtual ~M() = 0;
 };
 

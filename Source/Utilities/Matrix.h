@@ -3,10 +3,11 @@ class Matrix
 {
 public:
 
+	void set();
+
+protected:
 
 	Matrix();
 	~Matrix();
-
-	void set();
 };
 

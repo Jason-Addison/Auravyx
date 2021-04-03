@@ -25,37 +25,37 @@ public:
 	Log();
 	~Log();
 
-	static void out(std::string who, std::wstringstream& msg);
+	static void out(const std::string& who, const std::wstringstream& msg);
 
-	static void out(std::string who, std::wstringstream& msg, int lvl);
+	static void out(const std::string& who, const std::wstringstream& msg, const int lvl);
 
-	static void out(std::wstringstream &msg);
+	static void out(const std::wstringstream& msg);
 
-	static void out(std::string src, std::string msg, int colour);
+	static void out(const std::string& src, const std::string& msg, const int colour);
 
-	static void out(std::string src, std::string msg, int colourA, int colourB);
+	static void out(const std::string& src, const std::string& msg, const int colourA, const int colourB);
 
-	static void out(std::string src, std::string msg);
+	static void out(const std::string& src, const std::string& msg);
 
-	static void out(std::string msg, int colour);
+	static void out(const std::string& msg, const int colour);
 
-	static void debug(std::string msg);
+	static void debug(const std::string& msg);
 
-	static void warn(std::string msg);
+	static void warn(const std::string& msg);
 
-	static void error(std::string msg);
+	static void error(const std::string& msg);
 
-	static void criticalError(std::string msg);
+	static void criticalError(const std::string& msg);
 
-	static void outNNL(std::string msg, int colour);
+	static void outNNL(const std::string& msg, const int colour);
 
-	static void outNNL(std::string msg);
+	static void outNNL(const std::string& msg);
 
-	static void out(std::string msg);
+	static void out(const std::string& msg);
 
 	static void update();
 
-	static void print(std::string msg);
+	static void print(const std::string& msg);
 
 	Log& operator <<(const std::string& msg)
 	{
@@ -63,7 +63,7 @@ public:
 		//*stream << msg;
 		return *this;
 	}
-	static Log& print(Log& l, int n);
+	static Log& print(Log& l, const int n);
 
 };
 

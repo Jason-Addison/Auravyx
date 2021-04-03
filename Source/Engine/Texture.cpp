@@ -6,7 +6,7 @@ Texture::Texture()
 {
 }
 
-Texture::Texture(GLuint texture, int width, int height)
+Texture::Texture(const GLuint texture, const int width, const int height)
 {
 	this->texture = texture;
 	this->width = width;

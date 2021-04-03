@@ -6,7 +6,7 @@ public:
 	float x, y, z;
 
 	Vec3f() = default;
-	Vec3f(float x, float y, float z);
+	Vec3f(const float x, const float y, const float z);
 	~Vec3f();
 
 	float getX();
@@ -15,15 +15,17 @@ public:
 
 	float getZ();
 
-	void add(float x, float y, float z);
+	void add(const float x, const float y, const float z);
 
-	static Vec3f add(Vec3f a, Vec3f b);
-	void subtract(float x, float y, float z);
+	void add(const Vec3f& v);
 
-	Vec3f subtract(Vec3f sub);
+	static Vec3f add(Vec3f& a, const Vec3f& b);
 
+	void subtract(const float x, const float y, const float z);
 
-	static Vec3f subtract(Vec3f sub, Vec3f a);
+	Vec3f subtract(const Vec3f& sub);
+
+	static Vec3f subtract(const Vec3f& sub, const Vec3f& a);
 
 	void normalize();
 
@@ -52,27 +54,26 @@ public:
 	{
 		z = -z;
 	}
-	void add(Vec3f v);
 
-	void cross(Vec3f a, Vec3f b);
+	void cross(const Vec3f& a, const Vec3f& b);
 
-	void divide(float d);
+	void divide(const float d);
 
 	void multiply(float m);
 
-	static Vec3f multiply(Vec3f v, float m);
+	static Vec3f multiply(const Vec3f& v, const float m);
 
 	Vec3f absolute();
 
-	static Vec3f absolute(Vec3f v);
+	static Vec3f absolute(const Vec3f& v);
 
 	float length();
 
-	void set(Vec3f v);
+	void set(const Vec3f& v);
 
-	static float dot(Vec3f a, Vec3f b);
+	static float dot(const Vec3f& a, const Vec3f& b);
 
-	static Vec3f mod(Vec3f a, int mod);
+	static Vec3f mod(const Vec3f& a, const int mod);
 
 	Vec3f& operator+=(const Vec3f b);
 
@@ -89,8 +90,6 @@ public:
 	Vec3f& operator*=(const float b);
 
 	Vec3f& operator/=(const float b);
-
-	float maxx() const;
 };
 
 Vec3f operator+(const Vec3f a, const Vec3f b);

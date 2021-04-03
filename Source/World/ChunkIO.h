@@ -9,7 +9,7 @@ public:
 
 	void saveArea();
 
-	void saveChunk(const std::shared_ptr<Chunk>& chunk, const std::string& name);
+	void saveChunk(const Chunk* chunk, const std::string& name);
 
 	std::shared_ptr<Chunk> readChunk(const int x, const int y, const int z, const std::string& name);
 };

@@ -144,7 +144,6 @@
     <ClCompile Include="Source\World\World.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Mouse.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="ServerHost\Client.h" />
     <ClInclude Include="ServerHost\HostChunk.h" />
@@ -211,7 +210,6 @@
     <ClInclude Include="Source\Physics\PhysicsTriangles.h" />
     <ClInclude Include="Source\Physics\PhysicsWorld.h" />
     <ClInclude Include="Source\Server\ClientManager.h" />
-    <ClInclude Include="Source\Server\HostChunk.h" />
     <ClInclude Include="Source\Shader\LineShader.h" />
     <ClInclude Include="Source\Shader\DeferredShader.h" />
     <ClInclude Include="Source\Shader\ImageShader.h" />

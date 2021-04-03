@@ -19,17 +19,17 @@ public:
 	Player();
 	~Player();
 
-	void send(std::shared_ptr<Packet> p);
+	void send(const std::shared_ptr<Packet>& p);
 
 	void sendAll();
 
 	void update();
 
-	void send(std::string data);
+	void send(const std::string& data);
 
-	void send(int id, std::string data);
+	void send(const int id, const std::string& data);
 
-	void receive(std::string data);
+	void receive(const std::string& data);
 
 	void disconnect();
 

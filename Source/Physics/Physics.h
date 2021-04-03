@@ -6,9 +6,9 @@ class Physics
 {
 public:
 
-	static void addCallback(std::function<void(std::string)> callback);
+	static void addCallback(const std::function<void(std::string)>& callback);
 
-	static void messagePhysics(std::string message);
+	static void messagePhysics(const std::string& message);
 
 private:
 	static std::vector<std::function<void(std::string)>> physicsCallbacks;

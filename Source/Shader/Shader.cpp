@@ -16,38 +16,38 @@ Shader::~Shader()
 
 static std::vector<Shader*> shaderPtrs;
 
-GLint Shader::getUniformLocation(GLchar *name)
+GLint Shader::getUniformLocation(const GLchar *name)
 {
 	GLint location = glGetUniformLocation(shaderProgram, name);
 	return location;
 }
 
-GLint Shader::getUniformLocation(std::string name)
+GLint Shader::getUniformLocation(const std::string& name)
 {
 	return getUniformLocation((GLchar*) name.c_str());
 }
 
-void Shader::loadFloat(GLint location, float value)
+void Shader::loadFloat(const GLint location, const float value)
 {
 	glUniform1f(location, value);
 }
 
-void Shader::loadVec4f(GLint location, float x, float y, float z, float w)
+void Shader::loadVec4f(const GLint location, const float x, const float y, const float z, const float w)
 {
 	glUniform4f(location, x, y, z, w);
 }
 
-void Shader::loadVec3f(GLint location, float x, float y, float z)
+void Shader::loadVec3f(const GLint location, const float x, const float y, const float z)
 {
 	glUniform3f(location, x, y, z);
 }
 
-void Shader::loadVec2f(GLint location, float x, float y)
+void Shader::loadVec2f(const GLint location, const float x, const float y)
 {
 	glUniform2f(location, x, y);
 }
 
-void Shader::loadMatrix4f(GLint location, Matrix4f value)
+void Shader::loadMatrix4f(const GLint location, const Matrix4f& value)
 {
 	GLfloat mat[] = { value.m00, value.m01, value.m02, value.m03,
 		value.m10, value.m11, value.m12, value.m13,
@@ -113,7 +113,7 @@ void outputErrorMessage(std::string shader, std::string fileData, std::string er
 	Resource::getResources()->printLoadingMessage(problemLines, 15, colours);
 }
 
-void Shader::createShader(std::map<std::string, std::string> shaders)
+void Shader::createShader(const std::map<std::string, std::string>& shaders)
 {
 	std::string vert;
 	std::string frag;
@@ -218,15 +218,15 @@ void Shader::loadAllUniformLocations()
 {
 }
 
-void Shader::loadTexture(GLchar* location, int unit)
+void Shader::loadTexture(const GLchar* location, const int unit)
 {
 	glUniform1i(getUniformLocation(location), unit);
 }
-void Shader::loadTexture(std::string location, int unit)
+void Shader::loadTexture(const std::string& location, const int unit)
 {
 	loadTexture((GLchar*) location.c_str(), unit);
 }
-void Shader::bindAttribute(int attribute, GLchar* variableName)
+void Shader::bindAttribute(const int attribute, const GLchar* variableName)
 {
 	glBindAttribLocation(shaderProgram, attribute, variableName);
 }

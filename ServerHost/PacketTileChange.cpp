@@ -13,7 +13,7 @@ PacketTileChange::~PacketTileChange()
 {
 }
 
-void PacketTileChange::read(int length, char* data)
+void PacketTileChange::read(const int length, const char* data)
 {
 	int x = M::bytesToInt(data + 0);
 	int y = M::bytesToInt(data + 4);
@@ -35,7 +35,7 @@ void PacketTileChange::read(int length, char* data)
 	}
 }
 
-void PacketTileChange::write(int x, int y, int z, int pos, int id)
+void PacketTileChange::write(const int x, const int y, const int z, const int pos, const int id)
 {
 	std::vector<char> xx = M::intToBytes(x);
 	std::vector<char> yy = M::intToBytes(y);

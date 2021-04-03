@@ -9,22 +9,22 @@ class FileIO
 public:
 	FileIO();
 	~FileIO();
-	static std::vector<std::string> listDirectory(std::string directory);
+	static std::vector<std::string> listDirectory(const std::string& directory);
 
-	static std::vector<std::string> listDirectory(std::string directory, std::string fileType);
+	static std::vector<std::string> listDirectory(const std::string& directory, const std::string& fileType);
 
-	static int typeOfFile(std::string path);
+	static int typeOfFile(const std::string& path);
 
-	static std::string getFileName(std::string file);
+	static std::string getFileName(const std::string& file);
 
-	static std::string getFileNameNoEXT(std::string file);
+	static std::string getFileNameNoEXT(const std::string& file);
 
-	static std::string readTextFile(std::string location);
+	static std::string readTextFile(const std::string& location);
 
-	static void writeToFile(std::string dir, std::string data);
+	static void writeToFile(const std::string& dir, const std::string& data);
 
-	static std::map<std::string, std::string> readConfig(std::string dir);
+	static std::map<std::string, std::string> readConfig(const std::string& dir);
 
-	static std::vector<std::string> readLines(std::string location);
+	static std::vector<std::string> readLines(const std::string& location);
 };
 

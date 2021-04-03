@@ -7,6 +7,6 @@ public:
 	FontLoader();
 	~FontLoader();
 
-	static void loadFont(std::string font);
+	static void loadFont(const std::string& font);
 };
 

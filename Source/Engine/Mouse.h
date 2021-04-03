@@ -6,6 +6,6 @@ public:
 	Mouse();
 	~Mouse();
 
-	void update(World* world);
+	void update(const World& world);
 };
 

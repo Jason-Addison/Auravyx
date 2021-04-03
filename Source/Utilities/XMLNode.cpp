@@ -10,7 +10,7 @@ std::string XMLNode::getData()
 	return data;
 }
 
-std::string XMLNode::getAttribute(std::string attrib)
+std::string XMLNode::getAttribute(const std::string& attrib)
 {
 	if (attributes.size() > 0)
 	{
@@ -22,7 +22,7 @@ std::string XMLNode::getAttribute(std::string attrib)
 	}
 }
 
-XMLNode XMLNode::getChild(std::string childName)
+XMLNode XMLNode::getChild(const std::string& childName)
 {
 	if (childNodes.size() > 0)
 	{
@@ -35,7 +35,7 @@ XMLNode XMLNode::getChild(std::string childName)
 	return XMLNode();
 }
 
-XMLNode XMLNode::getChildWithAttribute(std::string childName, std::string attrib, std::string value)
+XMLNode XMLNode::getChildWithAttribute(const std::string& childName, const std::string& attrib, const std::string& value)
 {
 	std::list<XMLNode> children = getChildren(childName);
 	if (children.size() > 0)
@@ -52,7 +52,7 @@ XMLNode XMLNode::getChildWithAttribute(std::string childName, std::string attrib
 	}
 }
 
-std::list<XMLNode> XMLNode::getChildren(std::string name)
+std::list<XMLNode> XMLNode::getChildren(const std::string& name)
 {
 	if (childNodes.size() > 0)
 	{
@@ -68,17 +68,17 @@ XMLNode::XMLNode()
 {
 }
 
-XMLNode::XMLNode(std::string name)
+XMLNode::XMLNode(const std::string& name)
 {
 	this->name = name;
 }
 
-void XMLNode::addAttribute(std::string attrib, std::string value)
+void XMLNode::addAttribute(const std::string& attrib, const std::string& value)
 {
 	attributes.emplace(attrib, value);
 }
 
-void XMLNode::addChild(XMLNode child)
+void XMLNode::addChild(const XMLNode& child)
 {
 	if (childNodes.at(child.name).size() == 0)
 	{
@@ -87,7 +87,7 @@ void XMLNode::addChild(XMLNode child)
 	childNodes.at(child.name).emplace_back(child);
 }
 
-void XMLNode::setData(std::string data)
+void XMLNode::setData(const std::string& data)
 {
 	this->data = data;
 }

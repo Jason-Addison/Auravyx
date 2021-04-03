@@ -114,12 +114,12 @@ void SoundManager::destroyAllSounds()
 	sounds.clear();
 }
 
-void SoundManager::addSound(ALuint source)
+void SoundManager::addSound(const ALuint source)
 {
 	sounds.insert(source);
 }
 
-void SoundManager::removeSound(ALuint source)
+void SoundManager::removeSound(const ALuint source)
 {
 	sounds.erase(source);
 }

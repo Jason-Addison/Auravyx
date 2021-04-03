@@ -455,9 +455,6 @@
     <ClInclude Include="Source\Server\ClientManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Mouse.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Engine\Mouse.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -486,9 +483,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ServerHost\Server.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Server\HostChunk.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\GameManager.h">

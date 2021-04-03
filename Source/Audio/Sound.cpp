@@ -27,13 +27,13 @@ void Sound::create()
 	SoundManager::getSoundManager()->addSound(source);
 }
 
-void Sound::play(WAVE wave)
+void Sound::play(const WAVE& wave)
 {
 	alSourcei(source, AL_BUFFER, wave.buffer);
 	alSourcePlay(source);
 }
 
-void Sound::play(std::shared_ptr<WAVE> wave)
+void Sound::play(const std::shared_ptr<WAVE>& wave)
 {
 	if (wave)
 	{
@@ -47,31 +47,32 @@ void Sound::stop()
 	alSourceStop(source);
 }
 
-void Sound::setGain(float gain)
+void Sound::setGain(const float gain)
 {
 	this->gain = gain;
 	alSourcef(source, AL_GAIN, gain);
 }
 
-void Sound::setPitch(float pitch)
+void Sound::setPitch(const float pitch)
 {
 	this->pitch = pitch;
 	alSourcef(source, AL_PITCH, pitch);
 }
 
-void Sound::setPosition(float x, float y, float z)
+void Sound::setPosition(const float x, const float y, const float z)
 {
 	alSource3f(source, AL_POSITION, x, y, z);
 }
 
-void Sound::setVelocity(float x, float y, float z)
+void Sound::setVelocity(const float x, const float y, const float z)
 {
 	alSource3f(source, AL_VELOCITY, x, y, z);
 }
 
 void Sound::pause()
 {
-	//time = getTime();
+	stop();
+	time = getTime();
 }
 
 void Sound::unpause()
@@ -85,7 +86,7 @@ ALfloat Sound::getTime()
 	return i;
 }
 
-void Sound::setTime(ALfloat time)
+void Sound::setTime(const ALfloat time)
 {
 	alSourcef(source, AL_SEC_OFFSET, time);
 }

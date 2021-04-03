@@ -33,7 +33,7 @@ public:
 
 	double getZ();
 
-	Matrix4f getViewMatrix();
+	Matrix4f getViewMatrix() const;
 
 	void setSpeedMultiplier(double x);
 

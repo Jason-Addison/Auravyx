@@ -9,7 +9,7 @@ public:
 	int width = -1;
 	int height = 0;
 
-	FontChar(int xAdvance, int xOffset, int yOffset, int width, int height, int vaoID);
+	FontChar(const int xAdvance, const int xOffset, const int yOffset, const int width, const int height, const int vaoID);
 
 	FontChar();
 	~FontChar();

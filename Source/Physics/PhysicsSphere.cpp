@@ -9,7 +9,7 @@ PhysicsSphere::~PhysicsSphere()
 {
 }
 
-void PhysicsSphere::setDiameter(double d)
+void PhysicsSphere::setDiameter(const double d)
 {
 	this->diameter = d;
 }

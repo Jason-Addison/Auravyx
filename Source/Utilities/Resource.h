@@ -12,15 +12,15 @@ public:
 
 	bool loadAllResources();
 
-	std::map<std::string, std::string> loadShaders(std::string dir);
+	std::map<std::string, std::string> loadShaders(const std::string& dir);
 
 	std::string DIR;
 
 	void loadBootAssets();
 
-	int loadTexture(std::string dir);
+	int loadTexture(const std::string& dir);
 
-	void loadTextureSilent(std::string texture);
+	void loadTextureSilent(const std::string& texture);
 
 	void loadAllAsyncAssets();
 
@@ -28,7 +28,7 @@ public:
 
 	void clearPreloadedResources();
 
-	void printLoadingMessage(std::vector<std::string> lines, double delay, std::vector<Vec3f> colours);
+	void printLoadingMessage(const std::vector<std::string>& lines, const double delay, const std::vector<Vec3f>& colours);
 
 	void cleanupPrimaryResources();
 

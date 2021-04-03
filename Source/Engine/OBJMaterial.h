@@ -4,7 +4,7 @@ class OBJMaterial
 {
 public:
 	OBJMaterial();
-	OBJMaterial(Texture texture, int length);
+	OBJMaterial(const Texture& texture, const int length);
 	~OBJMaterial();
 
 	Texture texture;
@@ -17,4 +17,3 @@ public:
 	int getLength();
 
 };
-

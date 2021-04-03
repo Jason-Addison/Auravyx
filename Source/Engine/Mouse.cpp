@@ -49,7 +49,7 @@ void send(int x, int y, int id)
 	prevY = y;
 }
 
-void Mouse::update(World * world)
+void Mouse::update(const World& world)
 {
 	/*if (tX < 0)
 	{

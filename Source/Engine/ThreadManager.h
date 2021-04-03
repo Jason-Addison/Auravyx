@@ -11,9 +11,9 @@ public:
 
 	static ThreadManager* getThreadManager();
 
-	void registerThread(std::thread::id id, std::string name);
+	void registerThread(const std::thread::id& id, const std::string& name);
 
-	std::string getThreadName(std::thread::id id);
+	std::string getThreadName(const std::thread::id& id);
 
 private:
 

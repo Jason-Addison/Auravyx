@@ -7,7 +7,7 @@ public:
 	PhysicsSphere();
 	~PhysicsSphere();
 
-	void setDiameter(double d);
+	void setDiameter(const double d);
 
 	double getDiameter();
 
