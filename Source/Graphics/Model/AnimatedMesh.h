@@ -3,6 +3,10 @@
 #include <vector>
 #include <string>
 #include "Graphics/Model/ModelMaterial.h"
+
+/**
+ * @brief Container for animated meshes.
+*/
 class AnimatedMesh
 {
 public:

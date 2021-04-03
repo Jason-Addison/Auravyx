@@ -48,7 +48,6 @@ void updater()
 	int time;
 	double deltaUpdate;
 	double lastTimeUPSOld = 0;
-	
 	while (!end)
 	{
 		//double lerp = delta * UPS;

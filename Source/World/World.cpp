@@ -219,11 +219,11 @@ void World::render(const Camera& cam, const Matrix4f& projectionMatrix)
 	
 	GFX::getOverlay()->renderModel(s1->getX(), s1->getY(), s1->getZ(), 1, 1, 1, 0, 0, 0, *Assets::getAssets()->getAssets()->getModel("sky").get(),
 		(GFX::getOverlay()->CAM), projectionMatrix, *Assets::getAssets()->getAssets()->getTexture("light_blue").get());
-	if (s1->checkCollision(*s2.get()))
+	//if (s1->checkCollision(*s2.get()))
 	{
 		//GFX::getOverlay()->renderModel(0, 0, 0, 1, 1, 1, 0, 0, 0, Assets::getAssets()->getAssets()->getModel("sky").get(), &GFX::getOverlay()->CAM, projectionMatrix, Assets::getAssets()->getAssets()->getTexture("yellow").get());
 	}
-	else
+	//else
 	{
 		//GFX::getOverlay()->renderModel(0, 0, 0, 1, 1, 1, 0, 0, 0, Assets::getAssets()->getAssets()->getModel("sky").get(), &GFX::getOverlay()->CAM, projectionMatrix, Assets::getAssets()->getAssets()->getTexture("light_blue").get());
 	}
@@ -378,11 +378,11 @@ long long int World::getOverworldDayCycle()
 
 void World::test()
 {
-	physicsWorld.addObject(s1);
-	s1->addImpulse(0, 1, 0);
-	s1->setPosition(50, 0, 50);
-	s2->setPosition(20, 0, 10);
-	physicsWorld.addObject(s2);
+	//physicsWorld.addObject(s1);
+	//s1->addImpulse(0, 1, 0);
+	//s1->setPosition(50, 0, 50);
+	//s2->setPosition(20, 0, 10);
+	//physicsWorld.addObject(s2);
 }
 
 Chunk* World::getChunk(int i)

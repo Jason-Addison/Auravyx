@@ -2,18 +2,10 @@
 #include "Utilities/Assets.h"
 #include "Utilities/Log.h"
 #include <Auravyx.h>
-Assets::Assets()
-{
-}
 
 Assets::Assets(Assets* a)
 {
 	assets = a;
-}
-
-
-Assets::~Assets()
-{
 }
 
 Assets* Assets::assets;
@@ -78,12 +70,6 @@ std::shared_ptr<WAVE> Assets::getAudio(const std::string& name)
 	}
 	return NULL;
 }
-
-void Assets::deleteAllAssets()
-{
-	
-}
-
 void Assets::deleteAudio()
 {
 	for (auto a : audio)
