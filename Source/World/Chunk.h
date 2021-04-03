@@ -57,7 +57,6 @@ public:
 
 	void addTriangleL(const Voxel* v1, const Voxel* v2, const Voxel* v3, const Voxel* v4, std::vector<float>& vec, const float x, const float y, const float z);
 
-
 	unsigned short getDensity(const int x, const int y, const int z);
 
 	unsigned short getVoxelID(const int x, const int y, const int z);
