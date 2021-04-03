@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "Graphics/FontChar.h"
 
-
 FontChar::FontChar()
 {
 	
@@ -16,7 +15,6 @@ FontChar::FontChar(const int xAdvance, const int xOffset, const int yOffset, con
 	this->width = width;
 	this->height = height;
 }
-
 
 FontChar::~FontChar()
 {
