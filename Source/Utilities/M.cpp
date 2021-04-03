@@ -9,7 +9,6 @@ M::M()
 {
 }
 
-
 float M::toRadians(const float degrees)
 {
 	return degrees / 180 * 3.14159265;
@@ -34,10 +33,10 @@ float M::mag(const float x, const float y, const float z)
 {
 	return (float)std::sqrt(std::pow(x, 2) + std::pow(y, 2) + std::pow(z, 2));
 }
-Vec3f M::normalize(const Vec3f& vector)
+Vec3f M::normalize(const Vec3f& v)
 {
-	float m = mag(vector.x, vector.y, vector.z);
-	return Vec3f(vector.x / m, vector.y / m, vector.z / m);
+	float m = mag(v.x, v.y, v.z);
+	return Vec3f(v.x / m, v.y / m, v.z / m);
 }
 
 std::vector<char> M::intToBytes(const int x)
@@ -50,12 +49,17 @@ std::vector<char> M::intToBytes(const int x)
 	return bytes;
 }
 
-int M::bytesToInt(const char* bytes)
+int M::bytesToInt(const char* b)
 {
-	return int((unsigned char)(bytes[3]) << 24 |
-		(unsigned char)(bytes[2]) << 16 |
-		(unsigned char)(bytes[1]) << 8 |
-		(unsigned char)(bytes[0]));
+	return int((unsigned char)(b[3]) << 24 |
+		(unsigned char)(b[2]) << 16 |
+		(unsigned char)(b[1]) << 8 |
+		(unsigned char)(b[0]));
+}
+
+double M::roundToDecimal(const double x, const int precision)
+{
+	return 0.0;
 }
 
 
