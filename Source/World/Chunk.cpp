@@ -52,34 +52,9 @@ void addMaterial(Voxel* n, int material, std::vector<unsigned int>* mat)
 }
 void addNormalFace(Voxel* n1, Voxel* n2, Voxel* n3, Voxel* n4, std::vector<float>* vec, char type, bool flipXLock, bool flipYLock, bool flipZLock, Vec3f a, Vec3f b)
 {
-	bool flipX = n3->flipX || n2->flipX;
-	bool flipY = n3->flipY || n1->flipY;
-	bool flipZ = n3->flipZ || n2->flipZ;
-
-	bool flip = false;
-
-	if (type == 0)
-	{
-		if (flipXLock && flipX)
-		{
-			flip = true;
-		}
-	}
-	if (type == 1)
-	{
-		if (flipYLock && flipY)
-		{
-			flip = true;
-		}
-	}
-	if (type == 2)
-	{
-		if (flipZLock && flipZ)
-		{
-			flip = true;
-		}
-	}
-	if (flip)
+	if (((type == 0) * flipXLock * (n3->flipX || n2->flipX)) +
+		((type == 0) * flipYLock * (n3->flipY || n1->flipY)) +
+		((type == 0) * flipZLock * (n3->flipZ || n2->flipZ)))
 	{
 		a.flip();
 		b.flip();
@@ -94,34 +69,9 @@ void addNormalFace(Voxel* n1, Voxel* n2, Voxel* n3, Voxel* n4, std::vector<float
 }
 void addNormalFaceL(Voxel* n1, Voxel* n2, Voxel* n3, Voxel* n4, std::vector<float>* vec, char type, bool flipXLock, bool flipYLock, bool flipZLock, Vec3f a, Vec3f b)
 {
-	bool flipX = n3->flipLX || n2->flipLX;
-	bool flipY = n3->flipLY || n1->flipLY;
-	bool flipZ = n3->flipLZ || n2->flipLZ;
-
-	bool flip = false;
-
-	if (type == 0)
-	{
-		if (flipXLock && flipX)
-		{
-			flip = true;
-		}
-	}
-	if (type == 1)
-	{
-		if (flipYLock && flipY)
-		{
-			flip = true;
-		}
-	}
-	if (type == 2)
-	{
-		if (flipZLock && flipZ)
-		{
-			flip = true;
-		}
-	}
-	if (flip)
+	if (((type == 0) * flipXLock * (n3->flipLX || n2->flipLX)) +
+		((type == 0) * flipYLock * (n3->flipLY || n1->flipLY)) +
+		((type == 0) * flipZLock * (n3->flipLZ || n2->flipLZ)))
 	{
 		a.flip();
 		b.flip();
@@ -209,7 +159,6 @@ int Chunk::relativeDensity(int x, int y, int z)
 		int rZ = z - (cZ << 6);
 		return neighbours[cX + 1][cY + 1][cZ + 1]->getVoxel(rX, rY, rZ);
 	}
-	//std::cout << x << " " << y << " " << z << " " << (neighbours[cX + 1][cY + 1][cZ + 1] != nullptr) << "\n";
 	return -1;
 }
 
@@ -226,9 +175,6 @@ void Chunk::zeroNeighbours()
 		}
 	}
 }
-
-int positionInArray = 0;
-
 unsigned short Chunk::getDensity(int x, int y, int z)
 {
 	return getVoxel(x, y, z) & 0x00ff;
@@ -239,51 +185,27 @@ unsigned short Chunk::getVoxelID(int x, int y, int z)
 }
 unsigned short Chunk::getVoxel(int x, int y, int z)
 {
-	positionInArray = x + CHUNK_SIZE * (y + CHUNK_SIZE * z);
-	if (positionInArray >= 0 && positionInArray < 262144)
-	{
-		return density[positionInArray];
-	}
-	return 0;
+	return density[x + CHUNK_SIZE * (y + CHUNK_SIZE * z)];
 }
 float Chunk::calcDensity(int x, int y, int z, int xX, int yY, int zZ)
 {
-	//////CODE FOR EVEN SMOOTHER TERRAIN///////
-
 	float d1 = -1;
 	float d2 = -1;
-	x *= lod;
-	y *= lod;
-	z *= lod;
-	
-	xX *= lod;
-	yY *= lod;
-	zZ *= lod;
 
-	d1 = (float) (relativeDensity(x, y, z) & 0x00ff) / (float) 255;
-	d2 = (float) (relativeDensity(xX, yY, zZ) & 0x00ff) / (float) 255;
+	d1 = (float) (relativeDensity(x * lod, y * lod, z * lod) & 0x00ff) / (float) 255;
+	d2 = (float) (relativeDensity(xX * lod, yY * lod, zZ * lod) & 0x00ff) / (float) 255;
 	
-
 	float interp = (d1 + d2);
-	if (d1 < d2)
-	{
-		interp = 1 - interp;
-	}
 	if (d1 == 0 && d2 == 0)
 	{
 		return 0.5;
 	}
+	if (d1 < d2)
+	{
+		interp = 1 - interp;
+	}
 	return interp;
 }
-int offX = 0;
-int offY = 0;
-int offZ = 0;
-
-int fdA = 0;
-int fdB = 0;
-
-int fiA = 0;
-int fiB = 0;
 
 bool air(int id)
 {
@@ -302,61 +224,48 @@ bool liquid(int id)
 	}
 	return false;
 }
-
+int fiA = 0;
+int fiB = 0;
+bool a = 0;
+bool b = 0;
 int Chunk::scan(int x, int y, int z, int axis, int axisA, int axisB, int &material)
 {
-	offX = (axis == 0);
-	offY = (axis == 1);
-	offZ = (axis == 2);
-	x -= 1;
-	y -= 1;
-	z -= 1;
-	x *= lod;
-	y *= lod;
-	z *= lod;
-
-	offX *= lod;
-	offY *= lod;
-	offZ *= lod;
+	x = (x - 1) * lod;
+	y = (y - 1) * lod;
+	z = (z - 1) * lod;
 
 	if (axisA >= 0 && axisB >= 0)
 	{
-		fiA = relativeDensity(x, y, z);
-		fiB = relativeDensity(x + offX, y + offY, z + offZ);
-		
-		fdA = fiA & 0x00ff;
-		fdB = fiB & 0x00ff;
-
-		fiA = fiA >> 8;
-		fiB = fiB >> 8;
+		fiA = (relativeDensity(x, y, z)) >> 8;
+		fiB = (relativeDensity(x + ((axis == 0) * lod), y + ((axis == 1) * lod), z + ((axis == 2) * lod))) >> 8;
+		a = air(fiA);
+		b = air(fiB);
 
 		if (fiA < 0 && fiB < 0)
 		{
 			return -1;
 		}
-		if ((air(fiA) && !air(fiB)))
+		if (a && !b)
 		{
 			material = fiB;
-			return (int) fiB;
+			return fiB;
 		}
-		if (!air(fiA) && air(fiB))
+		if (!a && b)
 		{
 			material = fiA;
-			return (int)fiA;
+			return fiA;
 		}
-
 		if (fiA == 100 && fiB == 0)
 		{
 			material = 100;
-			return (int)100;
+			return 100;
 		}
 		if (fiB == 100 && fiA == 0)
 		{
 			material = 100;
-			return (int)100;
+			return 100;
 		}
 	}
-
 
 	return 0;
 }
@@ -462,11 +371,7 @@ bool Chunk::neighboursLoaded()
 void Chunk::setVoxel(char x, char y, char z, unsigned short id, unsigned short density)
 {
 	emptyChunk = false;
-	unsigned short value = (id << 8) + density;
-	if (x + CHUNK_SIZE * (y + CHUNK_SIZE * z) >= 0 && x + CHUNK_SIZE * (y + CHUNK_SIZE * z) < 262144)
-	{
-		this->density[x + CHUNK_SIZE * (y + CHUNK_SIZE * z)] = value;
-	}
+	this->density[x + CHUNK_SIZE * (y + CHUNK_SIZE * z)] = (id << 8) + density;
 }
 
 void Chunk::clearDensity()
@@ -605,8 +510,6 @@ int Chunk::getRelativeVoxelID(int x, int y, int z)
 {
 	return relativeDensity(x, y, z) >> 8;
 }
-RandomNoise ran;
-Voxel* voxels;
 std::vector<std::vector<float>> Chunk::generate()
 {
 	if (emptyChunk)
@@ -630,16 +533,10 @@ std::vector<std::vector<float>> Chunk::generate()
 	std::vector<char> flipsL;
 	std::vector<char> axisL;
 
-	lod = 1;
-	
 	size = 64 / lod + 6;
-	//lod = 2;
-	int s = size;
-	voxels = new Voxel[s * s * s];
+	Voxel* voxels = new Voxel[size * size * size];
 	
 	v = voxels;
-
-	
 	Vec3f edge;
 	float interp = 0;
 
@@ -647,15 +544,15 @@ std::vector<std::vector<float>> Chunk::generate()
 	float yy = 0;
 	float zz = 0;
 
-	int cubicSize = s * s * s;
+	int cubicSize = size * size * size;
 
 	Voxel* voxel;
 
 	for (int i = 0; i < cubicSize; i++)
 	{
-		int x = i % s;
-		int y = (i / s) % s;
-		int z = i / s / s;
+		int x = i % size;
+		int y = (i / size) % size;
+		int z = i / size / size;
 		float rX = x - 1;
 		float rY = y - 1;
 		float rZ = z - 1;

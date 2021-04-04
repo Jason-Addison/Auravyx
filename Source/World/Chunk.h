@@ -98,6 +98,7 @@ public:
 	 * @param z position
 	 * @param id voxel ID
 	 * @param density voxel density
+	 * @warning no inbound checks!
 	*/
 	void setVoxel(char x, char y, char z, unsigned short id, unsigned short density);
 
