@@ -1,4 +1,4 @@
-# <img src="coin.png" width="200"> Auravyx (C++ Voxel Game)
+# <img src="coin.png" width="50"> Auravyx (C++ Voxel Game)
 ---
 
 
