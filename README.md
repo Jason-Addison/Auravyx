@@ -1,4 +1,4 @@
-# ![Image](coin.png) Auravyx (C++ Voxel Game)
+# ![Image](img src="coin.png" width="200") Auravyx (C++ Voxel Game)
 ---
 
 
