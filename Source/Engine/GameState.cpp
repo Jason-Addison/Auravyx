@@ -29,6 +29,7 @@
 #include <stdexcept>
 #include <Utilities\Log.h>
 #include <Utilities\io.h>
+#include <Utilities\M.h>
 GameState::GameState()
 {
 }
@@ -54,8 +55,6 @@ std::thread server;
 
 Chunk ch;
 
-World w;
-
 void chunkLoading(const int xC, const int yC, const int zC)
 {
 	int size = GFX::getOverlay()->viewDistance * 2;
@@ -67,7 +66,6 @@ void chunkLoading(const int xC, const int yC, const int zC)
 
 	int z = 0;
 	
-	ChunkIO cio;
 	double start = glfwGetTime();
 	for (int x = 0; x < size / 2; x++)
 	{
@@ -113,7 +111,7 @@ void chunkLoading(const int xC, const int yC, const int zC)
 						return;
 					}
 					
-					if (!lock && !w.unloadLock)
+					if (!lock && !GameManager::world.unloadLock)
 					{
 						cY = y;
 						cX += xC;
@@ -124,9 +122,9 @@ void chunkLoading(const int xC, const int yC, const int zC)
 							origin = true;
 						}
 						//avg += c.generate();
-						if (!origin && !w.isLoaded(cX, cY, cZ))
+						if (!origin && !GameManager::world.isLoaded(cX, cY, cZ))
 						{
-							nextChunk = cio.readChunk(cX, cY, cZ, "myworld");// new Chunk(cX, cY, cZ);
+							nextChunk = ChunkIO::readChunk(cX, cY, cZ, "myworld");// new Chunk(cX, cY, cZ);
 							//std::shared_ptr<Chunk> c (new Chunk(cX, cY, cZ));
 							//c->generateTerrain(ch);
 
@@ -155,7 +153,7 @@ void chunkLoading(const int xC, const int yC, const int zC)
 								lock = true;
 							}
 						}
-						w.unloadLock = true;
+						GameManager::world.unloadLock = true;
 					}
 					else
 					{
@@ -195,9 +193,14 @@ void chunkMeshGeneration()
 			{
 				if (c && !c->loaded && c->neighboursLoaded())
 				{
-					c->generate();
-					c->loaded = true;
-					c->chunkUpdate = true;
+					if (!c->editingData)
+					{
+						c->generating = true;
+						c->generate();
+						c->generating = false;
+						c->loaded = true;
+						c->chunkUpdate = true;
+					}
 				}
 			}
 			chunksToMesh = std::vector<Chunk*>();
@@ -224,7 +227,7 @@ void GameState::update()
 		//PacketMsg::sendMessage("hello!!!");
 	}
 
-	w.update();
+	GameManager::world.update();
 	
 	int x = GFX::getOverlay()->CAM.cX >> 2;
 	int y = GFX::getOverlay()->CAM.cZ >> 2;
@@ -245,7 +248,7 @@ void world()
 		fov /= 3.6666;
 	}
 	m4.createProjectionMatrix(WindowManager::getWindow()->getWidth(), WindowManager::getWindow()->getHeight(), GFX::getOverlay()->viewDistance * 1000, 0.1, fov);
-	w.render(GFX::getOverlay()->CAM, m4);
+	GameManager::world.render(GFX::getOverlay()->CAM, m4);
 	
 	Camera cam = GFX::getOverlay()->CAM;
 }
@@ -265,14 +268,14 @@ void GameState::render()
 	{
 		Chunk c = Chunk(*nextChunk.get());
 		c.loaded = false;
-		w.addChunk(c);
+		GameManager::world.addChunk(c);
 		nextChunk.reset();
-		chunkGenerationSize = w.overworld.size() - 1;
+		chunkGenerationSize = GameManager::world.overworld.size() - 1;
 		lock = false;
 	}
-	if (w.unloadLock)
+	if (GameManager::world.unloadLock)
 	{
-		w.unloadLock = false;
+		GameManager::world.unloadLock = false;
 	}
 	std::string fps = std::to_string(GFX::getOverlay()->FPS);
 	int curFPS = 0;
@@ -289,7 +292,7 @@ void GameState::render()
 	bool meshFlag = false;
 	if (!chunkMeshingInProgress)
 	{
-		for (auto& c : w.overworld)
+		for (auto& c : GameManager::world.overworld)
 		{
 			if (!c->loaded && c->neighboursLoaded())
 			{
@@ -312,7 +315,7 @@ void GameState::render()
 			chunkMeshingInProgress = true;
 		}
 	}
-	for (auto &c : w.overworld)
+	for (auto &c : GameManager::world.overworld)
 	{
 		if (c->chunkUpdate)
 		{
@@ -361,9 +364,21 @@ void GameState::render()
 	{
 		id = 100;
 	}
+	if (WindowManager::getWindow()->getController()->isKeyDown(GLFW_KEY_KP_ADD))
+	{
+		id = 7;
+	}
+	if (WindowManager::getWindow()->getController()->isKeyDown(GLFW_KEY_KP_SUBTRACT))
+	{
+		id = 11;
+	}
+	if (WindowManager::getWindow()->getController()->isKeyDown(GLFW_KEY_KP_DIVIDE))
+	{
+		id = 6;
+	}
 	if (WindowManager::getWindow()->getController()->isMouseDown(GLFW_MOUSE_BUTTON_1))
 	{
-		Chunk* c = w.getChunk(GFX::getOverlay()->CAM.cX, GFX::getOverlay()->CAM.cY, GFX::getOverlay()->CAM.cZ);
+		Chunk* c = GameManager::world.getChunk(GFX::getOverlay()->CAM.cX, GFX::getOverlay()->CAM.cY, GFX::getOverlay()->CAM.cZ);
 		if (c)
 		{
 			int x = ((int) floor(GFX::getOverlay()->CAM.xPos)) % 64;
@@ -387,14 +402,11 @@ void GameState::render()
 				size = 1;
 			}
 			c->fill(x, y - 7, z, size, size, size, id, 255);
-			c->chunkUpdate = true;
-			c->priorityLoad = true;
-			c->loaded = false;
 		}
 	}
 	if (WindowManager::getWindow()->getController()->isMouseDown(GLFW_MOUSE_BUTTON_2))
 	{
-		Chunk* c = w.getChunk(GFX::getOverlay()->CAM.cX, GFX::getOverlay()->CAM.cY, GFX::getOverlay()->CAM.cZ);
+		Chunk* c = GameManager::world.getChunk(GFX::getOverlay()->CAM.cX, GFX::getOverlay()->CAM.cY, GFX::getOverlay()->CAM.cZ);
 		if (c)
 		{
 			int x = ((int)floor(GFX::getOverlay()->CAM.xPos)) % 64;
@@ -418,9 +430,6 @@ void GameState::render()
 				size = 1;
 			}
 			c->clear(x, y - 7, z, size, size, size, 0);
-			c->chunkUpdate = true;
-			c->priorityLoad = true;
-			c->loaded = false;
 		}
 	}
 	MEMORYSTATUSEX memInfo;
@@ -444,7 +453,7 @@ void GameState::render()
 
 	world();
 
-	chat.w = &w;
+	chat.w = &GameManager::world;
 
 
 	glEnable(GL_BLEND);
@@ -470,12 +479,16 @@ void GameState::render()
 	GFX::getOverlay()->drawStringBG("c: " + std::to_string(GFX::getOverlay()->CAM.cX) + " / " + std::to_string(GFX::getOverlay()->CAM.cY) + " / " +
 		std::to_string(GFX::getOverlay()->CAM.cZ), 0, dim * (di++), 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3f);
 
+	GFX::getOverlay()->drawStringBG("rot x: " + Util::removeDecimal(GFX::getOverlay()->CAM.xRot, 3), 0, dim* (di++), 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3f);
+	GFX::getOverlay()->drawStringBG("rot y: " + Util::removeDecimal(GFX::getOverlay()->CAM.yRot, 3), 0, dim* (di++), 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3f);
+	GFX::getOverlay()->drawStringBG("rot z: " + Util::removeDecimal(GFX::getOverlay()->CAM.zRot, 3), 0, dim* (di++), 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3f);
+
 	float velocity = sqrt(pow(GFX::getOverlay()->CAM.xVel, 2) + pow(GFX::getOverlay()->CAM.yVel, 2) + pow(GFX::getOverlay()->CAM.zVel, 2));
 	GFX::getOverlay()->drawStringBG("v: " + Util::removeDecimal(velocity, 1) + " m/s", 0, dim * (di++), 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3f);
 	SIZE_T physMemUsedByMe = pmc.WorkingSetSize;
 	DWORDLONG totalPhysMem = memInfo.ullTotalPhys;
 	int renderableChunk = 0;
-	for (auto &c : w.overworld)
+	for (auto &c : GameManager::world.overworld)
 	{
 		if (c != nullptr && c->ready)
 		{
@@ -483,15 +496,15 @@ void GameState::render()
 		}
 	}
 	GFX::getOverlay()->drawStringBG("render: " + std::to_string(renderableChunk) + " / " +
-		std::to_string(w.overworld.size()), 0, dim * (di++), 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3);
+		std::to_string(GameManager::world.overworld.size()), 0, dim * (di++), 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3);
 
 	GFX::getOverlay()->drawStringBG("time: " +
-		std::to_string(((w.getOverworldTime() + 60000) % w.getOverworldDayCycle()) / 10000) + ":" +
-		std::to_string((int)((w.getOverworldTime() % w.getOverworldDayCycle() / (3600)) % 60)) + ":" +
-		std::to_string((int)((w.getOverworldTime() % 10000 / 60 % 60))) + " (" +
-		std::to_string((int)(((w.getOverworldTime()) + 60000) / w.getOverworldDayCycle())) + ")",
+		std::to_string(((GameManager::world.getOverworldTime() + 60000) % GameManager::world.getOverworldDayCycle()) / 10000) + ":" +
+		std::to_string((int)((GameManager::world.getOverworldTime() % GameManager::world.getOverworldDayCycle() / (3600)) % 60)) + ":" +
+		std::to_string((int)((GameManager::world.getOverworldTime() % 10000 / 60 % 60))) + " (" +
+		std::to_string((int)(((GameManager::world.getOverworldTime()) + 60000) / GameManager::world.getOverworldDayCycle())) + ")",
 		0, dim * (di++), 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3);
-	GFX::getOverlay()->drawStringBG("tick: " + std::to_string((int)(w.getOverworldTime())),
+	GFX::getOverlay()->drawStringBG("tick: " + std::to_string((int)(GameManager::world.getOverworldTime())),
 		0, dim * (di++), 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3);
 
 	GFX::getOverlay()->drawStringBG("physics: " + std::string("no clip"),
@@ -518,6 +531,26 @@ void GameState::render()
 
 	if (Profiler::showAdvancedDebugInfo)
 	{
+		GFX::getOverlay()->drawStringBG("rot x: " + Util::removeDecimal(GFX::getOverlay()->CAM.xRot, 3), 0, dim* (di++), 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3f);
+		GFX::getOverlay()->drawStringBG("rot y: " + Util::removeDecimal(GFX::getOverlay()->CAM.yRot, 3), 0, dim* (di++), 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3f);
+		GFX::getOverlay()->drawStringBG("rot z: " + Util::removeDecimal(GFX::getOverlay()->CAM.zRot, 3), 0, dim* (di++), 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3f);
+
+		Vec3f normalizedRotation = Vec3f(-sin(M::toRadians(GFX::getOverlay()->CAM.yRot)) * (cos(M::toRadians(GFX::getOverlay()->CAM.xRot))),
+			sin(M::toRadians(GFX::getOverlay()->CAM.xRot)),
+			-cos(M::toRadians(GFX::getOverlay()->CAM.yRot)) * (cos(M::toRadians(GFX::getOverlay()->CAM.xRot))));
+
+		Vec3f normalizedUpRotation = Vec3f(sin(M::toRadians(GFX::getOverlay()->CAM.yRot)) * (sin(M::toRadians(GFX::getOverlay()->CAM.xRot))),
+			cos(M::toRadians(GFX::getOverlay()->CAM.xRot)),
+			cos(M::toRadians(GFX::getOverlay()->CAM.yRot)) * (sin(M::toRadians(GFX::getOverlay()->CAM.xRot))));
+
+		GFX::getOverlay()->drawStringBG("n rot x: " + Util::removeDecimal(normalizedRotation.x, 3), 0, dim * (di++), 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3f);
+		GFX::getOverlay()->drawStringBG("n rot y: " + Util::removeDecimal(normalizedRotation.y, 3), 0, dim * (di++), 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3f);
+		GFX::getOverlay()->drawStringBG("n rot z: " + Util::removeDecimal(normalizedRotation.z, 3), 0, dim * (di++), 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3f);
+
+		GFX::getOverlay()->drawStringBG("n up rot x: " + Util::removeDecimal(normalizedUpRotation.x, 3), 0, dim * (di++), 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3f);
+		GFX::getOverlay()->drawStringBG("n up rot y: " + Util::removeDecimal(normalizedUpRotation.y, 3), 0, dim * (di++), 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3f);
+		GFX::getOverlay()->drawStringBG("n up rot z: " + Util::removeDecimal(normalizedUpRotation.z, 3), 0, dim * (di++), 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3f);
+
 		GFX::getOverlay()->drawStringBGR("advanced debug on", 0, dim * (rdi++), 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3);
 		GFX::getOverlay()->drawStringBGR("mipmap bias: " + std::to_string(GFX::getOverlay()->mipmapBias), 0, dim * (rdi++), 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3);
 		GFX::getOverlay()->drawStringBGR("terrain tex res: " + std::to_string(GFX::getOverlay()->terrainTextureResolution), 0, dim * (rdi++), 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3);
@@ -536,6 +569,7 @@ void GameState::render()
 		functions->at(i).second->set();
 		functions->at(i).first();
 	}
+	SoundManager::getSoundManager()->setListener(GFX::getOverlay()->CAM);
 }
 void startChunkLoader()
 {
@@ -558,13 +592,15 @@ void physicsCallback(std::string s)
 }
 void GameState::start()
 {
-	ChunkIO c;
-	c.saveArea();
+	ChunkIO::saveArea();
 	Physics::addCallback(physicsCallback);
 	
 	Sound s;
-	s.play(Assets::getAssets()->getAssets()->getAudio("Fall"));
-	s.setGain(0.4);
+	s.play(Assets::getAssets()->getAudio("song1"));
+	s.setGain(10);
+	s.setPitch(0.9);
+	s.setTime(30);
+	s.setPosition(0, 0, 0);
 	hostServer = false;// Settings::getBool("host");
 	Modify::getModify()->loadAllMods();
 	
@@ -578,8 +614,8 @@ void GameState::start()
 	}
 	chunkLoader = std::thread(startChunkLoader);
 	chunkMeshGenerator = std::thread(chunkMeshGeneration);
-	w.create();
-	w.test();
+	GameManager::world.create();
+	GameManager::world.test();
 }
 
 void GameState::stop()
