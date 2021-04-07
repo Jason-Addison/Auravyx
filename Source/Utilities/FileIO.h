@@ -7,8 +7,7 @@
 class FileIO
 {
 public:
-	FileIO();
-	~FileIO();
+
 	static std::vector<std::string> listDirectory(const std::string& directory);
 
 	static std::vector<std::string> listDirectory(const std::string& directory, const std::string& fileType);
@@ -26,5 +25,10 @@ public:
 	static std::map<std::string, std::string> readConfig(const std::string& dir);
 
 	static std::vector<std::string> readLines(const std::string& location);
+
+protected:
+
+	FileIO() = default;
+	virtual ~FileIO() = 0;
 };
 

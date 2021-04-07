@@ -3,15 +3,6 @@
 #include <filesystem>
 #include "Utilities/FileIO.h"
 #include "Utilities/StringUtil.h"
-#define FOLDER 0
-FileIO::FileIO()
-{
-}
-
-
-FileIO::~FileIO()
-{
-}
 
 std::vector<std::string> FileIO::listDirectory(const std::string& directory, const std::string& fileType)
 {
@@ -25,7 +16,7 @@ std::vector<std::string> FileIO::listDirectory(const std::string& directory, con
 		{
 			list.emplace_back(i);
 		}
-		if (FileIO::typeOfFile(i) == FOLDER)
+		if (FileIO::typeOfFile(i) == 0)
 		{
 			std::vector<std::string> subfolder = listDirectory(i, fileType);
 			list.insert(list.begin(), subfolder.begin(), subfolder.end());
