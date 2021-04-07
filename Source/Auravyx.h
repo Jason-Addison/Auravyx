@@ -15,27 +15,7 @@ class Auravyx
 {
 public:
 
-	Auravyx();
-
-	GFX overlayGraphics;
-
-	WindowManager window;
-
-	Renderer renderer;
-
-	Assets assets;
-
-	Modify modify;
-
-	SoundManager soundManager;
-
-	Resource resources;
-
-	OutputConsole outputConsole;
-
-	ThreadManager threadManager;
-
-	static Auravyx *getAuravyx();
+	static Auravyx& getInstance();
 
 	static GameManager gameManager;
 
@@ -45,7 +25,7 @@ public:
 
 	static void stop();
 
-	static void setInstance(Auravyx * a);
+	static void setInstance(const Auravyx& auravyx);
 
 	Resource* getResources();
 
@@ -65,10 +45,45 @@ public:
 
 	ThreadManager* getThreadManager();
 
+	/**
+	 * @brief
+	 * @param
+	 * @warning Do not use this
+	*/
+	Auravyx(Auravyx const&) = delete;
+	void operator=(Auravyx const&) = delete;
+
 private:
 
+	Auravyx() = default;
+	/**
+	 * @brief Game's context, which is sent to mod DLLs so they can use the same environement.
+	*/
 
-	static Auravyx* instance;
 
-	static void create();
+	/**
+	 * @brief Set singleton instances for current context. This allows for DLLs to communicate properly.
+	*/
+	static void setupAllInstances();
+
+	/**
+	 * @brief Singletons for game's core functionalities.
+	*/
+	GFX overlayGraphics;
+
+	WindowManager window;
+
+	Renderer renderer;
+
+	Assets assets;
+
+	Modify modify;
+
+	SoundManager soundManager;
+
+	Resource resources;
+
+	OutputConsole outputConsole;
+
+	ThreadManager threadManager;
 };

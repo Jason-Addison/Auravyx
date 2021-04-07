@@ -1,3 +1,20 @@
+/*
+ *  ----------------------------------------------------------------                
+ *	   ,---.                                                       
+ *	  /  O  \ ,--.,--.,--.--. ,--,--.,--.  ,--.,--. ,--.,--.  ,--. 
+ *	 |  .-.  ||  ||  ||  .--'' ,-.  | \  `'  /  \  '  /  \  `'  /  
+ *	 |  | |  |'  ''  '|  |   \ '-'  |  \    /    \   '   /  /.  \  
+ *	 `--' `--' `----' `--'    `--`--'   `--'   .-'  /   '--'  '--' 
+ *	                                           `---'               
+ *  ----------------------------------------------------------------
+ * 
+ * Authour: Jason Addison
+ * https://github.com/Jason-Addison
+ * 
+ * Auravyx is a voxel based 3D sandbox game written in C++ using OpenGL and OpenAL.
+ * 
+ */
+
 #include "stdafx.h"
 #include "Library/GL/glew.h"
 #include "Auravyx.h"
@@ -22,6 +39,8 @@
 #include <Engine\OutputConsole.h>
 #include <Graphics\Model\ColladaParser.h>
 #include <Utilities/M.h>
+
+
 double thisFrame = 0;
 double nextFrame = 0;
 
@@ -35,8 +54,6 @@ auto start = std::chrono::high_resolution_clock::now();
 bool end = false;
 bool updateEnd = false;
 
-Auravyx* Auravyx::instance;
-
 void updater()
 {
 	ThreadManager::getThreadManager()->registerThread(std::this_thread::get_id(), "Updater");
@@ -48,6 +65,7 @@ void updater()
 	int time;
 	double deltaUpdate;
 	double lastTimeUPSOld = 0;
+
 	while (!end)
 	{
 		//double lerp = delta * UPS;
@@ -178,7 +196,12 @@ int main(int argc, char* argv[])
 		}
 	}
 
-	ColladaParser::parse("C:\\Users\\jason\\Downloads\\Zelda\\Zeld\\Zelda.dae");
+	AnimatedMesh meshes = ColladaParser::parse("C:\\Users\\jason\\Downloads\\Zelda\\Zeld\\Zelda.dae");
+	Model m = Model::loadIndexed3DModel(meshes.vertices, meshes.normals, meshes.textureCoords, meshes.colors, meshes.indices);
+	m.setMaterials(meshes.materials);
+	std::cout << meshes.id << "sadasd";
+	Assets::getAssets()->addModel(meshes.id, m);
+
 	Resource::getResources()->clearPreloadedResources();
 	Renderer::getRenderer()->getShaders()->lineShader->init();
 	asyncLoader.join();
@@ -205,11 +228,6 @@ int APIENTRY WinMain(HINSTANCE hInstance,
 	return main(__argc, __argv);
 }
 #endif
-
-Auravyx::Auravyx()
-{
-
-}
 
 SoundManager* Auravyx::getSoundManager()
 {
@@ -251,8 +269,9 @@ ThreadManager* Auravyx::getThreadManager()
 	return &threadManager;
 }
 
-Auravyx* Auravyx::getAuravyx()
+Auravyx& Auravyx::getInstance()
 {
+	static Auravyx instance;
 	return instance;
 }
 
@@ -263,20 +282,18 @@ GameManager Auravyx::getManager()
 
 void Auravyx::start()
 {
-	Auravyx *auravyx = new Auravyx();
-	instance = auravyx;
-	create();
+	setupAllInstances();
 }
 
 void Auravyx::stop()
 {
-	delete instance;
+	
 }
 
-void Auravyx::setInstance(Auravyx* a)
+void Auravyx::setInstance(const Auravyx& auravyx)
 {
-	instance = a;
-	create();
+	//instance = auravyx;
+	setupAllInstances();
 }
 
 Resource* Auravyx::getResources()
@@ -284,15 +301,15 @@ Resource* Auravyx::getResources()
 	return &resources;
 }
 
-void Auravyx::create()
+void Auravyx::setupAllInstances()
 {
-	GFX(instance->getOverlay());
-	Assets(instance->getAssets());
-	WindowManager(instance->getWindow());
-	Renderer(instance->getRenderer());
-	Modify(instance->getModify());
-	SoundManager(instance->getSoundManager());
-	Resource(instance->getResources());
-	OutputConsole(instance->getConsole());
-	ThreadManager(instance->getThreadManager());
+	GFX(getInstance().getOverlay());
+	Assets(getInstance().getAssets());
+	WindowManager(getInstance().getWindow());
+	Renderer(getInstance().getRenderer());
+	Modify(getInstance().getModify());
+	SoundManager(getInstance().getSoundManager());
+	Resource(getInstance().getResources());
+	OutputConsole(getInstance().getConsole());
+	ThreadManager(getInstance().getThreadManager());
 }
