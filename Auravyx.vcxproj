@@ -55,6 +55,7 @@
     <ClCompile Include="Source\Audio\SoundManager.cpp" />
     <ClCompile Include="Source\Audio\WAVE.cpp" />
     <ClCompile Include="Source\Engine\Action.cpp" />
+    <ClCompile Include="Source\Engine\Actions.cpp" />
     <ClCompile Include="Source\Engine\Camera.cpp" />
     <ClCompile Include="Source\Engine\Clock.cpp" />
     <ClCompile Include="Source\Engine\Control.cpp" />
@@ -79,7 +80,6 @@
     <ClCompile Include="Source\Graphics\FontShader.cpp" />
     <ClCompile Include="Source\Graphics\GFX.cpp" />
     <ClCompile Include="Source\Graphics\GLContext.cpp" />
-    <ClCompile Include="Source\Graphics\Model\AnimatedMesh.cpp" />
     <ClCompile Include="Source\Graphics\Model\ColladaParser.cpp" />
     <ClCompile Include="Source\Graphics\Model\ModelMaterial.cpp" />
     <ClCompile Include="Source\Graphics\Model\Parser.cpp" />
@@ -160,6 +160,7 @@
     <ClInclude Include="Source\Audio\WAVE.h" />
     <ClInclude Include="Source\Auravyx.h" />
     <ClInclude Include="Source\Engine\Action.h" />
+    <ClInclude Include="Source\Engine\Actions.h" />
     <ClInclude Include="Source\Engine\Camera.h" />
     <ClInclude Include="Source\Engine\Chat.h" />
     <ClInclude Include="Source\Engine\Clock.h" />
@@ -464,7 +465,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(ProjectDir)\Source\Library;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glew32s.lib;ALut.lib;OpenAL32.lib;opengl32.lib;glfw3.lib;SOIL.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glew32s.lib;ALut.lib;OpenAL32.lib;EFX-Util.lib;opengl32.lib;glfw3.lib;SOIL.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <TargetMachine>MachineX64</TargetMachine>
     </Link>
   </ItemDefinitionGroup>
@@ -539,7 +540,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(ProjectDir)\Source\Library;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glew32s.lib;ALut.lib;OpenAL32.lib;opengl32.lib;glfw3.lib;SOIL.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glew32s.lib;ALut.lib;OpenAL32.lib;EFX-Util.lib;opengl32.lib;glfw3.lib;SOIL.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Test|x64'">
@@ -589,6 +590,16 @@
       <AdditionalLibraryDirectories>$(ProjectDir)\Source\Library;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>glew32s.lib;ALut.lib;OpenAL32.lib;opengl32.lib;glfw3.lib;SOIL.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug (R)|Win32'">
+    <ClCompile>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug (R)|x64'">
+    <ClCompile>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+    </ClCompile>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
