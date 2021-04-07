@@ -40,22 +40,22 @@ void Camera::getPlayerInput()
 		{
 			speed *= 10;
 		}
-		if (WindowManager::getWindow()->getController()->isKeyDown(GLFW_KEY_W))
+		if (WindowManager::getWindow()->getController()->isAction(Action::MOVE_FORWARDS))
 		{
 			xVel -= sin(M::toRadians(yRot)) * (speed);
 			zVel -= cos(M::toRadians(yRot)) * (speed);
 		}
-		if (WindowManager::getWindow()->getController()->isKeyDown(GLFW_KEY_S))
+		if (WindowManager::getWindow()->getController()->isAction(Action::MOVE_BACKWARDS))
 		{
 			xVel += sin(M::toRadians(yRot)) * (speed);
 			zVel += cos(M::toRadians(yRot)) * (speed);
 		}
-		if (WindowManager::getWindow()->getController()->isKeyDown(GLFW_KEY_A))
+		if (WindowManager::getWindow()->getController()->isAction(Action::MOVE_LEFT))
 		{
 			xVel -= cos(M::toRadians(yRot)) * (speed);
 			zVel += sin(M::toRadians(yRot)) * (speed);
 		}
-		if (WindowManager::getWindow()->getController()->isKeyDown(GLFW_KEY_D))
+		if (WindowManager::getWindow()->getController()->isAction(Action::MOVE_RIGHT))
 		{
 			xVel += cos(M::toRadians(yRot)) * (speed);
 			zVel -= sin(M::toRadians(yRot)) * (speed);
