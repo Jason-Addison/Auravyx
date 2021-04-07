@@ -3,14 +3,6 @@
 #include "Utilities/Log.h"
 #include <iostream>
 #include <filesystem>
-ChunkIO::ChunkIO()
-{
-}
-
-ChunkIO::~ChunkIO()
-{
-
-}
 bool verboseChunkIO = false;
 
 void ChunkIO::saveArea()
