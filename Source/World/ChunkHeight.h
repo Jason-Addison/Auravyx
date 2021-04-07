@@ -1,9 +1,12 @@
 #pragma once
+/**
+ * @brief 2D heightmap of density
+*/
 class ChunkHeight
 {
 public:
-	ChunkHeight();
-	~ChunkHeight();
+	ChunkHeight() = default;
+	~ChunkHeight() = default;
 
 	int x;
 	int z;

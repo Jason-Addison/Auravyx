@@ -1,13 +1,6 @@
 #include "World/ChunkHeight.h"
 #include <Utilities/RandomNoise.h>
 #include <iostream>
-ChunkHeight::ChunkHeight()
-{
-}
-
-ChunkHeight::~ChunkHeight()
-{
-}
 
 float ChunkHeight::getHeight(const int x, const int z)
 {
