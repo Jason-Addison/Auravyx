@@ -29,10 +29,11 @@ public:
 class IClipboardOS 
 {
 protected:
-	// not accessable from other files :)
+
 	IClipboardOS() {};
 
 public:
+
 	virtual void copyText(const char* pText, size_t Length) {};
 	virtual void PasteText(std::string& sString) {};
 };
