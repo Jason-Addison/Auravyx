@@ -9,7 +9,6 @@ Controller::Controller()
 Controller::~Controller()
 {
 }
-
 bool Controller::anyInput = false;
 bool Controller::keyInput = false;
 bool Controller::mouseInput = false;
@@ -17,6 +16,10 @@ bool Controller::controllerInput = false;
 std::vector<std::string*> Controller::inputTexts;
 void Controller::loadControls()
 {
+	for (int i = 0; i < Action::actions.size(); i++)
+	{
+		actionsAsStrings.emplace(Action::actions.at(i).readableName, i);
+	}
 	std::unordered_map<std::string, int> controls;
 	std::string file = Util::readTextFile("controls.txt");
 	std::vector<std::string> lines = Util::splitString(file, "\n");
@@ -69,10 +72,40 @@ void Controller::removeText(std::string & str)
 {
 //	inputTexts.erase(std::remove(inputTexts.begin(), inputTexts.end(), &str), inputTexts.end());
 }
+bool Controller::isControlActive(const int controlCode, const int controllerCode)
+{
+	return false;
+}
 float Controller::getMouseDX()
 {
 	return dX;
 }
+bool Controller::isAction(Action& action)
+{
+	for (Control c : action.controls)
+	{
+		if (c.type == Type::KEYBOARD)
+		{
+			if (isKeyDown(c.code))
+			{
+				return true;
+			}
+		}
+		else if (c.type == Type::MOUSE)
+		{
+			if (isMouseDown(c.code))
+			{
+				return true;
+			}
+		}
+		else if (c.type == Type::JOYSTICK)
+		{
+			// TODO
+		}
+	}
+	return false;
+}
+
 float Controller::getMouseDY()
 {
 	return dY;

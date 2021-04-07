@@ -4,23 +4,15 @@
 #include <unordered_map>
 #include "Utilities/Util.h"
 #include "Engine/Control.h"
+#include "Action.h"
 #include <vector>
 #include <map>
-#define MOVE_FORWARD "Move forward"
-#define MOVE_BACKWARD "Move backward"
-#define MOVE_LEFT "Move left"
-#define MOVE_RIGHT "Move right"
-#define FLY_UP "Fly up"
-#define FLY_DOWN "Fly down"
-#define SPEED_2 "Speed 2"
-#define EDITOR_CAMERA_ROTATE "Editor Camera Rotate"
-#define LEFT_CLICK "Left click"
-#define MIDDLE_CLICK "Middle click"
-#define RIGHT_CLICK "Right click"
 
-#define CONTROLLER 'C'
-#define MOUSE 'M'
-#define KEYBOARD 'K'
+/**
+ * @brief Manager for game controls. 
+ * @details Individual commands are dealt with here since raw glfw inputs should be avoided.
+ * @todo Not currently in use, update.
+*/
 class Controller
 {
 public:
@@ -32,6 +24,22 @@ public:
 	static bool mouseInput;
 	static bool controllerInput;
 
+
+
+	/**
+	 * @brief Type of controller, used for identifying which control is which.
+	 * 
+	 * KEYBOARD: Generic keyboard with macros
+	 * MOUSE: Generic mouse with macros and X/Y axis movement
+	 * JOYSTICK: Generic joystick with macros. Requires index for L/R/etc stick identification.
+	*/
+	enum Type
+	{
+		KEYBOARD,
+		MOUSE,
+		JOYSTICK,
+	};
+
 	static std::vector<std::string*> inputTexts;
 
 	double x = 0, y = 0;
@@ -40,15 +48,39 @@ public:
 	
 	int keys[360];
 
+	static inline std::map<std::string, int> actionsAsStrings;
+
 	std::map<std::string, std::vector<Control>> controls;
 
 	void loadControls();
 
+	/**
+	 * @brief Returns status of key input.
+	 * @param keyCode GLFW keycode of key
+	 * @return true if active, false otherwise
+	*/
 	bool isKeyDown(const int keyCode);
 
-	bool isControl(const int keyCode, const int controllerCode);
+	/**
+	 * @brief Returns status of control input
+	 * @param controlCode code of control
+	 * @param controllerCode code of controller type
+	 * @return true if active, false otherwise
+	*/
+	bool isControlActive(const int controlCode, const int controllerCode);
 
+	/**
+	 * @brief Returns mouse's delta movement on the X axis in pixels.
+	 * @return mouse x delta
+	*/
 	float getMouseDX();
+
+	/**
+	 * @brief Returns mouse's delta movement on the Y axis in pixels.
+	 * @return mouse y delta
+	*/
+
+	bool isAction(Action& action);
 
 	float getMouseDY();
 
