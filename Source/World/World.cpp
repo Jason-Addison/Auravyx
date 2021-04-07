@@ -209,15 +209,18 @@ void World::render(const Camera& cam, const Matrix4f& projectionMatrix)
 	//	&(GFX::getOverlay()->CAM), projectionMatrix, Assets::getAssets()->getAssets()->getTexture("mod").get());
 
 		GFX::getOverlay()->renderModelIndex(GFX::getOverlay()->CAM.xPos, GFX::getOverlay()->CAM.yPos, GFX::getOverlay()->CAM.zPos,
-			1, 1, 1, 0, 90, (GFX::getOverlay()->CAM.yRot + 180) * 0, *Assets::getAssets()->getAssets()->getModel("mesh").get(),
+			1, 1, 1, 0, 90, (GFX::getOverlay()->CAM.xRot + 180) * 0, *Assets::getAssets()->getAssets()->getModel("Zelda").get(),
 			(GFX::getOverlay()->CAM), projectionMatrix, *Assets::getAssets()->getAssets()->getTexture("face").get());
 	
-		GFX::getOverlay()->renderModelIndex(0, 0, 0,
-			1, 1, 1, 0, 0, (0 + 180) * 0, *Assets::getAssets()->getAssets()->getModel("mesh").get(),
+	for (int i = 0; i < 30; i++)
+	{
+		GFX::getOverlay()->renderModelIndex(i * 2, 32.5, 0,
+			1, 1, 1, i * 0, (GameManager::world.getOverworldTime() % GameManager::world.getOverworldDayCycle()) * 0.5 * (i * i * 0.2), 0, *Assets::getAssets()->getAssets()->getModel("Zelda").get(),
 			(GFX::getOverlay()->CAM), projectionMatrix, *Assets::getAssets()->getAssets()->getTexture("face").get());
+	}
 	//s1.setPosition(GFX::getOverlay()->CAM.x, GFX::getOverlay()->CAM.y - 5, GFX::getOverlay()->CAM.z);
 	
-	GFX::getOverlay()->renderModel(s1->getX(), s1->getY(), s1->getZ(), 1, 1, 1, 0, 0, 0, *Assets::getAssets()->getAssets()->getModel("sky").get(),
+	GFX::getOverlay()->renderModel(s1->getX(), s1->getY(), s1->getZ(), 1, 1, 1, 0, 0, 0, *Assets::getAssets()->getAssets()->getModel("test").get(),
 		(GFX::getOverlay()->CAM), projectionMatrix, *Assets::getAssets()->getAssets()->getTexture("light_blue").get());
 	//if (s1->checkCollision(*s2.get()))
 	{
