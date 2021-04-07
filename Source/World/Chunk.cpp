@@ -104,9 +104,9 @@ bool Chunk::isValid(const Voxel* vert)
 }
 void Chunk::addVertex(const Vec3f& pos, std::vector<float>& vec, const float x, const float y, const float z)
 {
-	vec.emplace_back((pos.x * lod + CHUNK_SIZE * x) * 1);
-	vec.emplace_back((pos.y * lod + CHUNK_SIZE * y) * 1 - 0.5f);
-	vec.emplace_back((pos.z * lod + CHUNK_SIZE * z) * 1);
+	vec.emplace_back((pos.x * lod + CHUNK_SIZE * x - 1.5) * 1);
+	vec.emplace_back((pos.y * lod + CHUNK_SIZE * y - 1.5) * 1);
+	vec.emplace_back((pos.z * lod + CHUNK_SIZE * z - 1.5) * 1);
 }
 
 void Chunk::addTriangle(const Voxel* v1, const Voxel* v2, const Voxel* v3, const Voxel* v4, std::vector<float>& vec, const float x, const float y, const float z)
@@ -384,6 +384,11 @@ bool Chunk::threadSafe()
 }
 void Chunk::clear(int ax, int ay, int az, int bx, int by, int bz, int strength)
 {
+	if (generating)
+	{
+		return;
+	}
+	editingData = true;
 	for (int x = ax - bx; x < ax + bx; x++)
 	{
 		for (int y = ay - by; y < ay + by; y++)
@@ -394,9 +399,9 @@ void Chunk::clear(int ax, int ay, int az, int bx, int by, int bz, int strength)
 					getRelativeVoxelID(x, y + 1, z) == 0 || getRelativeVoxelID(x, y, z - 1) == 0 || getRelativeVoxelID(x, y, z + 1) == 0)
 				{
 					int d = relativeDensity(x, y, z) & 0x00ff;
-					d -= Clock::get(255) * 4;
+					d -= Clock::get(255) * 10;
 					int id = relativeDensity(x, y, z) >> 8;
-					if (d < 10)
+					if (d < 1)
 					{
 						d = 0;
 						id = 0;
@@ -406,6 +411,7 @@ void Chunk::clear(int ax, int ay, int az, int bx, int by, int bz, int strength)
 			}
 		}
 	}
+	editingData = false;
 	for (int x = ax - bx - 2; x < ax + bx + 2; x++)
 	{
 		for (int y = ay - by - 2; y < ay + by + 2; y++)
@@ -419,6 +425,11 @@ void Chunk::clear(int ax, int ay, int az, int bx, int by, int bz, int strength)
 }
 void Chunk::fill(int ax, int ay, int az, int bx, int by, int bz, int id, int density)
 {
+	if (generating)
+	{
+		return;
+	}
+	editingData = true;
 	for (int x = ax - bx; x < ax + bx - 1; x++)
 	{
 		for (int y = ay - by; y < ay + by - 1; y++)
@@ -448,6 +459,7 @@ void Chunk::fill(int ax, int ay, int az, int bx, int by, int bz, int id, int den
 			}
 		}
 	}
+	editingData = false;
 	for (int x = ax - bx - 2; x < ax + bx + 2; x++)
 	{
 		for (int y = ay - by - 2; y < ay + by + 2; y++)
