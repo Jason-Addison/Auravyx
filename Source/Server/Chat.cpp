@@ -280,10 +280,9 @@ void Chat::command(const std::string& cmd)
 	if (parse.size() > 0 && parse.at(0).compare("save") == 0)
 	{
 		Log::out("Command", "Saving...", RED);
-		ChunkIO io;
 		for (auto &c : w->overworld)
 		{
-			io.saveChunk(c.get(), "myworld");
+			ChunkIO::saveChunk(c.get(), "myworld");
 		}
 		Log::out("Command", "Save complete.", RED);
 	}
