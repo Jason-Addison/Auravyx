@@ -9,6 +9,7 @@
 #include <Graphics/GFX.h>
 #include <Utilities/Assets.h>
 #include <Utilities\M.h>
+#include <Engine/GameManager.h>
 ShadowShader::ShadowShader()
 {
 	shader = "Shadow";
@@ -102,12 +103,24 @@ void ShadowShader::render(const World &world, ShadowMap &shadowMap, const Camera
 	glCullFace(GL_BACK);
 	glDisable(GL_CULL_FACE);
 
-	std::shared_ptr<Model> m = Assets::getAssets()->getAssets()->getModel("mesh");
+	std::shared_ptr<Model> m = Assets::getAssets()->getAssets()->getModel("Zelda");
+	for (int i = 0; i < 30; i++)
+	{
+		glBindVertexArray(m->getVAO());
+		glEnableVertexArrayAttrib(m->getVAO(), 0);
+
+		Matrix4f matrix = M::createTransformationMatrix(i * 2, 32.5, 0,
+			1, 1, 1, i * 0, (GameManager::world.getOverworldTime() % GameManager::world.getOverworldDayCycle()) * 0.5 * (i * i * 0.2), 0);
+		loadTransformation(matrix);
+
+		glDrawElements(GL_TRIANGLES, m->indexCount, GL_UNSIGNED_INT, 0);
+	}
+
 	glBindVertexArray(m->getVAO());
 	glEnableVertexArrayAttrib(m->getVAO(), 0);
 
 	Matrix4f matrix = M::createTransformationMatrix(GFX::getOverlay()->CAM.xPos, GFX::getOverlay()->CAM.yPos, GFX::getOverlay()->CAM.zPos,
-		1, 1, 1, 0, 90, (GFX::getOverlay()->CAM.yRot + 180) * 0);
+		1, 1, 1, 0, 90, (GFX::getOverlay()->CAM.xRot + 180) * 0);
 	loadTransformation(matrix);
 	
 	glDrawElements(GL_TRIANGLES, m->indexCount, GL_UNSIGNED_INT, 0);
