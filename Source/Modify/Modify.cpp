@@ -49,7 +49,9 @@ int Modify::loadMod(const std::string& dir)
     }
     Mod* (__stdcall * getMod)() = (Mod * (__stdcall *)())GetProcAddress(hGetProcIDDLL, "getMod");
 
-    int* (__stdcall * setInstance)(Auravyx*) = (int* (__stdcall *)(Auravyx*))GetProcAddress(hGetProcIDDLL, "setInstance");
+
+    //@TODO Change to singleton
+    //int* (__stdcall * setInstance)(Auravyx*) = (int* (__stdcall *)(Auravyx*))GetProcAddress(hGetProcIDDLL, "setInstance");
 
     void* (__stdcall * setContext)() = (void* (__stdcall*)())GetProcAddress(hGetProcIDDLL, "setContext");
 
@@ -60,11 +62,11 @@ int Modify::loadMod(const std::string& dir)
         errorFlag = true;
         Log::out("         - [!] Could not find getMod.", RED);
     }
-    if (!setInstance)
+    /*if (!setInstance)
     {
         errorFlag = true;
         Log::out("         - [!] Could not find setInstance.", RED);
-    }
+    }*/
     if (!setContext)
     {
         errorFlag = true;
@@ -76,7 +78,7 @@ int Modify::loadMod(const std::string& dir)
     }
     enabledModCount++;
     Mod* mod = getMod();
-    setInstance(Auravyx::getAuravyx());
+    //setInstance(Auravyx::getInstance());
     mod->start();
     return 0;
 }

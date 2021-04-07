@@ -54,7 +54,8 @@ extern "C"
 {
 	EXPORT void setInstance(Auravyx* auravyx)
 	{
-		Auravyx::setInstance(auravyx);
+		//@TODO fix for singleton
+		//Auravyx::setInstance(auravyx);
 		static int i = 0;
 		ThreadManager::getThreadManager()->registerThread(std::this_thread::get_id(), "Mod [" + std::to_string(i++) + "]");
 	}
