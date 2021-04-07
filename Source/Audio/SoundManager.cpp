@@ -9,6 +9,10 @@
 #include "Utilities/Assets.h"
 #include <Audio/Sound.h>
 #include <Auravyx.h>
+#include "Utilities/M.h"
+
+#define AL_ALEXT_PROTOTYPES
+#define ALC_EXT_EFX 
 SoundManager::SoundManager()
 {
 }
@@ -82,10 +86,15 @@ void SoundManager::start()
 	}
 	ALfloat listenerOri[] = { 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f };
 	
+	//alDistanceModel(AL_INVERSE_DISTANCE_CLAMPED);
 	alListenerf(AL_GAIN, 1);
 	//alListener3f(AL_VELOCITY, 0, 0, 0);
 	//alListenerfv(AL_ORIENTATION, listenerOri);
-	alListenerf(AL_AIR_ABSORPTION_FACTOR, 100);
+	//alListenerf(AL_AIR_ABSORPTION_FACTOR, 100);
+	alDopplerFactor(1);
+	alDistanceModel(AL_INVERSE_DISTANCE);
+	
+	//alEffectf(AL_AIR_ABSORPTION_FACTOR, AL_EFFECT_TYPE, 100);
 	//std::cout << "Data Size : " << dataSize << "\n";
 	std::string alVersion = alGetString(AL_VERSION);
 	std::string alVendor = alGetString(AL_VENDOR);
@@ -122,6 +131,32 @@ void SoundManager::addSound(const ALuint source)
 void SoundManager::removeSound(const ALuint source)
 {
 	sounds.erase(source);
+}
+
+void SoundManager::setListener(const Camera& camera)
+{
+	alListener3f(AL_POSITION, camera.x, camera.y, camera.z);
+	alListener3f(AL_VELOCITY, camera.xVel, camera.yVel, camera.zVel);
+	alListener3f(AL_ORIENTATION, camera.yRot, 0, 0);
+
+	Vec3f normalizedRotation = Vec3f(-sin(M::toRadians(GFX::getOverlay()->CAM.yRot)) * (cos(M::toRadians(GFX::getOverlay()->CAM.xRot))),
+		sin(M::toRadians(GFX::getOverlay()->CAM.xRot)),
+		-cos(M::toRadians(GFX::getOverlay()->CAM.yRot)) * (cos(M::toRadians(GFX::getOverlay()->CAM.xRot))));
+
+	Vec3f normalizedUpRotation = Vec3f(sin(M::toRadians(GFX::getOverlay()->CAM.yRot)) * (sin(M::toRadians(GFX::getOverlay()->CAM.xRot))),
+		cos(M::toRadians(GFX::getOverlay()->CAM.xRot)),
+		cos(M::toRadians(GFX::getOverlay()->CAM.yRot)) * (sin(M::toRadians(GFX::getOverlay()->CAM.xRot))));
+
+	float orientation[] = {normalizedRotation.x, normalizedRotation.y, normalizedRotation.z,
+	normalizedUpRotation.x, normalizedUpRotation.y, normalizedUpRotation.z };
+
+	/*Matrix4f viewMatrix = GFX::getOverlay()->CAM.getViewMatrix();
+
+	Vec3f forwardVec = Vec3f(viewMatrix.m20, viewMatrix.m21, viewMatrix.m22);
+	Vec3f upVec = Vec3f(viewMatrix.m10, viewMatrix.m11, viewMatrix.m12);
+	float orientation[] = { forwardVec.x, -forwardVec.y, -forwardVec.z,
+	upVec.x, upVec.y, upVec.z };*/
+	alListenerfv(AL_ORIENTATION, orientation);
 }
 
 SoundManager* SoundManager::getSoundManager()

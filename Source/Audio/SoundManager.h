@@ -1,6 +1,7 @@
 #pragma once
 #include <unordered_set>
 #include "Library/AL/al.h"
+#include "Engine/Camera.h"
 class SoundManager
 {
 public:
@@ -19,6 +20,8 @@ public:
 	void addSound(const ALuint source);
 
 	void removeSound(const ALuint source);
+
+	void setListener(const Camera& camera);
 
 	static SoundManager* getSoundManager();
 
