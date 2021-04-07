@@ -213,8 +213,6 @@ AnimatedMesh ColladaParser::loadAllGeometries(XMLParser::XMLElement* doc, std::m
             mat.length = m.indices.size();
             mesh.materials.emplace_back(mat);
         }
-
-        
     }
     mesh.indices = indices;
     mesh.vertices = vertices;
@@ -222,24 +220,35 @@ AnimatedMesh ColladaParser::loadAllGeometries(XMLParser::XMLElement* doc, std::m
     mesh.normals = normals;
     return mesh;
 }
-
-
-void ColladaParser::parse(const std::string& dir)
+AnimatedMesh ColladaParser::parse(const std::string& dir)
 {
     XMLParser::XMLDocument doc;
     doc.LoadFile(dir.c_str());
 
-
     XMLParser::XMLElement* dae = doc.FirstChildElement("COLLADA");
+
+    unsigned long long k = dir.rfind('\\', dir.length());
+
+    std::string colladaFileName = "[Error]";
+    if (k != std::string::npos)
+    {
+        colladaFileName = dir.substr(k + 1, dir.length() - k);
+        int periodIndex = -1;
+        for (int i = colladaFileName.length() - 1; i >= 0; i--)
+        {
+            if (colladaFileName.at(i) == '.')
+            {
+                periodIndex = i;
+                break;
+            }
+        }
+        colladaFileName = colladaFileName.substr(0, periodIndex);
+    }
 
     std::map<std::string, std::string> textures = loadTextures(dae);
     std::map<std::string, GLuint> links = getTextureLinks(dae, textures);
 
     AnimatedMesh meshes = loadAllGeometries(dae, links);
-
-    Model m = Model::loadIndexed3DModel(meshes.vertices, meshes.normals, meshes.textureCoords, meshes.colors, meshes.indices);
-    m.setMaterials(meshes.materials);
-    Assets::getAssets()->addModel("mesh", m);
-    
+    meshes.id = colladaFileName;
+    return meshes;
 }
-

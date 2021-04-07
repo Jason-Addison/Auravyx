@@ -5,7 +5,7 @@
 #include "Graphics/Model/ModelMaterial.h"
 
 /**
- * @brief Container for animated meshes.
+ * @brief Container for Collada (.dae) meshes.
 */
 class AnimatedMesh
 {
