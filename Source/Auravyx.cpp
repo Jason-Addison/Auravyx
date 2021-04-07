@@ -1,20 +1,3 @@
-/*
- *  ----------------------------------------------------------------                
- *	   ,---.                                                       
- *	  /  O  \ ,--.,--.,--.--. ,--,--.,--.  ,--.,--. ,--.,--.  ,--. 
- *	 |  .-.  ||  ||  ||  .--'' ,-.  | \  `'  /  \  '  /  \  `'  /  
- *	 |  | |  |'  ''  '|  |   \ '-'  |  \    /    \   '   /  /.  \  
- *	 `--' `--' `----' `--'    `--`--'   `--'   .-'  /   '--'  '--' 
- *	                                           `---'               
- *  ----------------------------------------------------------------
- * 
- * Authour: Jason Addison
- * https://github.com/Jason-Addison
- * 
- * Auravyx is a voxel based 3D sandbox game written in C++ using OpenGL and OpenAL.
- * 
- */
-
 #include "stdafx.h"
 #include "Library/GL/glew.h"
 #include "Auravyx.h"
