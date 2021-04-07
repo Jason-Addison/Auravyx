@@ -29,6 +29,10 @@ public:
 
 	bool dataLoaded = false;
 
+	bool generating = false;
+
+	bool editingData = false;
+
 	bool priorityLoad = false;
 
 	int material;
