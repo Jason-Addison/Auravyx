@@ -6,7 +6,7 @@ io::io()
 
 io& io::operator<<(const std::string& msg)
 {
-	OutputConsole::getConsole()->message(msg, 0);
+	///OutputConsole::getConsole()->message(msg, 0);
 	return *this;
 }
 

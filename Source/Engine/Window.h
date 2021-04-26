@@ -3,14 +3,16 @@
 #include <Library/GLFW/glfw3.h>
 #include <string>
 #include <Engine/Controller.h>
-class WindowManager
+
+/**
+ * @brief GUI window using GLFW for Windows / Linux / Mac. 
+*/
+class Window
 {
 public:
-	WindowManager();
-	WindowManager(WindowManager* wm);
-	~WindowManager();
-
-	GLFWwindow *window;
+	Window();
+	Window(Window* wm);
+	~Window();
 
 	Controller controller;
 	int width = 0;
@@ -49,13 +51,16 @@ public:
 
 	Controller* getController();
 
-	static WindowManager* getWindow();
+	static Window* getWindow();
 
 	static double mainScroll;
 
+	GLFWwindow* window;
+
 private:
 
-	static WindowManager* windowManager;
+
+	static Window* windowManager;
 
 	static void scrollCallback(GLFWwindow* window, double xoffset, double yoffset);
 

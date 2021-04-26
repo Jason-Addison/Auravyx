@@ -43,14 +43,14 @@ void ScrollBar::handleResize()
 	}
 	button->setDownEvent([this, spacing]()
 	{
-		if (WindowManager::getWindow()->getController()->active("e"))
+		if (Window::getWindow()->getController()->active("e"))
 		{
 			mouseDown = true;
 		}
 	});
 	button->updateEvent = [this, spacing]()
 	{
-		if (!WindowManager::getWindow()->getController()->active("e"))
+		if (!Window::getWindow()->getController()->active("e"))
 		{
 			mouseDown = false;
 		}
@@ -58,7 +58,7 @@ void ScrollBar::handleResize()
 		{
 			if (mode == VERTICAL)
 			{
-				progress -= WindowManager::getWindow()->getController()->getMouseDY();
+				progress -= Window::getWindow()->getController()->getMouseDY();
 				if (progress > height - spacing * 2 - height / range)
 				{
 					progress = height - spacing * 2 - height / range;
@@ -73,7 +73,7 @@ void ScrollBar::handleResize()
 			}
 			else if (mode == HORIZONTAL)
 			{
-				progress -= WindowManager::getWindow()->getController()->getMouseDX();
+				progress -= Window::getWindow()->getController()->getMouseDX();
 				if (progress > width - spacing - width / range)
 				{
 					progress = width - spacing - width / range;

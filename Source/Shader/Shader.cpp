@@ -110,7 +110,7 @@ void outputErrorMessage(std::string shader, std::string fileData, std::string er
 	problemLines.emplace_back("Starting anyways");
 	colours.emplace_back(Vec3f(1, 1, 1));
 
-	Resource::getResources()->printLoadingMessage(problemLines, 15, colours);
+	Resource::getInstance().printLoadingMessage(problemLines, 15, colours);
 }
 
 void Shader::createShader(const std::map<std::string, std::string>& shaders)

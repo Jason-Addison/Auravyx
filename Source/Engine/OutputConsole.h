@@ -10,7 +10,7 @@ class OutputConsole
 public:
 
 	OutputConsole();
-	OutputConsole(OutputConsole *c);
+	OutputConsole(OutputConsole* c);
 	~OutputConsole();
 
 	void start();
@@ -57,4 +57,3 @@ private:
 
 	void render();
 };
-

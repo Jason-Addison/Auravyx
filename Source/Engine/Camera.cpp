@@ -18,61 +18,61 @@ void Camera::getPlayerInput()
 	zVel = 0;
 	if (!Chat::isChatting)
 	{
-		if (!f3Lock && WindowManager::getWindow()->getController()->isKeyDown(GLFW_KEY_F3))
+		if (!f3Lock && Window::getWindow()->getController()->isKeyDown(GLFW_KEY_F3))
 		{
 			f3Lock = true;
 			Profiler::showAdvancedDebugInfo = !Profiler::showAdvancedDebugInfo;
 		}
-		else if (!WindowManager::getWindow()->getController()->isKeyDown(GLFW_KEY_F3))
+		else if (!Window::getWindow()->getController()->isKeyDown(GLFW_KEY_F3))
 		{
 			f3Lock = false;
 		}
-		if (!f5Lock && WindowManager::getWindow()->getController()->isKeyDown(GLFW_KEY_F5))
+		if (!f5Lock && Window::getWindow()->getController()->isKeyDown(GLFW_KEY_F5))
 		{
 			f5Lock = true;
 			Profiler::showChunkMetrics = !Profiler::showChunkMetrics;
 		}
-		else if (!WindowManager::getWindow()->getController()->isKeyDown(GLFW_KEY_F5))
+		else if (!Window::getWindow()->getController()->isKeyDown(GLFW_KEY_F5))
 		{
 			f5Lock = false;
 		}
-		if (WindowManager::getWindow()->getController()->isKeyDown(GLFW_KEY_E))
+		if (Window::getWindow()->getController()->isKeyDown(GLFW_KEY_E))
 		{
 			speed *= 10;
 		}
-		if (WindowManager::getWindow()->getController()->isAction(Action::MOVE_FORWARDS))
+		if (Window::getWindow()->getController()->isAction(Action::MOVE_FORWARDS))
 		{
 			xVel -= sin(M::toRadians(yRot)) * (speed);
 			zVel -= cos(M::toRadians(yRot)) * (speed);
 		}
-		if (WindowManager::getWindow()->getController()->isAction(Action::MOVE_BACKWARDS))
+		if (Window::getWindow()->getController()->isAction(Action::MOVE_BACKWARDS))
 		{
 			xVel += sin(M::toRadians(yRot)) * (speed);
 			zVel += cos(M::toRadians(yRot)) * (speed);
 		}
-		if (WindowManager::getWindow()->getController()->isAction(Action::MOVE_LEFT))
+		if (Window::getWindow()->getController()->isAction(Action::MOVE_LEFT))
 		{
 			xVel -= cos(M::toRadians(yRot)) * (speed);
 			zVel += sin(M::toRadians(yRot)) * (speed);
 		}
-		if (WindowManager::getWindow()->getController()->isAction(Action::MOVE_RIGHT))
+		if (Window::getWindow()->getController()->isAction(Action::MOVE_RIGHT))
 		{
 			xVel += cos(M::toRadians(yRot)) * (speed);
 			zVel -= sin(M::toRadians(yRot)) * (speed);
 		}
-		if (WindowManager::getWindow()->getController()->isKeyDown(GLFW_KEY_SPACE))
+		if (Window::getWindow()->getController()->isKeyDown(GLFW_KEY_SPACE))
 		{
 			yVel += (speed);
 		}
-		if (WindowManager::getWindow()->getController()->isKeyDown(GLFW_KEY_LEFT_SHIFT))
+		if (Window::getWindow()->getController()->isKeyDown(GLFW_KEY_LEFT_SHIFT))
 		{
 			yVel -= (speed);
 		}
 		xVel *= speedMultiplier;
 		yVel *= speedMultiplier;
 		zVel *= speedMultiplier;
-		xRot += (double)WindowManager::getWindow()->getController()->getMouseDY() * (double) 0.3;
-		yRot += (double)WindowManager::getWindow()->getController()->getMouseDX() * (double) 0.3;
+		xRot += (double)Window::getWindow()->getController()->getMouseDY() * (double) 0.3;
+		yRot += (double)Window::getWindow()->getController()->getMouseDX() * (double) 0.3;
 	}
 
 	xPos += Clock::get(xVel);

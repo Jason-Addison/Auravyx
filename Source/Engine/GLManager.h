@@ -1,7 +1,7 @@
 #pragma once
 #define GLEW_STATIC
 
-#include <Engine/WindowManager.h>
+#include <Engine/Window.h>
 class GLManager
 {
 public:

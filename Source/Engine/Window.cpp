@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "Engine/WindowManager.h"
+#include "Engine/Window.h"
 #include "Engine/Controller.h"
 #include <Library\SOIL\SOIL.h>
 #include "Utilities/Resource.h"
@@ -7,25 +7,25 @@
 #include <thread>
 #include <Utilities\Log.h>
 #include "Auravyx.h"
-WindowManager::WindowManager()
+Window::Window()
 {
 }
 
-WindowManager::WindowManager(WindowManager* wm)
+Window::Window(Window* wm)
 {
 	windowManager = wm;
 }
 
-WindowManager* WindowManager::windowManager;
-WindowManager::~WindowManager()
+Window* Window::windowManager;
+Window::~Window()
 {
 }
-bool WindowManager::resized = true;
+bool Window::resized = true;
 HWND hwnd;
-double WindowManager::mainScroll = 1;
-void WindowManager::scrollCallback(GLFWwindow* window, double xoffset, double yoffset)
+double Window::mainScroll = 1;
+void Window::scrollCallback(GLFWwindow* window, double xoffset, double yoffset)
 {
-	WindowManager::mainScroll += yoffset;
+	Window::mainScroll += yoffset;
 	if (mainScroll < 1)
 	{
 		mainScroll = 1;
@@ -45,16 +45,16 @@ GLFWwindowrefreshfun windowUpdateCallback()
 	//resized = false;
 	return GLFWwindowrefreshfun();
 }
-void WindowManager::displayResizeCallback(GLFWwindow* _window, int _width, int _height)
+void Window::displayResizeCallback(GLFWwindow* _window, int _width, int _height)
 {
 	resized = true;
 }
 
-void WindowManager::errorCallback(int error, const char* description)
+void Window::errorCallback(int error, const char* description)
 {
 	Log::out("[GLFW] Error : " + std::to_string(error) + " : " + std::string(description));
 }
-void WindowManager::create()
+void Window::create()
 {
 	std::string title = "Auravyx";//Polyvox | Ver " + std::string(1.3) + " | FPS : " + std::to_string(Display::frameRate);
 	//func();
@@ -74,7 +74,7 @@ void WindowManager::create()
 	glfwSetWindowPos(window, (mode->width - width) / 2, (mode->height - height) / 2);
 
 	GLFWimage icons[1];
-	std::string str = Resource::getResources()->DIR + "\\Assets\\Textures\\coin.png";
+	std::string str = Resource::getInstance().DIR + "\\Assets\\Textures\\coin.png";
 	icons[0].pixels = SOIL_load_image(str.c_str(), &icons[0].width, &icons[0].height, 0, SOIL_LOAD_RGBA);
 	glfwSetWindowIcon(window, 1, icons);
 	SOIL_free_image_data(icons[0].pixels);
@@ -97,7 +97,7 @@ bool fullscreen = false;
 int windowedX = 0, windowedY = 0;
 int windowedWidth = 0, windowedHeight = 0;
 
-void WindowManager::update()
+void Window::update()
 {
 	if (getController()->isKeyDown(GLFW_KEY_F11))
 	{
@@ -150,17 +150,17 @@ void WindowManager::update()
 
 }
 
-int WindowManager::getWidth()
+int Window::getWidth()
 {
 	return width;
 }
 
-int WindowManager::getHeight()
+int Window::getHeight()
 {
 	return height;
 }
 
-bool WindowManager::wasResized()
+bool Window::wasResized()
 {
 	return resized;
 }
@@ -180,61 +180,61 @@ void noKCallback(GLFWwindow* window, int key, int scancode, int action, int mods
 GLFWkeyfun keyback = noKCallback;
 void kCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-	WindowManager::getWindow()->getController()->keys[key] = action;
+	Window::getWindow()->getController()->keys[key] = action;
 	Controller::keyInput = true;
 	Controller::anyInput = true;
 	Controller::keyboardInput(key, scancode, action, mods);
 	keyback(window, key, scancode, action, mods);
 }
 
-void WindowManager::setTextCallback(GLFWcharfun f)
+void Window::setTextCallback(GLFWcharfun f)
 {
 	charback = f;
 	glfwSetKeyCallback(window, kCallback);
 }
 
-void WindowManager::setKeyCallback(GLFWkeyfun f)
+void Window::setKeyCallback(GLFWkeyfun f)
 {
 	keyback = f;
 	glfwSetCharCallback(window, cCallback);
 }
 
-int WindowManager::closeRequested()
+int Window::closeRequested()
 {
 	return glfwWindowShouldClose(window);
 }
 
-void WindowManager::showMouse()
+void Window::showMouse()
 {
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 }
 
-void WindowManager::hideMouse()
+void Window::hideMouse()
 {
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 }
 
-void WindowManager::centerCursor()
+void Window::centerCursor()
 {
 	glfwSetCursorPos(window, width / 2, height / 2);
 }
 
-void WindowManager::setWindowTitle(const std::string& title)
+void Window::setWindowTitle(const std::string& title)
 {
 	glfwSetWindowTitle(window, title.c_str());
 }
 
-void WindowManager::setContext()
+void Window::setContext()
 {
 	glfwMakeContextCurrent(window);
 }
 
-Controller* WindowManager::getController()
+Controller* Window::getController()
 {
 	return &controller;
 }
 
-WindowManager* WindowManager::getWindow()
+Window* Window::getWindow()
 {
 	return windowManager;
 }

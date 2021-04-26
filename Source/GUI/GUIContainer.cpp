@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "GUI/GUIContainer.h"
 #include <Auravyx.h>
-#include "Engine/WindowManager.h"
+#include "Engine/Window.h"
 
 GUIContainer::GUIContainer(float x, float y, float width, float height)
 {
@@ -81,7 +81,7 @@ void GUIContainer::handleResize()
 			(i->height / yMax * h) - (spacing * i->height * 1.3));
 		if (ra)
 		{
-			i->gui->setBounds(WindowManager::getWindow()->getWidth() + -i->x * w / xMax + spacing * (1 - i->x / xMax) + x,
+			i->gui->setBounds(Window::getWindow()->getWidth() + -i->x * w / xMax + spacing * (1 - i->x / xMax) + x,
 				i->y * h / yMax + spacing * (1 - i->y / yMax) + y,
 				(i->width / xMax * w) - (spacing * i->width * 1.3),
 				(i->height / yMax * h) - (spacing * i->height * 1.3));

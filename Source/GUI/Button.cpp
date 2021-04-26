@@ -19,25 +19,25 @@ void Button::update()
 	updateEvent();
 	isHover = false;
 	isClicked = false;
-	if (WindowManager::getWindow()->getController()->getMouseX() >= x && WindowManager::getWindow()->getController()->getMouseY() >= y &&
-		WindowManager::getWindow()->getController()->getMouseX() <= x + width && WindowManager::getWindow()->getController()->getMouseY() <= y + height)
+	if (Window::getWindow()->getController()->getMouseX() >= x && Window::getWindow()->getController()->getMouseY() >= y &&
+		Window::getWindow()->getController()->getMouseX() <= x + width && Window::getWindow()->getController()->getMouseY() <= y + height)
 	{
 		isHover = true;
 		hoverEvent();
 	}
-	if (!WindowManager::getWindow()->getController()->active("e"))
+	if (!Window::getWindow()->getController()->active("e"))
 	{
 		wasHeld = false;
 	}
 	if (isHover)
 	{
-		if (WindowManager::getWindow()->getController()->active("e"))
+		if (Window::getWindow()->getController()->active("e"))
 		{
 			isDown = true;
 			downEvent();
 			wasHeld = true;
 		}
-		if (isDown && !WindowManager::getWindow()->getController()->active("e"))
+		if (isDown && !Window::getWindow()->getController()->active("e"))
 		{
 			isClicked = true;
 			isDown = false;

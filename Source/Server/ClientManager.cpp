@@ -100,7 +100,7 @@ void ClientManager::init()
 void ClientManager::update()
 {
 	std::string msg = "hello";
-	if (WindowManager::getWindow()->getController()->isKeyDown(GLFW_KEY_0))
+	if (Window::getWindow()->getController()->isKeyDown(GLFW_KEY_0))
 	{
 		int sendOK = sendto(out, msg.c_str(), 256, 0, (sockaddr*)&server, sizeof(server));
 		if (sendOK == SOCKET_ERROR)

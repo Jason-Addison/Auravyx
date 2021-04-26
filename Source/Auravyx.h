@@ -20,7 +20,7 @@
 #define GLEW_MX
 #include "Engine/GameManager.h"
 #include "Graphics/GFX.h"
-#include "Engine/WindowManager.h"
+#include "Engine/Window.h"
 #include "Graphics/Renderer.h"
 #include "Utilities\Assets.h"
 #include "Modify\Modify.h"
@@ -57,7 +57,7 @@ public:
 
 	GFX* getOverlay();
 
-	WindowManager* getWindow();
+	Window* getWindow();
 
 	OutputConsole* getConsole();
 
@@ -89,7 +89,7 @@ private:
 	*/
 	GFX overlayGraphics;
 
-	WindowManager window;
+	Window window;
 
 	Renderer renderer;
 

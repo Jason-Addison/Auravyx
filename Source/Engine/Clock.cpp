@@ -1,6 +1,5 @@
 #include "Engine/Clock.h"
 
-
 Clock::Clock()
 {
 }

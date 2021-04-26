@@ -1,6 +1,6 @@
 #pragma once
 #include <sstream>
-
+#include <Engine\OutputConsole.h>
 #include <string>
 #define BLACK 0
 #define DARK_BLUE 1
@@ -64,6 +64,8 @@ public:
 		return *this;
 	}
 	static Log& print(Log& l, const int n);
+
+private:
 
 };
 

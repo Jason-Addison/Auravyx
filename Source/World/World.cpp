@@ -3,7 +3,7 @@
 #include "World/Chunk.h"
 #include <Auravyx.h>
 #include "Utilities/Profiler.h"
-#include "Engine/WindowManager.h"
+#include "Engine/Window.h"
 #include <Engine/Clock.h>
 #include <Engine/Controller.h>
 #include <Utilities/M.h>
@@ -37,11 +37,11 @@ void World::generate()
 void World::update()
 {
 	float speed = 500000;
-	if (WindowManager::getWindow()->getController()->isKeyDown(GLFW_KEY_EQUAL))
+	if (Window::getWindow()->getController()->isKeyDown(GLFW_KEY_EQUAL))
 	{
 		overworldTime += Clock::get(speed);
 	}
-	if (WindowManager::getWindow()->getController()->isKeyDown(GLFW_KEY_MINUS))
+	if (Window::getWindow()->getController()->isKeyDown(GLFW_KEY_MINUS))
 	{
 		overworldTime -= Clock::get(speed);
 	}
@@ -51,7 +51,7 @@ void World::update()
 ShadowMap shadowMap;
 void World::create()
 {
-	fbo = FBO(WindowManager::getWindow()->getWidth(), WindowManager::getWindow()->getHeight());
+	fbo = FBO(Window::getWindow()->getWidth(), Window::getWindow()->getHeight());
 	shadowMap = ShadowMap(2048 * 2, 2048 * 2);
 }
 
@@ -71,7 +71,7 @@ void World::render(const Camera& cam, const Matrix4f& projectionMatrix)
 	Renderer::getRenderer()->getShaders()->shadowShader->render(*this, shadowMap, cam, dir);
 	
 	shadowMap.unbind();
-	fbo.update(WindowManager::getWindow()->getWidth(), WindowManager::getWindow()->getHeight());
+	fbo.update(Window::getWindow()->getWidth(), Window::getWindow()->getHeight());
 	//fbo.checkStatus();
 	//Log::out(std::to_string(fbo.checkStatus()));
 	fbo.bind();
@@ -87,7 +87,7 @@ void World::render(const Camera& cam, const Matrix4f& projectionMatrix)
 	Renderer::getRenderer()->getShaders()->skyShader->loadCamera(altCam.getViewMatrix());
 	Renderer::getRenderer()->getShaders()->skyShader->loadSun(-cos(m * p), sin(m * p), 0);
 	Renderer::getRenderer()->getShaders()->skyShader->loadTime((double)((getOverworldTime() + 60000) % getOverworldDayCycle()) / (double) getOverworldDayCycle());
-	Renderer::getRenderer()->getShaders()->skyShader->loadScreenResolution(WindowManager::getWindow()->getWidth(), WindowManager::getWindow()->getHeight());
+	Renderer::getRenderer()->getShaders()->skyShader->loadScreenResolution(Window::getWindow()->getWidth(), Window::getWindow()->getHeight());
 	double rot = (double)(getOverworldTime() % getOverworldDayCycle()) / (double)360;
 	Matrix4f t = M::createTransformationMatrix(0, 0, 0, 1, 1, 1, 70, rot, 0);
 	Renderer::getRenderer()->getShaders()->skyShader->loadTransformationMatrix(t);
@@ -181,7 +181,7 @@ void World::render(const Camera& cam, const Matrix4f& projectionMatrix)
 		unloadLock = false;
 	}*/
 
-	if (WindowManager::getWindow()->getController()->isKeyDown(GLFW_KEY_R))
+	if (Window::getWindow()->getController()->isKeyDown(GLFW_KEY_R))
 	{
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	}
@@ -214,7 +214,7 @@ void World::render(const Camera& cam, const Matrix4f& projectionMatrix)
 	
 	for (int i = 0; i < 30; i++)
 	{
-		GFX::getOverlay()->renderModelIndex(i * 2, 32.5, 0,
+		GFX::getOverlay()->renderModelIndex(i * 2, 31.5, 0,
 			1, 1, 1, i * 0, (GameManager::world.getOverworldTime() % GameManager::world.getOverworldDayCycle()) * 0.5 * (i * i * 0.2), 0, *Assets::getAssets()->getAssets()->getModel("Zelda").get(),
 			(GFX::getOverlay()->CAM), projectionMatrix, *Assets::getAssets()->getAssets()->getTexture("face").get());
 	}
@@ -234,7 +234,7 @@ void World::render(const Camera& cam, const Matrix4f& projectionMatrix)
 	fbo.unbind();
 	glDisable(GL_CULL_FACE);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	GFX::getOverlay()->drawImage(0, 0, WindowManager::getWindow()->getWidth(), WindowManager::getWindow()->getHeight(), fbo.texture);
+	GFX::getOverlay()->drawImage(0, 0, Window::getWindow()->getWidth(), Window::getWindow()->getHeight(), fbo.texture);
 	
 	Renderer::getRenderer()->getShaders()->deferredShader->start();
 
@@ -273,22 +273,22 @@ void World::render(const Camera& cam, const Matrix4f& projectionMatrix)
 	glDrawArrays(GL_TRIANGLES, 0, 6 * 3);
 
 
-	int width = WindowManager::getWindow()->getWidth() / 6;
-	int height = (int) (width * ((float) WindowManager::getWindow()->getHeight() / (float) WindowManager::getWindow()->getWidth()));
+	int width = Window::getWindow()->getWidth() / 6;
+	int height = (int) (width * ((float) Window::getWindow()->getHeight() / (float) Window::getWindow()->getWidth()));
 	
 	if (Profiler::showAdvancedDebugInfo)
 	{
-		GFX::getOverlay()->fillRect(0, WindowManager::getWindow()->getHeight() - height - 1, WindowManager::getWindow()->getWidth(), 1, 0, 0, 0, 1);
+		GFX::getOverlay()->fillRect(0, Window::getWindow()->getHeight() - height - 1, Window::getWindow()->getWidth(), 1, 0, 0, 0, 1);
 		for (int i = 0; i < 5; i++)
 		{
 			GFX::getOverlay()->drawImage(width * i, 0, width, height, fbo.buffers[i]);
-			GFX::getOverlay()->drawStringBG(fboStrings.at(i), i * width, WindowManager::getWindow()->getHeight() - height, WindowManager::getWindow()->getWidth() / 80,
-				1, 1, 1, 1, 0, 0, 0, WindowManager::getWindow()->getWidth() / 300 - 10, 0, 0, 0, 0.3);
+			GFX::getOverlay()->drawStringBG(fboStrings.at(i), i * width, Window::getWindow()->getHeight() - height, Window::getWindow()->getWidth() / 80,
+				1, 1, 1, 1, 0, 0, 0, Window::getWindow()->getWidth() / 300 - 10, 0, 0, 0, 0.3);
 		}
 		GFX::getOverlay()->drawImage(width * 5, 0, width, height, shadowMap.depthTexture);
 		GFX::getOverlay()->drawImage(width * 5, height, width, height, Assets::getAssets()->getAssets()->getTexture("font_plain")->texture);
-		GFX::getOverlay()->drawStringBG("shadow", width * 5, WindowManager::getWindow()->getHeight() - height, WindowManager::getWindow()->getWidth() / 80,
-			1, 1, 1, 1, 0, 0, 0, WindowManager::getWindow()->getWidth() / 300 - 10, 0, 0, 0, 0.3);
+		GFX::getOverlay()->drawStringBG("shadow", width * 5, Window::getWindow()->getHeight() - height, Window::getWindow()->getWidth() / 80,
+			1, 1, 1, 1, 0, 0, 0, Window::getWindow()->getWidth() / 300 - 10, 0, 0, 0, 0.3);
 	}
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }
@@ -410,7 +410,7 @@ void World::setup()
 	fboStrings.emplace_back("position");
 }
 
-void World::sphere(const float xP, const float yP, const float zP, const float radius, const float power)
+void World::sphere(const float xP, const float yP, const float zP, const short type, const short density, const float radius, const float strength)
 {
 	Chunk* c = nullptr;
 	for (int x = floor(-radius / 2); x < ceil(radius / 2); x++)
@@ -433,7 +433,7 @@ void World::sphere(const float xP, const float yP, const float zP, const float r
 						//if (nX >= 0 && nY >= 0 && nZ >= 0 &&
 						//	nX < size && nY < size && nZ < size)
 						{
-							c->setVoxel(nX, nY, nZ, c->getDensity(nX, nY, nZ) + power * 0.01 * ((radius - distance) / radius), 255);
+							c->setVoxel(nX, nY, nZ, c->getDensity(nX, nY, nZ) + strength * 0.01 * ((radius - distance) / radius), 255);
 							if (c->getDensity(nX, nY, nZ) > 1)
 							{
 								c->setVoxel(nX, nY, nZ, 1, 255);
@@ -442,7 +442,7 @@ void World::sphere(const float xP, const float yP, const float zP, const float r
 							{
 								c->setVoxel(nX, nY, nZ, 0, 255);
 							}
-							if (c->getDensity(nX, nY, nZ) < 0.1 && power < 0)
+							if (c->getDensity(nX, nY, nZ) < 0.1 && strength < 0)
 							{
 								c->setVoxel(nX, nY, nZ, 0, 255);
 							}
@@ -455,7 +455,7 @@ void World::sphere(const float xP, const float yP, const float zP, const float r
 	}
 }
 
-void World::cuboid(float xP, float yP, float zP, float xS, float yS, float zS, float power)
+void World::cuboid(float xP, float yP, float zP, float xS, float yS, float zS, const short type, const short density, float power)
 {
 	std::shared_ptr<Chunk> c = nullptr;
 	for (int x = xP - xS; x < xP + xS; x++)

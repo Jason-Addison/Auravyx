@@ -130,7 +130,7 @@ void Controller::update()
 }
 bool Controller::isMouseDown(const int code)
 {
-	int mouse = glfwGetMouseButton(WindowManager::getWindow()->window, code);
+	int mouse = glfwGetMouseButton(Window::getWindow()->window, code);
 	if (mouse == GLFW_PRESS)
 	{
 		return true;
@@ -147,28 +147,28 @@ bool Controller::isKeyDown(const int keyCode)
 }
 void Controller::getMousePos(double &x, double &y)
 {
-	glfwGetCursorPos(WindowManager::getWindow()->window, &x, &y);
+	glfwGetCursorPos(Window::getWindow()->window, &x, &y);
 }
 void Controller::getMouseX(double &x)
 {
-	glfwGetCursorPos(WindowManager::getWindow()->window, &x, 0);
+	glfwGetCursorPos(Window::getWindow()->window, &x, 0);
 }
 void Controller::getMouseY(double &y)
 {
-	glfwGetCursorPos(WindowManager::getWindow()->window, 0, &y);
+	glfwGetCursorPos(Window::getWindow()->window, 0, &y);
 }
 
 double Controller::getMouseX()
 {
 	double x = -1;
-	glfwGetCursorPos(WindowManager::getWindow()->window, &x, 0);
+	glfwGetCursorPos(Window::getWindow()->window, &x, 0);
 	return x;
 }
 
 double Controller::getMouseY()
 {
 	double y = -1;
-	glfwGetCursorPos(WindowManager::getWindow()->window, 0, &y);
+	glfwGetCursorPos(Window::getWindow()->window, 0, &y);
 	return y;
 }
 void Controller::keyboardInput(const int key, const int scancode, const int action, const int mods)
@@ -215,7 +215,7 @@ void in(GLFWwindow* window, unsigned int codepoint)
 
 void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-	WindowManager::getWindow()->getController()->keys[key] = action;
+	Window::getWindow()->getController()->keys[key] = action;
 	Controller::keyInput = true;
 	Controller::anyInput = true;
 	Controller::keyboardInput(key, scancode, action, mods);
@@ -237,9 +237,9 @@ void Controller::init()
 	{
 		Controller::keys[i] = 0;
 	}
-	glfwSetKeyCallback(WindowManager::getWindow()->window, keyCallback);
-	glfwSetMouseButtonCallback(WindowManager::getWindow()->window, mouseCallback);
+	glfwSetKeyCallback(Window::getWindow()->window, keyCallback);
+	glfwSetMouseButtonCallback(Window::getWindow()->window, mouseCallback);
 	glfwSetJoystickCallback(joystickCallback);
-	glfwSetCharCallback(WindowManager::getWindow()->window, in);
+	glfwSetCharCallback(Window::getWindow()->window, in);
 	loadControls();
 }

@@ -34,11 +34,9 @@ public:
 
 	void cleanupRemainingResources();
 
-	static Resource* getResources();
+	static Resource& getInstance();
 
 private:
-
-	static Resource* resource;
 
 	void loadAllTextures();
 

@@ -1,6 +1,6 @@
 #include "Engine/Chat.h"
 #include "Engine/Controller.h"
-#include "Engine/WindowManager.h"
+#include "Engine/Window.h"
 #include <Utilities/Log.h>
 #include <Auravyx.h>
 #include "Utilities/Clipboard.hpp"
@@ -134,23 +134,23 @@ bool f1Lock = false;
 void Chat::render()
 {
 	lastMode = isChatting;
-	if (!isChatting && WindowManager::getWindow()->getController()->isKeyDown(GLFW_KEY_T))
+	if (!isChatting && Window::getWindow()->getController()->isKeyDown(GLFW_KEY_T))
 	{
 		isChatting = true;
-		WindowManager::getWindow()->setTextCallback(textCallback);
-		WindowManager::getWindow()->setKeyCallback(chatKeyCallback);
+		Window::getWindow()->setTextCallback(textCallback);
+		Window::getWindow()->setKeyCallback(chatKeyCallback);
 	}
-	if (isChatting && WindowManager::getWindow()->getController()->isKeyDown(GLFW_KEY_ESCAPE))
+	if (isChatting && Window::getWindow()->getController()->isKeyDown(GLFW_KEY_ESCAPE))
 	{
-		WindowManager::getWindow()->setTextCallback(noTextCallback);
-		WindowManager::getWindow()->setKeyCallback(noKeyCallback);
+		Window::getWindow()->setTextCallback(noTextCallback);
+		Window::getWindow()->setKeyCallback(noKeyCallback);
 		isChatting = false;
 		currentMessage = std::string();
 	}
-	if (isChatting && WindowManager::getWindow()->getController()->isKeyDown(GLFW_KEY_ENTER))
+	if (isChatting && Window::getWindow()->getController()->isKeyDown(GLFW_KEY_ENTER))
 	{
-		WindowManager::getWindow()->setTextCallback(noTextCallback);
-		WindowManager::getWindow()->setKeyCallback(noKeyCallback);
+		Window::getWindow()->setTextCallback(noTextCallback);
+		Window::getWindow()->setKeyCallback(noKeyCallback);
 		if (currentMessage.length() > 0)
 		{
 			std::string outputMessage = currentMessage;
@@ -171,14 +171,14 @@ void Chat::render()
 	{
 		if (isChatting)
 		{
-			WindowManager::getWindow()->centerCursor();
-			WindowManager::getWindow()->centerCursor();
-			WindowManager::getWindow()->showMouse();
-			WindowManager::getWindow()->centerCursor();
+			Window::getWindow()->centerCursor();
+			Window::getWindow()->centerCursor();
+			Window::getWindow()->showMouse();
+			Window::getWindow()->centerCursor();
 		}
 		if (!isChatting)
 		{
-			WindowManager::getWindow()->hideMouse();
+			Window::getWindow()->hideMouse();
 		}
 	}
 	thisTime = glfwGetTime();
@@ -189,35 +189,35 @@ void Chat::render()
 	}
 	if (isChatting)
 	{
-		GFX::getOverlay()->fillRect(5, WindowManager::getWindow()->getHeight() - 35, WindowManager::getWindow()->getWidth() - 10, 30, 0, 0, 0, 0.5);
+		GFX::getOverlay()->fillRect(5, Window::getWindow()->getHeight() - 35, Window::getWindow()->getWidth() - 10, 30, 0, 0, 0, 0.5);
 		std::string outmsg = "";
 		outmsg += currentMessage;
 		if (textFlashOn)
 		{
 			outmsg += "_";
 		}
-		GFX::getOverlay()->drawString(outmsg, 7, WindowManager::getWindow()->getHeight() - 32.5, 30, 1, 1, 1, 1);
+		GFX::getOverlay()->drawString(outmsg, 7, Window::getWindow()->getHeight() - 32.5, 30, 1, 1, 1, 1);
 		
 	}
-	if (!f1Lock && WindowManager::getWindow()->getController()->isKeyDown(GLFW_KEY_F1))
+	if (!f1Lock && Window::getWindow()->getController()->isKeyDown(GLFW_KEY_F1))
 	{
 		auto t = std::time(nullptr);
 		auto tm = *std::localtime(&t);
 		f1Lock = true;
-		std::string outFile = Resource::getResources()->DIR + "//Screenshots//";
+		std::string outFile = Resource::getInstance().DIR + "//Screenshots//";
 		std::stringstream ss;
-		ss << Resource::getResources()->DIR + "//Screenshots//";
+		ss << Resource::getInstance().DIR + "//Screenshots//";
 		ss << std::put_time(&tm, "%d-%m-%Y %H-%M-%S");
 		ss << ".png";
 		int save_result = SOIL_save_screenshot
 		(
 			ss.str().c_str(),
 			SOIL_SAVE_TYPE_BMP,
-			0, 0, WindowManager::getWindow()->getWidth(), WindowManager::getWindow()->getHeight()
+			0, 0, Window::getWindow()->getWidth(), Window::getWindow()->getHeight()
 		);
 		message(ss.str());
 	}
-	else if (!WindowManager::getWindow()->getController()->isKeyDown(GLFW_KEY_F1))
+	else if (!Window::getWindow()->getController()->isKeyDown(GLFW_KEY_F1))
 	{
 		f1Lock = false;
 	}
@@ -226,7 +226,7 @@ void Chat::render()
 	float thisTime = glfwGetTime();
 	for (int i = (int) chatLog.size() - 1; i >= 0; i--)
 	{
-		GFX::getOverlay()->drawStringBG(chatLog.at(i), 5, WindowManager::getWindow()->getHeight() - 65 - (chatLog.size() - i) * 30, 30, 1, 1, 1, 1, 0, -2, 0, 0, 0, 0, 0, 0.3);
+		GFX::getOverlay()->drawStringBG(chatLog.at(i), 5, Window::getWindow()->getHeight() - 65 - (chatLog.size() - i) * 30, 30, 1, 1, 1, 1, 0, -2, 0, 0, 0, 0, 0, 0.3);
 	}
 	for (int i = 0; i < chatLogTimings.size(); i++)
 	{

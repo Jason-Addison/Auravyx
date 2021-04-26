@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "GUI/GUI.h"
-#include "Engine/WindowManager.h"
+#include "Engine/Window.h"
 #include <Auravyx.h>
 //#include "Game.h"
 
@@ -41,7 +41,7 @@ void GUI::handleResize()
 //double lT = WindowManager::getWindow()->getTime();
 void GUI::refresh()
 {
-	if (WindowManager::getWindow()->wasResized())
+	if (Window::getWindow()->wasResized())
 	{
 		resizeEvent();
 		handleResize();

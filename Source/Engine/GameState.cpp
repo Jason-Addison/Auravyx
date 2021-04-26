@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <Graphics/GFX.h>
 #include <Utilities/Util.h>
-#include <Engine/WindowManager.h>
+#include <Engine/Window.h>
 #include <chrono>
 #include <Engine/Controller.h>
 #include <World/Chunk.h>
@@ -212,7 +212,7 @@ void chunkMeshGeneration()
 void GameState::update()
 {
 	//std::cout << s1.checkCollision(&s2) << "\n";
-	if (WindowManager::getWindow()->getController()->isKeyDown(GLFW_KEY_ENTER))
+	if (Window::getWindow()->getController()->isKeyDown(GLFW_KEY_ENTER))
 	{
 		//s = s.substr(0, s.size() - 1);
 		//if (s.size() != 0)
@@ -222,7 +222,7 @@ void GameState::update()
 		}
 	}
 
-	if (WindowManager::getWindow()->getController()->isKeyDown(GLFW_KEY_Q))
+	if (Window::getWindow()->getController()->isKeyDown(GLFW_KEY_Q))
 	{
 		//PacketMsg::sendMessage("hello!!!");
 	}
@@ -239,15 +239,15 @@ void GameState::update()
 
 void world()
 {
-	WindowManager::getWindow()->getController()->update();
+	Window::getWindow()->getController()->update();
 	GFX::getOverlay()->CAM.getPlayerInput();
 	Matrix4f m4;
 	int fov = GFX::getOverlay()->CAM.fov;
-	if (glfwGetMouseButton(WindowManager::getWindow()->window, GLFW_MOUSE_BUTTON_4) == GLFW_PRESS)
+	if (glfwGetMouseButton(Window::getWindow()->window, GLFW_MOUSE_BUTTON_4) == GLFW_PRESS)
 	{
 		fov /= 3.6666;
 	}
-	m4.createProjectionMatrix(WindowManager::getWindow()->getWidth(), WindowManager::getWindow()->getHeight(), GFX::getOverlay()->viewDistance * 1000, 0.1, fov);
+	m4.createProjectionMatrix(Window::getWindow()->getWidth(), Window::getWindow()->getHeight(), GFX::getOverlay()->viewDistance * 1000, 0.1, fov);
 	GameManager::world.render(GFX::getOverlay()->CAM, m4);
 	
 	Camera cam = GFX::getOverlay()->CAM;
@@ -324,59 +324,59 @@ void GameState::render()
 			c->ready = true;
 		}
 	}
-	if (WindowManager::getWindow()->getController()->isKeyDown(GLFW_KEY_KP_0))
+	if (Window::getWindow()->getController()->isKeyDown(GLFW_KEY_KP_0))
 	{
 		id = 18;
 	}
-	if (WindowManager::getWindow()->getController()->isKeyDown(GLFW_KEY_KP_1))
+	if (Window::getWindow()->getController()->isKeyDown(GLFW_KEY_KP_1))
 	{
 		id = 19;
 	}
-	if (WindowManager::getWindow()->getController()->isKeyDown(GLFW_KEY_KP_2))
+	if (Window::getWindow()->getController()->isKeyDown(GLFW_KEY_KP_2))
 	{
 		id = 20;
 	}
-	if (WindowManager::getWindow()->getController()->isKeyDown(GLFW_KEY_KP_3))
+	if (Window::getWindow()->getController()->isKeyDown(GLFW_KEY_KP_3))
 	{
 		id = 21;
 	}
-	if (WindowManager::getWindow()->getController()->isKeyDown(GLFW_KEY_KP_4))
+	if (Window::getWindow()->getController()->isKeyDown(GLFW_KEY_KP_4))
 	{
 		id = 22;
 	}
-	if (WindowManager::getWindow()->getController()->isKeyDown(GLFW_KEY_KP_5))
+	if (Window::getWindow()->getController()->isKeyDown(GLFW_KEY_KP_5))
 	{
 		id = 23;
 	}
-	if (WindowManager::getWindow()->getController()->isKeyDown(GLFW_KEY_KP_6))
+	if (Window::getWindow()->getController()->isKeyDown(GLFW_KEY_KP_6))
 	{
 		id = 24;
 	}
-	if (WindowManager::getWindow()->getController()->isKeyDown(GLFW_KEY_KP_7))
+	if (Window::getWindow()->getController()->isKeyDown(GLFW_KEY_KP_7))
 	{
 		id = 25;
 	}
-	if (WindowManager::getWindow()->getController()->isKeyDown(GLFW_KEY_KP_8))
+	if (Window::getWindow()->getController()->isKeyDown(GLFW_KEY_KP_8))
 	{
 		id = 26;
 	}
-	if (WindowManager::getWindow()->getController()->isKeyDown(GLFW_KEY_KP_9))
+	if (Window::getWindow()->getController()->isKeyDown(GLFW_KEY_KP_9))
 	{
 		id = 100;
 	}
-	if (WindowManager::getWindow()->getController()->isKeyDown(GLFW_KEY_KP_ADD))
+	if (Window::getWindow()->getController()->isKeyDown(GLFW_KEY_KP_ADD))
 	{
 		id = 7;
 	}
-	if (WindowManager::getWindow()->getController()->isKeyDown(GLFW_KEY_KP_SUBTRACT))
+	if (Window::getWindow()->getController()->isKeyDown(GLFW_KEY_KP_SUBTRACT))
 	{
 		id = 11;
 	}
-	if (WindowManager::getWindow()->getController()->isKeyDown(GLFW_KEY_KP_DIVIDE))
+	if (Window::getWindow()->getController()->isKeyDown(GLFW_KEY_KP_DIVIDE))
 	{
 		id = 6;
 	}
-	if (WindowManager::getWindow()->getController()->isMouseDown(GLFW_MOUSE_BUTTON_1))
+	if (Window::getWindow()->getController()->isMouseDown(GLFW_MOUSE_BUTTON_1))
 	{
 		Chunk* c = GameManager::world.getChunk(GFX::getOverlay()->CAM.cX, GFX::getOverlay()->CAM.cY, GFX::getOverlay()->CAM.cZ);
 		if (c)
@@ -396,7 +396,7 @@ void GameState::render()
 			{
 				z = Chunk::CHUNK_SIZE + z;
 			}
-			int size = WindowManager::getWindow()->mainScroll;
+			int size = Window::getWindow()->mainScroll;
 			if (size < 1)
 			{
 				size = 1;
@@ -404,7 +404,7 @@ void GameState::render()
 			c->fill(x, y - 7, z, size, size, size, id, 255);
 		}
 	}
-	if (WindowManager::getWindow()->getController()->isMouseDown(GLFW_MOUSE_BUTTON_2))
+	if (Window::getWindow()->getController()->isMouseDown(GLFW_MOUSE_BUTTON_2))
 	{
 		Chunk* c = GameManager::world.getChunk(GFX::getOverlay()->CAM.cX, GFX::getOverlay()->CAM.cY, GFX::getOverlay()->CAM.cZ);
 		if (c)
@@ -424,7 +424,7 @@ void GameState::render()
 			{
 				z = Chunk::CHUNK_SIZE + z;
 			}
-			int size = WindowManager::getWindow()->mainScroll;
+			int size = Window::getWindow()->mainScroll;
 			if (size < 1)
 			{
 				size = 1;
@@ -634,5 +634,5 @@ void GameState::stop()
 		server.join();
 	}
 	glfwPollEvents();
-	glfwDestroyWindow(WindowManager::getWindow()->window);
+	glfwDestroyWindow(Window::getWindow()->window);
 }

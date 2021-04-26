@@ -7,7 +7,7 @@
 #include "Utilities/Assets.h"
 #include <Auravyx.h>
 #include <Graphics/FontLoader.h>
-#include <Engine/WindowManager.h>
+#include <Engine/Window.h>
 #include <Audio/SoundManager.h>
 #include <Utilities/Settings.h>
 #include <Shader/Shaders.h>
@@ -22,7 +22,7 @@ Resource::Resource()
 
 Resource::Resource(Resource* r)
 {
-	resource = r;
+
 }
 
 
@@ -67,8 +67,6 @@ std::vector<preloadTexture> preloadedTerrainTextures;
 std::map<std::string, std::string> preloadShaders;
 
 static bool logShaders = true;
-
-Resource* Resource::resource;
 
 std::string DIR;
 
@@ -269,10 +267,10 @@ void Resource::loadAllAsyncAssets()
 	shadersLoaded = true;
 	SoundManager::getSoundManager()->start();
 	Log::out("Loader", "Loading settings...", YELLOW);
-	Settings::settings = FileIO::readConfig(Resource::getResources()->DIR + "\\settings.txt");
+	Settings::settings = FileIO::readConfig(Resource::getInstance().DIR + "\\settings.txt");
 	Log::out("Loader", "Loading controller...", YELLOW);
 
-	WindowManager::getWindow()->getController()->init();
+	Window::getWindow()->getController()->init();
 	Log::out("Loader", "Loading textures...", YELLOW);
 	loadAllAudio();
 	//Sound s;
@@ -304,7 +302,7 @@ void Resource::renderProgress()
 	float spacingSize = 5;
 
 	float loadingX = 10;
-	float loadingY = WindowManager::getWindow()->getHeight() - squareSize * 2 - spacingSize - loadingX;
+	float loadingY = Window::getWindow()->getHeight() - squareSize * 2 - spacingSize - loadingX;
 
 	float rR = 1;
 	float gG = 1;
@@ -315,13 +313,13 @@ void Resource::renderProgress()
 	GFX::getOverlay()->fillRect(loadingX, loadingY + squareSize + spacingSize, squareSize, squareSize, rR, gG, bB, d);
 	GFX::getOverlay()->fillRect(loadingX + squareSize + spacingSize, loadingY + squareSize + spacingSize, squareSize, squareSize, rR, gG, bB, c);
 
-	GFX::getOverlay()->fillRect(WindowManager::getWindow()->getWidth() - loadingX - squareSize * 2 - spacingSize, loadingY, squareSize, squareSize, rR, gG, bB, b);
-	GFX::getOverlay()->fillRect(WindowManager::getWindow()->getWidth() - loadingX - squareSize * 2 - spacingSize + squareSize + spacingSize, loadingY, squareSize, squareSize, rR, gG, bB, a);
-	GFX::getOverlay()->fillRect(WindowManager::getWindow()->getWidth() - loadingX - squareSize * 2 - spacingSize, loadingY + squareSize + spacingSize, squareSize, squareSize, rR, gG, bB, c);
-	GFX::getOverlay()->fillRect(WindowManager::getWindow()->getWidth() - loadingX - squareSize * 2 - spacingSize + squareSize + spacingSize, loadingY + squareSize + spacingSize, squareSize, squareSize, rR, gG, bB, d);
+	GFX::getOverlay()->fillRect(Window::getWindow()->getWidth() - loadingX - squareSize * 2 - spacingSize, loadingY, squareSize, squareSize, rR, gG, bB, b);
+	GFX::getOverlay()->fillRect(Window::getWindow()->getWidth() - loadingX - squareSize * 2 - spacingSize + squareSize + spacingSize, loadingY, squareSize, squareSize, rR, gG, bB, a);
+	GFX::getOverlay()->fillRect(Window::getWindow()->getWidth() - loadingX - squareSize * 2 - spacingSize, loadingY + squareSize + spacingSize, squareSize, squareSize, rR, gG, bB, c);
+	GFX::getOverlay()->fillRect(Window::getWindow()->getWidth() - loadingX - squareSize * 2 - spacingSize + squareSize + spacingSize, loadingY + squareSize + spacingSize, squareSize, squareSize, rR, gG, bB, d);
 
-	GFX::getOverlay()->drawStringC(whatIsLoadingPrimary, 0, (float)WindowManager::getWindow()->getHeight() - 45, 30, (float) WindowManager::getWindow()->getWidth(), rR, gG, bB, 1);
-	GFX::getOverlay()->drawStringC(whatIsLoadingSecondary, 0, (float)WindowManager::getWindow()->getHeight() - 20, 25, (float)WindowManager::getWindow()->getWidth(), rR, gG, bB, 1);
+	GFX::getOverlay()->drawStringC(whatIsLoadingPrimary, 0, (float)Window::getWindow()->getHeight() - 45, 30, (float) Window::getWindow()->getWidth(), rR, gG, bB, 1);
+	GFX::getOverlay()->drawStringC(whatIsLoadingSecondary, 0, (float)Window::getWindow()->getHeight() - 20, 25, (float)Window::getWindow()->getWidth(), rR, gG, bB, 1);
 
 	if (loadingMessages.size() > 0)
 	{
@@ -329,7 +327,7 @@ void Resource::renderProgress()
 		for (int i = 0; i < loadingMessages.at(0).messageLines.size(); i++)
 		{
 			GFX::getOverlay()->drawString(loadingMessages.at(0).messageLines.at(i), 5, 
-				WindowManager::getWindow()->getHeight() / 4 + (float) (l++) * 15, 25,
+				Window::getWindow()->getHeight() / 4 + (float) (l++) * 15, 25,
 				loadingMessages.at(0).messageLinesColours.at(i).x,
 				loadingMessages.at(0).messageLinesColours.at(i).y, loadingMessages.at(0).messageLinesColours.at(i).z, 1);
 		}
@@ -339,7 +337,7 @@ void Resource::renderProgress()
 			remainingTime = 0;
 		}
 		GFX::getOverlay()->drawString("Message ends in " + Util::removeDecimal(remainingTime, 1) + "s", 5,
-			loadingMessages.at(0).sourceLines.size() * 15 + WindowManager::getWindow()->getHeight() / 4 + (float) (l++) * 15, 25,
+			loadingMessages.at(0).sourceLines.size() * 15 + Window::getWindow()->getHeight() / 4 + (float) (l++) * 15, 25,
 			rR, gG, bB, 1);
 	}
 }
@@ -376,18 +374,19 @@ void Resource::cleanupRemainingResources()
 	Log::out("Cleanup", "Cleaning up fonts...", LIGHT_GRAY);
 	Assets::getAssets()->getAssets()->deleteFonts();
 }
-Resource* Resource::getResources()
+Resource& Resource::getInstance()
 {
+	static Resource resource;
 	return resource;
 }
 void Resource::loadBootAssets()
 {
 	Renderer::getRenderer()->getShaders()->initBootShaders(Resource::loadShaders("\\Shaders\\Base"));
-	//loadTextureSilent(Resource::getResources()->DIR + "\\Assets\\Boot\\font.png");
-	///loadTextureSilent(Resource::getResources()->DIR + "\\Assets\\Boot\\font_plain-.png");
-	//FontLoader::loadFont(Resource::getResources()->DIR + "\\Assets\\font.fnt");
-	loadTextureSilent(Resource::getResources()->DIR + "\\Assets\\Boot\\font_plain.png");
-	FontLoader::loadFont(Resource::getResources()->DIR + "\\Assets\\Boot\\font_plain.fnt");
+	//loadTextureSilent(Resource::getInstance().DIR + "\\Assets\\Boot\\font.png");
+	///loadTextureSilent(Resource::getInstance().DIR + "\\Assets\\Boot\\font_plain-.png");
+	//FontLoader::loadFont(Resource::getInstance().DIR + "\\Assets\\font.fnt");
+	loadTextureSilent(Resource::getInstance().DIR + "\\Assets\\Boot\\font_plain.png");
+	FontLoader::loadFont(Resource::getInstance().DIR + "\\Assets\\Boot\\font_plain.fnt");
 }
 
 int Resource::loadTexture(const std::string& dir)
@@ -612,7 +611,7 @@ void Resource::loadAllMods()
 	whatIsLoadingPrimary = "Loading mods";
 
 	Log::out("Modify", "Loading all mods...", LIGHT_GRAY);
-	std::vector<std::string> mods = FileIO::listDirectory(Resource::getResources()->DIR + "\\Mods\\Enabled\\");
+	std::vector<std::string> mods = FileIO::listDirectory(Resource::getInstance().DIR + "\\Mods\\Enabled\\");
 	for (auto m : mods)
 	{
 		if (std::filesystem::is_directory(m))

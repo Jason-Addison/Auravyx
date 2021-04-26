@@ -3,7 +3,7 @@
 #include "Graphics/GFX.h"
 #include "Utilities/M.h"
 #include "Shader/Shaders.h"
-#include "Engine/WindowManager.h"
+#include "Engine/Window.h"
 #include "Utilities/Assets.h"
 #include "Engine/Clock.h"
 #include "Auravyx.h"
@@ -60,7 +60,7 @@ float u = 0.4;
 float i = 6;
 void GFX::drawString(const std::string& string, const float x, const float y, const float size, const float r, const float g, const float b, const float a)
 {
-	drawString(string, x, y, size, r, g, b, a, WindowManager::getWindow()->getWidth(), WindowManager::getWindow()->getHeight());
+	drawString(string, x, y, size, r, g, b, a, Window::getWindow()->getWidth(), Window::getWindow()->getHeight());
 }
 
 void GFX::drawString(const std::string& string, const float x, const float y, const float size, const float r, const float g, const float b, const float a, const float windowWidth, const float windowHeight)
@@ -77,19 +77,19 @@ void GFX::drawString(const std::string& string, const float x, const float y, co
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	Renderer::getRenderer()->getShaders()->fontShader->start();
-	if (WindowManager::getWindow()->getController()->isKeyDown(GLFW_KEY_Y))
+	if (Window::getWindow()->getController()->isKeyDown(GLFW_KEY_Y))
 	{
 		u += 0.0003;
 	}
-	if (WindowManager::getWindow()->getController()->isKeyDown(GLFW_KEY_U))
+	if (Window::getWindow()->getController()->isKeyDown(GLFW_KEY_U))
 	{
 		u -= 0.0003;
 	}
-	if (WindowManager::getWindow()->getController()->isKeyDown(GLFW_KEY_H))
+	if (Window::getWindow()->getController()->isKeyDown(GLFW_KEY_H))
 	{
 		i += 0.0003;
 	}
-	if (WindowManager::getWindow()->getController()->isKeyDown(GLFW_KEY_J))
+	if (Window::getWindow()->getController()->isKeyDown(GLFW_KEY_J))
 	{
 		i -= 0.0003;
 	}
@@ -138,13 +138,13 @@ void GFX::drawStringBG(const std::string& string, const float x, const float y, 
 void GFX::drawStringBGR(const std::string& string, const float x, const float y, const float size, const float r, const float g, const float b, const float a, const float xB, const float yB, const float xSB, const float ySB, const float rB, const float gB, const float bB, const float aB)
 {
 	float width = stringWidth(string, size) + 7;
-	fillRect(WindowManager::getWindow()->getWidth() - width - x + xB, y + yB, width + xSB, size + ySB, rB, gB, bB, aB);
+	fillRect(Window::getWindow()->getWidth() - width - x + xB, y + yB, width + xSB, size + ySB, rB, gB, bB, aB);
 	drawStringR(string, x, y, size, r, g, b, a);
 }
 
 void GFX::drawStringR(const std::string& string, const float x, const float y, const float size, const float r, const float g, const float b, const float a)
 {
-	drawString(string, WindowManager::getWindow()->getWidth() - stringWidth(string, size) - x - 7, y, size, r, g, b, a);
+	drawString(string, Window::getWindow()->getWidth() - stringWidth(string, size) - x - 7, y, size, r, g, b, a);
 }
 
 void GFX::drawStringC(const std::string& string, const float x, const float y, const float size, const float width, const float r, const float g, const float b, const float a)
@@ -176,16 +176,16 @@ float GFX::stringWidth(const std::string& string, const float size)
 
 		if (fchar.width != -1)
 		{
-			float newX = -1 + ((x) / WindowManager::getWindow()->getWidth() * 2) + ((totalX) / WindowManager::getWindow()->getWidth() * 2);
-			float newY = 1 - ((y + (fchar.yOffset - 12) * (resized / font.size)) / WindowManager::getWindow()->getHeight() * 2);
-			float newWidth = (resized / font.size) / WindowManager::getWindow()->getWidth() * 2;
-			float newHeight = (resized / font.size) / WindowManager::getWindow()->getHeight() * 2;
+			float newX = -1 + ((x) / Window::getWindow()->getWidth() * 2) + ((totalX) / Window::getWindow()->getWidth() * 2);
+			float newY = 1 - ((y + (fchar.yOffset - 12) * (resized / font.size)) / Window::getWindow()->getHeight() * 2);
+			float newWidth = (resized / font.size) / Window::getWindow()->getWidth() * 2;
+			float newHeight = (resized / font.size) / Window::getWindow()->getHeight() * 2;
 
 			totalX += ((float)fchar.xAdvance) * (resized / font.size) * 1;
 		}
 	}
 	return totalX;
-	return -1 + ((x) / WindowManager::getWindow()->getWidth() * 2) + ((totalX) / WindowManager::getWindow()->getWidth() * 2);
+	return -1 + ((x) / Window::getWindow()->getWidth() * 2) + ((totalX) / Window::getWindow()->getWidth() * 2);
 }
 
 void GFX::renderModel(const float x, const float y, const float z, const float xScale, const float yScale, const float zScale, const float xRot,
@@ -237,8 +237,6 @@ void GFX::renderModelIndex(const float x, const float y, const float z, const fl
 	glEnableVertexArrayAttrib(m.getVAO(), 2);
 	glEnableVertexArrayAttrib(m.getVAO(), 3);
 	int index = 0;
-	GLuint tt = Assets::getAssets()->getTexture("npc_zelda_miko_body_alb")->texture;
-
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_BLEND);
 	glActiveTexture(GL_TEXTURE0);
@@ -277,16 +275,16 @@ void GFX::fillRect(const float x, const float y, const float width, const float 
 
 void GFX::fillRect(const float x, const float y, const float xScale, const float yScale, const float r, const float g, const float b, const float a)
 {
-	fillRect(x, WindowManager::getWindow()->getHeight() - y, xScale, -yScale, WindowManager::getWindow()->getWidth(), WindowManager::getWindow()->getHeight(), r, g, b, a);
+	fillRect(x, Window::getWindow()->getHeight() - y, xScale, -yScale, Window::getWindow()->getWidth(), Window::getWindow()->getHeight(), r, g, b, a);
 }
 
 void GFX::drawImage(const float x, const float y, const float width, const float height, const int texture)
 {
-	drawImage(x, y, width, height, 0, texture, WindowManager::getWindow()->getWidth(), WindowManager::getWindow()->getHeight());
+	drawImage(x, y, width, height, 0, texture, Window::getWindow()->getWidth(), Window::getWindow()->getHeight());
 }
 void GFX::drawImage(const float x, const float y, const float width, const float height, const float rot, const int texture)
 {
-	drawImage(x, y, width, height, rot, texture, WindowManager::getWindow()->getWidth(), WindowManager::getWindow()->getHeight());
+	drawImage(x, y, width, height, rot, texture, Window::getWindow()->getWidth(), Window::getWindow()->getHeight());
 }
 /*void GFX::drawImage(float x, float y, float width, float height, int texture, int xScale, int yScale)
 {
@@ -305,7 +303,7 @@ void GFX::setFPS(const double fps)
 
 void GFX::enableScissor(const float x, const float y, const float width, const float height)
 {
-	glScissor(x, WindowManager::getWindow()->getHeight() - y - height, width, height);
+	glScissor(x, Window::getWindow()->getHeight() - y - height, width, height);
 	glEnable(GL_SCISSOR_TEST);
 }
 

@@ -30,7 +30,7 @@ DropdownMenu::DropdownMenu(const std::string& text)
 		}
 		else
 		{
-			if (!Util::pointAABB(WindowManager::getWindow()->getController()->getMouseX(), WindowManager::getWindow()->getController()->getMouseY(), list->x, list->y, list->width, list->height))
+			if (!Util::pointAABB(Window::getWindow()->getController()->getMouseX(), Window::getWindow()->getController()->getMouseY(), list->x, list->y, list->width, list->height))
 			{
 				active = false;
 				list->visible = false;

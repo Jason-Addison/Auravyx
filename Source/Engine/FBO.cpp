@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "Engine/FBO.h"
 
-#include "Engine/WindowManager.h"
+#include "Engine/Window.h"
 #include <Auravyx.h>
 #include <Utilities\Log.h>
 
@@ -80,7 +80,7 @@ void FBO::bind()
 void FBO::unbind()
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	glViewport(0, 0, WindowManager::getWindow()->getWidth(), WindowManager::getWindow()->getHeight());
+	glViewport(0, 0, Window::getWindow()->getWidth(), Window::getWindow()->getHeight());
 }
 
 void FBO::update(const int width, const int height)

@@ -38,7 +38,7 @@ GLContext* Mod::getRenderContext()
 }
 void contextFunction()
 {
-	WindowManager::getWindow()->setContext();
+	Window::getWindow()->setContext();
 	GLenum error = glewInit();
 	if (error != GLEW_OK)
 	{
@@ -61,7 +61,7 @@ extern "C"
 	}
 	EXPORT void setContext()
 	{
-		WindowManager::getWindow()->setContext();
+		Window::getWindow()->setContext();
 		GLenum error = glewInit();
 		if (error != GLEW_OK)
 		{

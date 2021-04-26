@@ -20,6 +20,22 @@ public:
 
 private:
 
+	struct VertexAttribute
+	{
+		std::string source;
+		std::vector<int> indices;
+		std::vector<float> processed;
+		int offset;
+		int stride;
+	};
+
+	struct ColladaSource
+	{
+		std::string name;
+		std::vector<float> data;
+		int stride;
+	};
+
 	/**
 	 * @brief Returns list of textures.
 	 * @param doc XML document
@@ -65,23 +81,4 @@ private:
 	 * @return list of integers
 	*/
 	static std::vector<GLuint> stringToIntegers(const std::string& str);
-
-	/**
-	 * @brief Write geometric data into proper format
-	 * @param v vertex index
-	 * @param n normal index
-	 * @param t texture index
-	 * @param c color index
-	 * @param indices list of indices
-	 * @param textures list of textures
-	 * @param normals list of normals
-	 * @param colors list of colors
-	 * @param[out] processedTextures output formatted textures list
-	 * @param[out] processedNormals output formatted normals list
-	 * @param[out] processedColors output formatted colors list
-	*/
-	static void processVertex(int v, int n, int t, int c, std::vector<GLuint>& indices,
-		std::vector<float>& textures, std::vector<float>& normals, 
-		std::vector<float>& colors,	std::vector<float>& processedTextures, 
-		std::vector<float>& processedNormals, std::vector<float>& processedColors);
 };

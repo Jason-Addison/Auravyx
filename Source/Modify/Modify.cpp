@@ -32,7 +32,7 @@ Modify::Modify(Modify* m)
 }
 void Modify::loadAllMods()
 {
-    std::vector<std::string> mods = FileIO::listDirectory(Resource::getResources()->DIR + "\\Mods\\enabled\\");
+    std::vector<std::string> mods = FileIO::listDirectory(Resource::getInstance().DIR + "\\Mods\\enabled\\");
     for (auto m : mods)
     {
 

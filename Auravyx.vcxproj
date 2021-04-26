@@ -72,7 +72,7 @@
     <ClCompile Include="Source\Engine\State.cpp" />
     <ClCompile Include="Source\Engine\Texture.cpp" />
     <ClCompile Include="Source\Engine\ThreadManager.cpp" />
-    <ClCompile Include="Source\Engine\WindowManager.cpp" />
+    <ClCompile Include="Source\Engine\Window.cpp" />
     <ClCompile Include="Source\Auravyx.cpp" />
     <ClCompile Include="Source\Graphics\Font.cpp" />
     <ClCompile Include="Source\Graphics\FontChar.cpp" />
@@ -178,7 +178,7 @@
     <ClInclude Include="Source\Engine\State.h" />
     <ClInclude Include="Source\Engine\Texture.h" />
     <ClInclude Include="Source\Engine\ThreadManager.h" />
-    <ClInclude Include="Source\Engine\WindowManager.h" />
+    <ClInclude Include="Source\Engine\Window.h" />
     <ClInclude Include="Source\Graphics\Font.h" />
     <ClInclude Include="Source\Graphics\FontChar.h" />
     <ClInclude Include="Source\Graphics\FontLoader.h" />

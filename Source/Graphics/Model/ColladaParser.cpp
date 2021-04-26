@@ -37,35 +37,6 @@ std::vector<GLuint> ColladaParser::stringToIntegers(const std::string& str)
     return v;
 }
 
-void ColladaParser::processVertex(int v, int n, int t, int c, std::vector<GLuint>& indices,
-    std::vector<float>& textures, std::vector<float>& normals,
-    std::vector<float>& colors, std::vector<float>& processedTextures,
-    std::vector<float>& processedNormals, std::vector<float>& processedColors)
-{
-    indices.emplace_back(v);
-
-    float tx = textures.at(t * 2 + 0);
-    float ty = textures.at(t * 2 + 1);
-
-    processedTextures.at(v * 2 + 0) = tx;
-    processedTextures.at(v * 2 + 1) = ty;
-
-    float nx = normals.at(n * 3 + 0);
-    float ny = normals.at(n * 3 + 1);
-    float nz = normals.at(n * 3 + 2);
-
-    processedNormals.at(v * 3 + 0) = -nz;
-    processedNormals.at(v * 3 + 1) = ny;
-    processedNormals.at(v * 3 + 2) = nx;
-
-    float r = colors.at(c * 3 + 0);
-    float g = colors.at(c * 3 + 1);
-    float b = colors.at(c * 3 + 2);
-
-    processedColors.at(v * 3 + 0) = r;
-    processedColors.at(v * 3 + 1) = g;
-    processedColors.at(v * 3 + 2) = b;
-}
 std::map<std::string, std::string> ColladaParser::loadTextures(XMLParser::XMLNode* doc)
 {
     std::map<std::string, std::string> textures;
@@ -130,51 +101,107 @@ std::map<std::string, GLuint> ColladaParser::getTextureLinks(XMLParser::XMLNode*
     }
     return links;
 }
+
 AnimatedMesh ColladaParser::loadGeometry(XMLParser::XMLNode* g)
 {
+    std::vector<float> vertices;
+    std::vector<float> normals;
+    std::vector<float> texCoords;
+    std::vector<float> colors;
     XMLParser::XMLNode* sources = g;
     sources = sources->FirstChildElement("mesh")->FirstChildElement("source");
-    std::string positionsStr = sources->FirstChildElement("float_array")->GetText();
-    sources = sources->NextSibling();
-    std::string normalsStr = sources->FirstChildElement("float_array")->GetText();
-    sources = sources->NextSibling();
-    std::string texID = ((XMLParser::XMLElement*) sources)->Attribute("id");
-    std::string texCoordsStr = sources->FirstChildElement("float_array")->GetText();
-    sources = sources->NextSibling();
-    std::string colorsStr = sources->FirstChildElement("float_array")->GetText();
-    XMLParser::XMLNode* pNode = g->FirstChildElement("mesh")->FirstChildElement("polylist");
+    std::map<std::string, ColladaSource> colsrc;
+    do
+    {
+        ColladaSource src;
+        src.data = stringToFloats(sources->FirstChildElement("float_array")->GetText());
+        src.stride = sources->FirstChildElement("technique_common")->FirstChildElement("accessor")->IntAttribute("stride");
+        std::string name = sources->FirstChildElement("technique_common")->FirstChildElement("accessor")->Attribute("source");
+        colsrc.emplace(name.substr(0, name.length() - std::string("-array").length()), src);
+    }
+    while ((sources = sources->NextSiblingElement("source")));
 
+    XMLParser::XMLElement* vNode = g->FirstChildElement("mesh")->FirstChildElement("vertices")->FirstChildElement("input");
+
+    std::map<std::string, VertexAttribute> attributes;
+
+    XMLParser::XMLNode* pNode = g->FirstChildElement("mesh")->FirstChildElement("polylist");
 
     if (pNode == NULL)
     {
         pNode = g->FirstChildElement("mesh")->FirstChildElement("triangles");
     }
-    std::string polylistStr = pNode->FirstChildElement("p")->GetText();
 
-    std::vector<float> vertices = stringToFloats(positionsStr);
-    std::vector<float> normals = stringToFloats(normalsStr);
-    std::vector<float> texCoords = stringToFloats(texCoordsStr);
-    std::vector<float> colors = stringToFloats(colorsStr);
+    XMLParser::XMLElement* nextPNode = pNode->FirstChildElement("input");
+    do
+    {
+        if (nextPNode)
+        {
+            VertexAttribute va;
+            va.offset = nextPNode->IntAttribute("offset");
+            if (std::string(nextPNode->Attribute("semantic")) == std::string("VERTEX"))
+            {
+                va.stride = 3;
+                va.source = vNode->Attribute("source");
+                attributes.emplace(nextPNode->Attribute("semantic"), va);
+            }
+            else
+            {
+                va.source = nextPNode->Attribute("source");
+                va.stride = colsrc.at(nextPNode->Attribute("source")).stride;
+                attributes.emplace(nextPNode->Attribute("semantic"), va);
+            }
+        }
+    }
+    while ((nextPNode = nextPNode->NextSiblingElement("input")));
+
+    std::string polylistStr = pNode->FirstChildElement("p")->GetText();
     std::vector<GLuint> polylist = stringToIntegers(polylistStr);
 
     std::vector<GLuint> indices;
-    std::vector<float> processedTex((vertices.size() / 3) * 2);
-    std::vector<float> processedNormals(vertices.size());
-    std::vector<float> processedColors(vertices.size());
 
-    for (int i = 0; i < polylist.size() / 4; i++)
+    std::map<std::string, VertexAttribute>::iterator it;
+    for (it = attributes.begin(); it != attributes.end(); it++)
     {
-        processVertex(polylist.at(i * 4 + 0), polylist.at(i * 4 + 1), polylist.at(i * 4 + 2), polylist.at(i * 4 + 3),
-            indices, texCoords, normals, colors, processedTex, processedNormals, processedColors);
+        for (int i = 0; i < polylist.size() / attributes.size(); i++)
+        {
+            it->second.indices.emplace_back(polylist.at(i * attributes.size() + it->second.offset));
+            indices.emplace_back(polylist.at(i * attributes.size() + 0));
+        }
+        //it->second.processed = std::vector<float>(it->second.indices.size() * it->second.stride);
+        it->second.processed = std::vector<float>(vertices.size());
     }
-    
+
+    if (attributes.find("VERTEX") != attributes.end())
+    {
+        std::string vertLocation = vNode->Attribute("source");
+        vertices = colsrc.at(vertLocation).data;
+    }
+
+    for (it = attributes.begin(); it != attributes.end(); it++)
+    {
+        for (int i = 0; i < polylist.size() / attributes.size(); i++)
+        {
+            int stride = colsrc.at(it->second.source).stride;
+            for (int j = 0; j < stride; j++)
+            {
+                float x = colsrc.at(it->second.source).data.at(it->second.indices.at(i) * stride + j);
+                it->second.processed.at(indices.at(i) * stride + j) = x;
+            }
+        }
+    }
+    //flip z normal
+
     AnimatedMesh mesh;
-    mesh.id = texID;
+    mesh.id = g->FirstChildElement("mesh")->FirstChildElement("source")->NextSiblingElement("source")->NextSiblingElement("source")->Attribute("id");
     mesh.indices = indices;
-    mesh.textureCoords = processedTex;
-    mesh.normals = processedNormals;
+    mesh.textureCoords = attributes.at("TEXCOORD").processed;
+    mesh.normals = attributes.at("NORMAL").processed;
     mesh.vertices = vertices;
-    mesh.colors = processedColors;
+    if (attributes.find("COLOR") != attributes.end())
+    {
+        mesh.colors = attributes.at("COLOR").processed;
+    }
     return mesh;
 }
 AnimatedMesh ColladaParser::loadAllGeometries(XMLParser::XMLElement* doc, std::map<std::string, GLuint>& texLinks)
@@ -204,7 +231,6 @@ AnimatedMesh ColladaParser::loadAllGeometries(XMLParser::XMLElement* doc, std::m
             vertices.insert(vertices.end(), m.vertices.begin(), m.vertices.end());
             textureCoords.insert(textureCoords.end(), m.textureCoords.begin(), m.textureCoords.end());
             normals.insert(normals.end(), m.normals.begin(), m.normals.end());
-
             ModelMaterial mat;
 
             mat.textured = true;

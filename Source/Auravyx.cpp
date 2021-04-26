@@ -1,41 +1,17 @@
 #include "stdafx.h"
-#include "Library/GL/glew.h"
 #include "Auravyx.h"
-#include "Library/GL/glew.h"
 #include "Utilities/Log.h"
-#include "Audio/Sound.h"
-#include "Utilities/Resource.h"
-#include "Shader/Shaders.h"
 #include "Engine/Clock.h"
-#include <thread>
 #include "Engine/Mouse.h"
-#include "Utilities/Settings.h"
 #include <Utilities/Profiler.h>
-#include <Engine/State.h>
-#include <iostream>
-#include <Engine/GameManager.h>
 #include <Engine/GLManager.h>
-#include <cstdio>
-#include <wtypes.h>
-#include <Engine/Controller.h>
 #include <Engine/GameState.h>
-#include <Engine\OutputConsole.h>
 #include <Graphics\Model\ColladaParser.h>
-#include <Utilities/M.h>
-
-
-double thisFrame = 0;
-double nextFrame = 0;
-
-
-std::chrono::duration<long, std::milli> timeStep = std::chrono::milliseconds(1);
 
 GameManager Auravyx::gameManager;
 
-auto start = std::chrono::high_resolution_clock::now();
-
-bool end = false;
-bool updateEnd = false;
+std::atomic_bool end = false;
+std::atomic_bool updateEnd = false;
 
 void updater()
 {
@@ -88,12 +64,9 @@ void loop()
 
 	double deltaRender = 0;
 	float lastFpsCounter = 0;
-	int time;
-	std::vector<int> aa;
-	//aa.at(342);
 	double lastTimeFPSOld = 0;
 
-	while ((!WindowManager::getWindow()->closeRequested() && !OutputConsole::getConsole()->shutdown))
+	while ((!Window::getWindow()->closeRequested() && !OutputConsole::getConsole()->shutdown))
 	{
 		double framesPerSecond = 1.0 / GFX::getOverlay()->FPS;
 		thisTimeFPS = glfwGetTime();
@@ -102,20 +75,18 @@ void loop()
 		Clock::DELTA = deltaRender;
 		if (GFX::getOverlay()->FPS == GFX::getOverlay()->UNLIMITED_FPS || deltaRender >= framesPerSecond)
 		{
-			WindowManager::getWindow()->update();
+			Window::getWindow()->update();
 			Auravyx::getManager().getCurrentState()->render();
-			
 			//mod.render();
 			lastTimeFPS = thisTimeFPS;
 			GLManager::setFPS(roundf((float)(1.0 / (deltaRender))));
 		}
 		else
 		{
-			time = (framesPerSecond - (glfwGetTime() - lastTimeFPSOld)) * 1000;
-			std::this_thread::sleep_for(std::chrono::milliseconds(time));
+			std::this_thread::sleep_for(std::chrono::milliseconds((int)((framesPerSecond - (glfwGetTime() - lastTimeFPSOld)) * 1000)));
 		}
 	}
-	if (WindowManager::getWindow()->closeRequested())
+	if (Window::getWindow()->closeRequested())
 	{
 		Log::out("Closing main window because it was requested.");
 	}
@@ -131,20 +102,19 @@ void loop()
 void loadAssetsAsync()
 {
 	ThreadManager::getThreadManager()->registerThread(std::this_thread::get_id(), "Async Loader");
-	Resource::getResources()->loadAllAsyncAssets();
+	Resource::getInstance().loadAllAsyncAssets();
 }
 int main(int argc, char* argv[])
 {
 	Auravyx::start();
 	ThreadManager::getThreadManager()->registerThread(std::this_thread::get_id(), "Main");
-	Resource::getResources()->DIR = std::string(argv[0]) + "\\..";
+	Resource::getInstance().DIR = std::string(argv[0]) + "\\..";
 	#ifdef NDEBUG
 	#else
 	Log::out("[Debug] : [!] Auravyx is running in debug mode, expect very slow world generation!", RED);
 	#endif
 	GameManager::world.setup();
 	
-
 	OutputConsole::getConsole()->start();
 
 	while (!OutputConsole::getConsole()->isReady())
@@ -154,14 +124,14 @@ int main(int argc, char* argv[])
 	GLManager::start();
 	std::thread asyncLoader(loadAssetsAsync);
 	GFX::getOverlay()->init();
-	Resource::getResources()->loadBootAssets();
+	Resource::getInstance().loadBootAssets();
 	Profiler::init();
 	double last = 0;
 	double now = 0;
 	
-	WindowManager::getWindow()->update();
+	Window::getWindow()->update();
 
-	while (!Resource::getResources()->loadAllResources())
+	while (!Resource::getInstance().loadAllResources())
 	{
 		now = glfwGetTime();
 		if (now - last > 1.0 / 144.0)
@@ -169,36 +139,36 @@ int main(int argc, char* argv[])
 			last = now;
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			glClearColor(0.1, 0.1, 0.1, 1);
-			Resource::getResources()->renderProgress();
+			Resource::getInstance().renderProgress();
 			
-			WindowManager::getWindow()->update();
+			Window::getWindow()->update();
 		}
 		else
 		{
-			std::this_thread::sleep_for(timeStep);
+			std::this_thread::sleep_for(std::chrono::milliseconds(1));
 		}
 	}
-
-	AnimatedMesh meshes = ColladaParser::parse("C:\\Users\\jason\\Downloads\\Zelda\\Zeld\\Zelda.dae");
+	//AnimatedMesh meshes = ColladaParser::parse("C:\\Users\\jason\\Downloads\\Audi\\cottage.dae");
+	AnimatedMesh meshes = AnimatedMesh();// ColladaParser::parse("C:\\Users\\jason\\Downloads\\Zelda\\Zeld\\Zelda.dae");
 	Model m = Model::loadIndexed3DModel(meshes.vertices, meshes.normals, meshes.textureCoords, meshes.colors, meshes.indices);
 	m.setMaterials(meshes.materials);
-	std::cout << meshes.id << "sadasd";
-	Assets::getAssets()->addModel(meshes.id, m);
 
-	Resource::getResources()->clearPreloadedResources();
+	Assets::getAssets()->addModel("Zelda", m);
+
+	Resource::getInstance().clearPreloadedResources();
 	Renderer::getRenderer()->getShaders()->lineShader->init();
 	asyncLoader.join();
-	WindowManager::getWindow()->hideMouse();
+	Window::getWindow()->hideMouse();
 
-	WindowManager::getWindow()->getController()->resetMouse();
+	Window::getWindow()->getController()->resetMouse();
 	
 	loop();
 
 	Log::out("Cleanup", "Cleaning up audio...", LIGHT_GRAY);
 	SoundManager::getSoundManager()->stop();
-	Resource::getResources()->cleanupPrimaryResources();
+	Resource::getInstance().cleanupPrimaryResources();
 	OutputConsole::getConsole()->cleanup();
-	Resource::getResources()->cleanupRemainingResources();
+	Resource::getInstance().cleanupRemainingResources();
 	Auravyx::stop();
 	glfwTerminate();
 	return 0;
@@ -237,7 +207,7 @@ GFX* Auravyx::getOverlay()
 	return &overlayGraphics;
 }
 
-WindowManager* Auravyx::getWindow()
+Window* Auravyx::getWindow()
 {
 	return &window;
 }
@@ -288,11 +258,11 @@ void Auravyx::setupAllInstances()
 {
 	GFX(getInstance().getOverlay());
 	Assets(getInstance().getAssets());
-	WindowManager(getInstance().getWindow());
+	Window(getInstance().getWindow());
 	Renderer(getInstance().getRenderer());
 	Modify(getInstance().getModify());
 	SoundManager(getInstance().getSoundManager());
-	Resource(getInstance().getResources());
+	//Resource(getInstance().getResources());
 	OutputConsole(getInstance().getConsole());
 	ThreadManager(getInstance().getThreadManager());
 }

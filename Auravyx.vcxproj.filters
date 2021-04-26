@@ -144,7 +144,7 @@
     <ClCompile Include="Source\Audio\WAVE.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Engine\WindowManager.cpp">
+    <ClCompile Include="Source\Engine\Window.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\World\World.cpp">
@@ -440,7 +440,7 @@
     <ClInclude Include="Source\Audio\WAVE.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Engine\WindowManager.h">
+    <ClInclude Include="Source\Engine\Window.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\World\World.h">

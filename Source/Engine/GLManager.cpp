@@ -31,7 +31,7 @@ void GLManager::start()
 	}
 	glfwSetErrorCallback(glfwErrorCallback);
 
-	WindowManager::getWindow()->create();
+	Window::getWindow()->create();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);

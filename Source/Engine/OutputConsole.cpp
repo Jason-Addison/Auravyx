@@ -90,7 +90,7 @@ void OutputConsole::setupWindow()
 	glfwSetWindowPos(outputWindow, 10, mode->height / 2 - height / 2);
 
 	GLFWimage icons[1];
-	std::string str = Resource::getResources()->DIR + "\\Assets\\Textures\\iconf.png";
+	std::string str = Resource::getInstance().DIR + "\\Assets\\Textures\\iconf.png";
 	icons[0].pixels = SOIL_load_image(str.c_str(), &icons[0].width, &icons[0].height, 0, SOIL_LOAD_RGBA);
 	glfwSetWindowIcon(outputWindow, 1, icons);
 	SOIL_free_image_data(icons[0].pixels);
@@ -125,7 +125,7 @@ void OutputConsole::setupWindow()
 	glViewport(0, 0, width, height);
 
 	GFX::getOverlay()->init();
-	Resource::getResources()->loadBootAssets();
+	Resource::getInstance().loadBootAssets();
 
 	glfwMakeContextCurrent(outputWindow);
 	OutputConsole::ready = true;
@@ -140,9 +140,9 @@ void OutputConsole::render()
 	{
 		//scroll = -10000000;
 	}
-	if (-((int)scroll - height + 125) > (long int) messages.size() * 25)
+	if (-((int)scroll - height + 125) > (long int)messages.size() * 25)
 	{
-		scroll = (((long int) messages.size() * 25) - height + 125);
+		scroll = (((long int)messages.size() * 25) - height + 125);
 		scroll = -scroll;
 		if (messages.size() < (height - 125) / 25)
 		{
@@ -193,14 +193,14 @@ void OutputConsole::render()
 		}
 		GFX::getOverlay()->drawString(messages.at(i).time, 5, (i * 25) + 80 + scroll, 21, 1, 1, 1, 1, width, height);
 
-	
+
 		if (width > 1000)
 		{
 			GFX::getOverlay()->drawString(messages.at(i).location, 155, (i * 25) + 80 + scroll, 21, 1, 1, 1, 1, width, height);
 
 			if (messages.at(i).thread.size() > 0)
 			{
-				GFX::getOverlay()->drawString(messages.at(i).thread, 305, (i * 25) + 80 + scroll, 21, 1, 1, 1, 1, width, height); 
+				GFX::getOverlay()->drawString(messages.at(i).thread, 305, (i * 25) + 80 + scroll, 21, 1, 1, 1, 1, width, height);
 			}
 			else
 			{
@@ -208,34 +208,34 @@ void OutputConsole::render()
 			}
 		}
 
-		
+
 		switch (messages.at(i).type)
 		{
-			case(ConsoleMessage::Type::MESSAGE):
-			{
-				GFX::getOverlay()->drawString(messages.at(i).text, offset, (i * 25) + 80 + scroll, 21, 1, 1, 1, 1, width, height);
-				break;
-			}
-			case(ConsoleMessage::Type::WARNING_MESSAGE):
-			{
-				GFX::getOverlay()->drawString(messages.at(i).text, offset, (i * 25) + 80 + scroll, 21, 1, 0.6, 0, 1, width, height);
-				break;
-			}
-			case(ConsoleMessage::Type::ERROR_MESSAGE):
-			{
-				GFX::getOverlay()->drawString(messages.at(i).text, offset, (i * 25) + 80 + scroll, 21, 1, 0.2, 0.2, 1, width, height);
-				break;
-			}
-			case(ConsoleMessage::Type::CRITICAL_ERROR_MESSAGE):
-			{
-				GFX::getOverlay()->drawString(messages.at(i).text, offset, (i * 25) + 80 + scroll, 21, 1, 1, 1, 1, width, height);
-				break;
-			}
-			case(ConsoleMessage::Type::DEBUG_MESSAGE):
-			{
-				GFX::getOverlay()->drawString(messages.at(i).text, offset, (i * 25) + 80 + scroll, 21, 0.5, 0.5, 0.5, 1, width, height);
-				break;
-			}
+		case(ConsoleMessage::Type::MESSAGE):
+		{
+			GFX::getOverlay()->drawString(messages.at(i).text, offset, (i * 25) + 80 + scroll, 21, 1, 1, 1, 1, width, height);
+			break;
+		}
+		case(ConsoleMessage::Type::WARNING_MESSAGE):
+		{
+			GFX::getOverlay()->drawString(messages.at(i).text, offset, (i * 25) + 80 + scroll, 21, 1, 0.6, 0, 1, width, height);
+			break;
+		}
+		case(ConsoleMessage::Type::ERROR_MESSAGE):
+		{
+			GFX::getOverlay()->drawString(messages.at(i).text, offset, (i * 25) + 80 + scroll, 21, 1, 0.2, 0.2, 1, width, height);
+			break;
+		}
+		case(ConsoleMessage::Type::CRITICAL_ERROR_MESSAGE):
+		{
+			GFX::getOverlay()->drawString(messages.at(i).text, offset, (i * 25) + 80 + scroll, 21, 1, 1, 1, 1, width, height);
+			break;
+		}
+		case(ConsoleMessage::Type::DEBUG_MESSAGE):
+		{
+			GFX::getOverlay()->drawString(messages.at(i).text, offset, (i * 25) + 80 + scroll, 21, 0.5, 0.5, 0.5, 1, width, height);
+			break;
+		}
 		}
 	}
 
@@ -243,7 +243,7 @@ void OutputConsole::render()
 
 	if (messages.size() > 0)
 	{
-		double barSize = (double) ((height - 125) / 25) / (double) messages.size();
+		double barSize = (double)((height - 125) / 25) / (double)messages.size();
 		if (barSize > 1)
 		{
 			barSize = 1;
@@ -253,7 +253,7 @@ void OutputConsole::render()
 		{
 			sb = 5;
 		}
-		GFX::getOverlay()->fillRect(width - 12, height - 75 - (sb) - (-scroll * barSize) + -2, 10, sb, width, height, 1, 1, 1, 1);
+		GFX::getOverlay()->fillRect(width - 12, height - 75 - (sb)-(-scroll * barSize) + -2, 10, sb, width, height, 1, 1, 1, 1);
 	}
 
 	GFX::getOverlay()->fillRect(0, 0, width, 50, width, height, 0.10, 0.10, 0.10, 1);

@@ -109,7 +109,7 @@ void ShadowShader::render(const World &world, ShadowMap &shadowMap, const Camera
 		glBindVertexArray(m->getVAO());
 		glEnableVertexArrayAttrib(m->getVAO(), 0);
 
-		Matrix4f matrix = M::createTransformationMatrix(i * 2, 32.5, 0,
+		Matrix4f matrix = M::createTransformationMatrix(i * 2, 31.5, 0,
 			1, 1, 1, i * 0, (GameManager::world.getOverworldTime() % GameManager::world.getOverworldDayCycle()) * 0.5 * (i * i * 0.2), 0);
 		loadTransformation(matrix);
 

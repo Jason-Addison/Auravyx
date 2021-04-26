@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "GUI/Image.h"
-#include "Engine/WindowManager.h"
+#include "Engine/Window.h"
 
 
 Image::Image()

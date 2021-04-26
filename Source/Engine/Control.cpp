@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "Engine/Control.h"
-#include "Engine/WindowManager.h"
+#include "Engine/Window.h"
 #include "Library\GLFW\glfw3.h"
 #include <Auravyx.h>
 
@@ -21,7 +21,7 @@ Control::~Control()
 
 int Control::active(int key)
 {
-	if (glfwGetKey(WindowManager::getWindow()->window, key) == GLFW_PRESS)
+	if (glfwGetKey(Window::getWindow()->window, key) == GLFW_PRESS)
 	{
 		return true;
 	}
