@@ -2,7 +2,7 @@
 #include <GL/glew.h>
 #include "GLFW/glfw3.h"
 #include <vector>
-#include "Auravyx/Graphics/Model/OBJ/OBJMaterial.h"
+#include "Auravyx/Graphics/Model/Wavefront/OBJMaterial.h"
 #include "Auravyx/Graphics/Model/ModelMaterial.h"
 
 class Model

@@ -14,7 +14,7 @@
 #include <deque>
 #include <filesystem>
 #include <thread>
-#include "Auravyx/Graphics/Model/DAE/ColladaParser.h"
+#include "Auravyx/Graphics/Model/Collada/ColladaParser.h"
 #include "Auravyx/Graphics/Renderer.h"
 #include "Auravyx/Graphics/GFX.h"
 #include <Auravyx/Modify/Modify.h>

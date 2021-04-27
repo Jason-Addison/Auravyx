@@ -5,7 +5,7 @@
 #include "Auravyx/Utility/Profiler.h"
 #include "Auravyx/Graphics/GL/GLManager.h"
 #include "Auravyx/Core/State/GameState.h"
-#include "Auravyx/Graphics/Model/DAE/ColladaParser.h"
+#include "Auravyx/Graphics/Model/Collada/ColladaParser.h"
 
 GameManager Auravyx::gameManager;
 
