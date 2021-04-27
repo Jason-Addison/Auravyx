@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "Player.h"
 #include "Server.h"
-#include "Utilities/Log.h"
+#include "Logger/Log.h"
 #include "LogType.h"
 Player::Player()
 {
