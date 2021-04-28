@@ -6,7 +6,7 @@
 #include "Auravyx/Utility/Profiler.h"
 #include "Auravyx/UI/Window.h"
 #include <Logger/Log.h>
-
+#include <cmath>
 bool f3Lock = false;
 bool f5Lock = false;
 

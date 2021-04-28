@@ -7,12 +7,12 @@ bool verboseChunkIO = false;
 
 void ChunkIO::saveArea()
 {
-	std::string dir = Resource::getInstance().DIR + "\\Saves\\m.txt";
+	std::string dir = Resource::getInstance().DIR + "/Saves/m.txt";
 
 	FILE* chunkOutput = fopen(dir.c_str(), "rb+");
 	if (!chunkOutput)
 	{
-		Log::out("ChunkIO", "Chunk error : " + std::string(strerror(errno)), RED, RED);
+		//Log::out("ChunkIO", "Chunk error : " + std::string(strerror(errno)), RED, RED);
 	}
 	unsigned char chunkCount = 0;
 	fwrite(&chunkCount, 1, 1, chunkOutput);
@@ -35,13 +35,13 @@ void ChunkIO::saveArea()
 
 void ChunkIO::saveChunk(const Chunk* chunk, const std::string& name)
 {
-	std::string dir = Resource::getInstance().DIR + "\\Saves\\" + name + "\\data\\c" +
+	std::string dir = Resource::getInstance().DIR + "/Saves/" + name + "/data/c" +
 		std::to_string(chunk->x) + "." + std::to_string(chunk->y) + "." + std::to_string(chunk->z) + ".voxc";
 
 	FILE* chunkOutput = fopen(dir.c_str(), "wb");
 	if (!chunkOutput)
 	{
-		Log::out("ChunkIO", "Chunk error : " + std::string(strerror(errno)), RED, RED);
+		//Log::out("ChunkIO", "Chunk error : " + std::string(strerror(errno)), RED, RED);
 	}
 	fwrite(&chunk->x, sizeof(int), 1, chunkOutput);
 	fwrite(&chunk->y, sizeof(int), 1, chunkOutput);
@@ -65,13 +65,13 @@ std::shared_ptr<Chunk> ChunkIO::readChunk(const int x, const int y, const int z,
 {
 	std::shared_ptr<Chunk> chunk(new Chunk());
 
-	std::string dir = Resource::getInstance().DIR + "\\Saves\\" + name + "\\data\\c" +
+	std::string dir = Resource::getInstance().DIR + "/Saves/" + name + "/data/c" +
 		std::to_string(x) + "." + std::to_string(y) + "." + std::to_string(z) + ".voxc";
 
 	FILE* chunkInput = fopen(dir.c_str(), "rb");
 	if (!chunkInput)
 	{
-		Log::out("ChunkIO", "Chunk error : " + std::string(strerror(errno)), RED, RED);
+		//Log::out("ChunkIO", "Chunk error : " + std::string(strerror(errno)), RED, RED);
 		return nullptr;
 	}
 

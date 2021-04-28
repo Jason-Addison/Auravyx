@@ -1,5 +1,4 @@
 #include "Auravyx/Core/State/GameState.h"
-#include <winsock2.h>
 #include <stdio.h>
 #include "Auravyx/Graphics/GFX.h"
 #include "Auravyx/Utility/Util.h"
@@ -11,7 +10,6 @@
 #include <Auravyx/Core/World/ChunkIO.h>
 #include <thread>
 #include <Auravyx/Audio/Sound.h>
-#include <Psapi.h>
 #include "Auravyx/Utility/Profiler.h"
 #include <Auravyx/Core/Settings.h>
 #include <Auravyx/Core/Assets.h>
@@ -24,6 +22,7 @@
 #include "Auravyx/Modify/Modify.h"
 #include <stdexcept>
 #include <Logger/Log.h>
+#include <cmath>
 #include <Auravyx/Utility/Math/M.h>
 #include "Auravyx/Core/GameManager.h"
 #include "Auravyx/Core/ThreadManager.h"
@@ -432,14 +431,14 @@ void GameState::render()
 			c->clear(x, y - 7, z, size, size, size, 0);
 		}
 	}
-	MEMORYSTATUSEX memInfo;
+	/*MEMORYSTATUSEX memInfo;
 	memInfo.dwLength = sizeof(MEMORYSTATUSEX);
 	GlobalMemoryStatusEx(&memInfo);
 	DWORDLONG totalVirtualMem = memInfo.ullTotalPageFile;
 
 	PROCESS_MEMORY_COUNTERS_EX pmc;
 	GetProcessMemoryInfo(GetCurrentProcess(), (PROCESS_MEMORY_COUNTERS*)&pmc, sizeof(pmc));
-	SIZE_T virtualMemUsedByMe = pmc.PrivateUsage;
+	SIZE_T virtualMemUsedByMe = pmc.PrivateUsage;*/
 	//fbo.bind();
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -485,8 +484,8 @@ void GameState::render()
 
 	float velocity = sqrt(pow(GFX::getOverlay()->CAM.xVel, 2) + pow(GFX::getOverlay()->CAM.yVel, 2) + pow(GFX::getOverlay()->CAM.zVel, 2));
 	GFX::getOverlay()->drawStringBG("v: " + Util::removeDecimal(velocity, 1) + " m/s", 0, dim * (di++), 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3f);
-	SIZE_T physMemUsedByMe = pmc.WorkingSetSize;
-	DWORDLONG totalPhysMem = memInfo.ullTotalPhys;
+	//SIZE_T physMemUsedByMe = pmc.WorkingSetSize;
+	//DWORDLONG totalPhysMem = memInfo.ullTotalPhys;
 	int renderableChunk = 0;
 	for (auto &c : GameManager::world.overworld)
 	{
@@ -516,9 +515,9 @@ void GameState::render()
 	GFX::getOverlay()->drawStringBGR("cpu usage: " + Util::removeDecimal((cpuUsageA + cpuUsageB) / 2, 2) + "%",
 		0, dim * (rdi++), 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3);
 
-	GFX::getOverlay()->drawStringBGR("mem: " + Util::removeDecimal(((float) static_cast<long long>(physMemUsedByMe) / 1000000000.0), 3) + " / " +
-		Util::removeDecimal((float) static_cast<long long>(totalPhysMem) / 1000000000.0, 1) + " GB"
-		, 0, dim * (rdi++), 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3);
+	//GFX::getOverlay()->drawStringBGR("mem: " + Util::removeDecimal(((float) static_cast<long long>(physMemUsedByMe) / 1000000000.0), 3) + " / " +
+	//	Util::removeDecimal((float) static_cast<long long>(totalPhysMem) / 1000000000.0, 1) + " GB"
+	//	, 0, dim * (rdi++), 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3);
 
 	GFX::getOverlay()->drawStringBGR("mods active: " + std::to_string(Modify::getModify()->getEnabledModCount()) +
 		" / " + std::to_string(Modify::getModify()->getEnabledModCount())
@@ -603,7 +602,7 @@ void GameState::start()
 	s.setPosition(0, 0, 0);
 	hostServer = false;// Settings::getBool("host");
 	Modify::getModify()->loadAllMods();
-	
+
 	if (hostServer)
 	{
 		server = std::thread(serverStart);

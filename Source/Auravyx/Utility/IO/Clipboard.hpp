@@ -106,11 +106,10 @@ public:
 
 #elif LINUX
 
-#include <gtk/gtk.h>
 
 class CClipboardLinux : public IClipboardOS {
 private:
-	GtkClipboard* m_pClip;
+	/*GtkClipboard* m_pClip;
 
 	CClipboardLinux() {
 		gtk_init(0, 0);
@@ -148,7 +147,7 @@ public:
 	}
 
 	friend class Clipboard;
-};
+};*/
 
 #endif
 

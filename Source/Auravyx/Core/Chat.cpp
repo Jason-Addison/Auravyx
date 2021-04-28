@@ -2,12 +2,9 @@
 #include "Auravyx/UI/Control/Controller.h"
 #include "Auravyx/UI/Window.h"
 #include <Logger/Log.h>
-#include "Auravyx/Utility/IO/Clipboard.hpp"
 #include <Auravyx/Core/World/ChunkIO.h>
 #include "SOIL/SOIL.h"
 #include <Auravyx/Utility/IO/Resource.h>
-#include <iomanip>
-#include <iostream>
 #include <Auravyx/Graphics/GFX.h>
 Chat::Chat()
 {
@@ -74,29 +71,29 @@ void chatKeyCallback(GLFWwindow* window, int key, int scancode, int action, int 
 			}
 			if (key == 67 && mods == 2)
 			{
-				try 
+				/*try
 				{
 					if (selectionEnd > selectionStart)
 					{
-						Clipboard clipboard;
+						//Clipboard clipboard;
 
-						clipboard << currentMessage.substr(selectionStart, selectionEnd).c_str();
+						//clipboard << currentMessage.substr(selectionStart, selectionEnd).c_str();
 					}
 				}
 				catch (CExceptionXX& e) 
 				{
 					Log::out(e.what());
-				}
+				}*/
 			}
 			if (key == 86 && mods == 2)
 			{
-				try
+				/*try
 				{
-					Clipboard clipboard;
+					//Clipboard clipboard;
 					std::string pasted = "";
 					//clipboard << currentMessage.substr(selectionStart, selectionEnd).c_str();
-					clipboard >> pasted;
-					if (pasted.length() > 0)
+					//clipboard >> pasted;
+					//if (pasted.length() > 0)
 					{
 						currentMessage += pasted;
 					}
@@ -104,7 +101,7 @@ void chatKeyCallback(GLFWwindow* window, int key, int scancode, int action, int 
 				catch (CExceptionXX & e)
 				{
 					Log::out(e.what());
-				}
+				}*/
 			}
 		}
 			// paste
@@ -201,13 +198,13 @@ void Chat::render()
 	}
 	if (!f1Lock && Window::getWindow()->getController()->isKeyDown(GLFW_KEY_F1))
 	{
-		auto t = std::time(nullptr);
-		auto tm = *std::localtime(&t);
+		auto t = time(nullptr);
+		auto tm = *localtime(&t);
 		f1Lock = true;
 		std::string outFile = Resource::getInstance().DIR + "//Screenshots//";
 		std::stringstream ss;
 		ss << Resource::getInstance().DIR + "//Screenshots//";
-		ss << std::put_time(&tm, "%d-%m-%Y %H-%M-%S");
+		//ss << std::put_time(&tm, "%d-%m-%Y %H-%M-%S");
 		ss << ".png";
 		int save_result = SOIL_save_screenshot
 		(

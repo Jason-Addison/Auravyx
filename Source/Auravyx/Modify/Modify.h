@@ -2,6 +2,7 @@
 #include <iostream>
 #include "Auravyx/Modify/Mod.h"
 #include <vector>
+#include <memory>
 class Modify
 {
 public:

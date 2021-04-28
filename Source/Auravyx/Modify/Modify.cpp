@@ -16,6 +16,10 @@ void sayHi()
 {
 
 }
+#ifdef _WIN32
+#else
+#define __stdcall
+#endif
 typedef Mod*(__stdcall* DLLFunc)();
 
 Modify* Modify::modify;
@@ -32,7 +36,7 @@ Modify::Modify(Modify* m)
 }
 void Modify::loadAllMods()
 {
-    std::vector<std::string> mods = FileIO::listDirectory(Resource::getInstance().DIR + "\\Mods\\enabled\\");
+    std::vector<std::string> mods = FileIO::listDirectory(Resource::getInstance().DIR + "/Mods/Enabled/");
     for (auto m : mods)
     {
 
@@ -41,6 +45,7 @@ void Modify::loadAllMods()
 }
 int Modify::loadMod(const std::string& dir)
 {
+#ifdef _WIN32
     HINSTANCE hGetProcIDDLL = LoadLibrary((LPCSTR)dir.c_str());
     if (!hGetProcIDDLL)
     {
@@ -80,6 +85,7 @@ int Modify::loadMod(const std::string& dir)
     Mod* mod = getMod();
     //setInstance(Auravyx::getInstance());
     mod->start();
+#endif
     return 0;
 }
 

@@ -6,6 +6,7 @@
 #include "Auravyx/Graphics/GL/GLManager.h"
 #include "Auravyx/Core/State/GameState.h"
 #include "Auravyx/Graphics/Model/Collada/ColladaParser.h"
+#include <cmath>
 
 GameManager Auravyx::gameManager;
 
@@ -59,7 +60,7 @@ void loop()
 	double lastTimeFPS = -1;
 	double thisTimeFPS = 0;
 
-	std::thread updater(updater);
+	std::thread updater;//(updater);
 
 	double deltaRender = 0;
 	float lastFpsCounter = 0;
@@ -107,27 +108,31 @@ int main(int argc, char* argv[])
 {
 	Auravyx::start();
 	ThreadManager::getThreadManager()->registerThread(std::this_thread::get_id(), "Main");
-	Resource::getInstance().DIR = std::string(argv[0]) + "\\..";
+	Resource::getInstance().DIR = "/home/jason/CLionProjects/Auravyx/cmake-build-release";//std::string(argv[0]) + "/..";
 	#ifdef NDEBUG
 	#else
 	Log::out("[Debug] : [!] Auravyx is running in debug mode, expect very slow world generation!", RED);
 	#endif
 	GameManager::world.setup();
-	
+
 	OutputConsole::getConsole()->start();
 
 	while (!OutputConsole::getConsole()->isReady())
 	{
 
 	}
+
 	GLManager::start();
+
 	std::thread asyncLoader(loadAssetsAsync);
 	GFX::getOverlay()->init();
+
 	Resource::getInstance().loadBootAssets();
 	Profiler::init();
+
 	double last = 0;
 	double now = 0;
-	
+
 	Window::getWindow()->update();
 
 	while (!Resource::getInstance().loadAllResources())
@@ -147,6 +152,7 @@ int main(int argc, char* argv[])
 			std::this_thread::sleep_for(std::chrono::milliseconds(1));
 		}
 	}
+
 	//AnimatedMesh meshes = ColladaParser::parse("C:\\Users\\jason\\Downloads\\Audi\\cottage.dae");
 	//AnimatedMesh meshes = ColladaParser::parse("C:\\Users\\jason\\Downloads\\Zelda\\Zeld\\Zelda.dae");
 	//Model m = Model::loadIndexed3DModel(meshes.vertices, meshes.normals, meshes.textureCoords, meshes.colors, meshes.indices);
@@ -156,11 +162,13 @@ int main(int argc, char* argv[])
 
 	Resource::getInstance().clearPreloadedResources();
 	Renderer::getRenderer()->getShaders()->lineShader->init();
-	asyncLoader.join();
-	Window::getWindow()->hideMouse();
 
-	Window::getWindow()->getController()->resetMouse();
-	
+	asyncLoader.join();
+
+	//////////Window::getWindow()->hideMouse();
+
+	/////////Window::getWindow()->getController()->resetMouse();
+
 	loop();
 
 	Log::out("Cleanup", "Cleaning up audio...", LIGHT_GRAY);

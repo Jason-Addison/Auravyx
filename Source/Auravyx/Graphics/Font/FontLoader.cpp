@@ -32,7 +32,7 @@ void FontLoader::loadFont(const std::string& file)
 {
 	std::vector<std::string> lines = Util::splitString(Util::readTextFile(file), "\n");
 	std::vector<FontChar> characters(500);
-	
+
 	std::string fontName = FileIO::getFileName(file);
 	fontName = fontName.substr(0, fontName.length() - 4);
 	std::shared_ptr<Texture> texture = Assets::getAssets()->getAssets()->getTexture(fontName);

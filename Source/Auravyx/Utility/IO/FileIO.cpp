@@ -1,6 +1,7 @@
 #include "MSVC/pch.h"
 #include "Auravyx/Utility/IO/FileIO.h"
 #include <filesystem>
+#include <sys/stat.h>
 #include "Auravyx/Utility/IO/FileIO.h"
 #include "Auravyx/Utility/StringUtil.h"
 
@@ -65,13 +66,12 @@ int FileIO::typeOfFile(const std::string& path)
 
 std::string FileIO::getFileName(const std::string& file)
 {
-	char sep = '\\';
+	char sep = '/';
 
 	int os = 0;
-	if (os)
-	{
+#ifdef _WIN32
 		sep = '\\';
-	}
+#endif
 
 	unsigned long long k = file.rfind(sep, file.length());
 	if (k != std::string::npos)

@@ -188,7 +188,7 @@ float GFX::stringWidth(const std::string& string, const float size)
 }
 
 void GFX::renderModel(const float x, const float y, const float z, const float xScale, const float yScale, const float zScale, const float xRot,
-	const float yRot, const float zRot, Model& m, Camera& c, const Matrix4f& const projection, const Texture& tex)
+	const float yRot, const float zRot, Model& m, Camera& c, const Matrix4f& projection, const Texture& tex)
 {
 	Renderer::getRenderer()->getShaders()->modelShader->start();
 	Renderer::getRenderer()->getShaders()->modelShader->loadCamera(c.getViewMatrix());

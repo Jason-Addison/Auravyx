@@ -6,6 +6,7 @@
 #include "Auravyx/Core/Assets.h"
 #include "Auravyx/Graphics/Model/Model.h"
 #include <Logger/Log.h>
+#include <iterator>
 
 #define ALBEDO 0
 #define NORMAL 1
