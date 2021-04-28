@@ -18,6 +18,7 @@
 #include "Auravyx/Graphics/Renderer.h"
 #include "Auravyx/Graphics/GFX.h"
 #include <Auravyx/Modify/Modify.h>
+#include <cmath>
 
 Resource::Resource()
 {
@@ -215,7 +216,7 @@ bool Resource::loadAllResources()
 void Resource::loadAllTextures()
 {
 	whatIsLoadingPrimary = "Loading textures";
-	std::vector<std::string> textures = FileIO::listDirectory(DIR + "\\Assets\\Textures", "png");
+	std::vector<std::string> textures = FileIO::listDirectory(DIR + "/Assets/Textures", "png");
 	Log::out("Loader", "Loading textures...", YELLOW);
 	for (auto &texture : textures)
 	{
@@ -266,11 +267,12 @@ void Resource::loadTextureSilent(const std::string& texture)
 
 void Resource::loadAllAsyncAssets()
 {
-	preloadShaders = loadShaders("\\Shaders\\Regular");
+	preloadShaders = loadShaders("/Shaders/Regular");
 	shadersLoaded = true;
 	SoundManager::getSoundManager()->start();
+
 	Log::out("Loader", "Loading settings...", YELLOW);
-	Settings::settings = FileIO::readConfig(Resource::getInstance().DIR + "\\settings.txt");
+	Settings::settings = FileIO::readConfig(Resource::getInstance().DIR + "/settings.txt");
 	Log::out("Loader", "Loading controller...", YELLOW);
 
 	Window::getWindow()->getController()->init();
@@ -384,13 +386,13 @@ Resource& Resource::getInstance()
 }
 void Resource::loadBootAssets()
 {
-	Renderer::getRenderer()->getShaders()->initBootShaders(Resource::loadShaders("\\Shaders\\Base"));
+	Renderer::getRenderer()->getShaders()->initBootShaders(Resource::loadShaders("/Shaders/Base"));
 
-	//loadTextureSilent(Resource::getInstance().DIR + "\\Assets\\Boot\\font.png");
-	///loadTextureSilent(Resource::getInstance().DIR + "\\Assets\\Boot\\font_plain-.png");
-	//FontLoader::loadFont(Resource::getInstance().DIR + "\\Assets\\font.fnt");
-	loadTextureSilent(Resource::getInstance().DIR + "\\Assets\\Boot\\font_plain.png");
-	FontLoader::loadFont(Resource::getInstance().DIR + "\\Assets\\Boot\\font_plain.fnt");
+	//loadTextureSilent(Resource::getInstance().DIR + "/Assets/Boot/font.png");
+	///loadTextureSilent(Resource::getInstance().DIR + "/Assets/Boot/font_plain-.png");
+	//FontLoader::loadFont(Resource::getInstance().DIR + "/Assets/font.fnt");
+	loadTextureSilent(Resource::getInstance().DIR + "/Assets/Boot/font_plain.png");
+	FontLoader::loadFont(Resource::getInstance().DIR + "/Assets/Boot/font_plain.fnt");
 }
 
 int Resource::loadTexture(const std::string& dir)
@@ -409,7 +411,7 @@ int Resource::loadTexture(const std::string& dir)
 void Resource::loadAllModels()
 {
 	whatIsLoadingPrimary = "Loading models";
-	std::vector<std::string> models = FileIO::listDirectory(DIR + "\\Assets\\Models", "obj");
+	std::vector<std::string> models = FileIO::listDirectory(DIR + "/Assets/Models", "obj");
 	std::vector<int> texList;
 	std::string s;
 	s += ((char) 0);
@@ -507,7 +509,7 @@ void Resource::loadAllModels()
 void Resource::loadAllAudio()
 {
 	whatIsLoadingPrimary = "Loading audio";
-	std::vector<std::string> sounds = FileIO::listDirectory(DIR + "\\Assets\\Audio", "wav");
+	std::vector<std::string> sounds = FileIO::listDirectory(DIR + "/Assets/Audio", "wav");
 	Log::out("Loader", "Loading audio...", YELLOW);
 	for (auto& sound : sounds)
 	{
@@ -578,7 +580,7 @@ std::map<std::string, std::string> Resource::loadShaders(const std::string& dir)
 void Resource::loadAllTerrainTextures()
 {
 	whatIsLoadingPrimary = "Loading terrain textures";
-	std::vector<std::string> textures = FileIO::listDirectory(DIR + "\\Assets\\Terrain", "png");
+	std::vector<std::string> textures = FileIO::listDirectory(DIR + "/Assets/Terrain", "png");
 	std::vector<int> texList;
 	std::string png = "png";
 	
@@ -618,7 +620,7 @@ void Resource::loadAllMods()
 	whatIsLoadingPrimary = "Loading mods";
 
 	Log::out("Modify", "Loading all mods...", LIGHT_GRAY);
-	std::vector<std::string> mods = FileIO::listDirectory(Resource::getInstance().DIR + "\\Mods\\Enabled\\");
+	std::vector<std::string> mods = FileIO::listDirectory(Resource::getInstance().DIR + "/Mods/Enabled/");
 	for (auto m : mods)
 	{
 		if (std::filesystem::is_directory(m))

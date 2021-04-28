@@ -58,7 +58,7 @@ void PhysicsObject::setPosition(const double x, const double y, const double z)
 
 void PhysicsObject::addImpulse(const double x, const double y, const double z)
 {
-	impulses.emplace_back(struct Impulse(x, y, z));
+	impulses.emplace_back(Impulse(x, y, z));
 }
 
 double PhysicsObject::getX() const

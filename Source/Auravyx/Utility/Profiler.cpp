@@ -20,12 +20,15 @@ Profiler::~Profiler()
 bool Profiler::showAdvancedDebugInfo = false;
 bool Profiler::showChunkMetrics = false;
 
+#ifdef _WIN32
 static ULARGE_INTEGER lastCPU, lastSysCPU, lastUserCPU;
 static int numProcessors;
 static HANDLE self;
+#endif
 
 void Profiler::init() 
 {
+#ifdef _WIN32
 	SYSTEM_INFO sysInfo;
 	FILETIME ftime, fsys, fuser;
 
@@ -39,10 +42,12 @@ void Profiler::init()
 	GetProcessTimes(self, &ftime, &ftime, &fsys, &fuser);
 	memcpy(&lastSysCPU, &fsys, sizeof(FILETIME));
 	memcpy(&lastUserCPU, &fuser, sizeof(FILETIME));
+#endif
 }
 
 double Profiler::getCurrentProcessCPU()
 {
+#ifdef _WIN32
 	FILETIME ftime, fsys, fuser;
 	ULARGE_INTEGER now, sys, user;
 	double percent;
@@ -62,6 +67,9 @@ double Profiler::getCurrentProcessCPU()
 	lastSysCPU = sys;
 
 	return percent * 100;
+#else
+	return 0;
+#endif
 }
 
 int Profiler::getCPUCoreCount()

@@ -10,7 +10,7 @@ Quaternion::Quaternion(const float x, const float y, const float z, const float 
 
 void Quaternion::normalize()
 {
-	float m = std::sqrtf(w * w + x * x + y * y + z * z);
+	float m = sqrtf(w * w + x * x + y * y + z * z);
 	x /= m;
 	y /= m;
 	z /= m;
@@ -54,7 +54,7 @@ Quaternion Quaternion::fromMatrix(const Matrix4f& m)
 	float diagonal = m.m00 + m.m11 + m.m22;
 	if (diagonal > 0)
 	{
-		float w4 = (float)(std::sqrtf(diagonal + 1.0f) * 2.0f);
+		float w4 = (float)(sqrtf(diagonal + 1.0f) * 2.0f);
 		w = w4 / 4.0f;
 		x = (m.m21 - m.m12) / w4;
 		y = (m.m02 - m.m20) / w4;
@@ -62,7 +62,7 @@ Quaternion Quaternion::fromMatrix(const Matrix4f& m)
 	}
 	else if ((m.m00 > m.m11) && (m.m00 > m.m22))
 	{
-		float x4 = (float)(std::sqrtf(1.0f + m.m00 - m.m11 - m.m22) * 2.0f);
+		float x4 = (float)(sqrtf(1.0f + m.m00 - m.m11 - m.m22) * 2.0f);
 		w = (m.m21 - m.m12) / x4;
 		x = x4 / 4.0f;
 		y = (m.m01 + m.m10) / x4;
@@ -70,14 +70,14 @@ Quaternion Quaternion::fromMatrix(const Matrix4f& m)
 	}
 	else if (m.m11 > m.m22)
 	{
-		float y4 = (float)(std::sqrtf(1.0f + m.m11 - m.m00 - m.m22) * 2.0f);
+		float y4 = (float)(sqrtf(1.0f + m.m11 - m.m00 - m.m22) * 2.0f);
 		w = (m.m02 - m.m20) / y4;
 		x = (m.m01 + m.m10) / y4;
 		y = y4 / 4.0f;
 		z = (m.m12 + m.m21) / y4;
 	}
 	else {
-		float z4 = (float)(std::sqrtf(1.0f + m.m22 - m.m00 - m.m11) * 2.0f);
+		float z4 = (float)(sqrtf(1.0f + m.m22 - m.m00 - m.m11) * 2.0f);
 		w = (m.m10 - m.m01) / z4;
 		x = (m.m02 + m.m20) / z4;
 		y = (m.m12 + m.m21) / z4;

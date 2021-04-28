@@ -91,8 +91,9 @@ void OutputConsole::setupWindow()
 	glfwSetWindowPos(outputWindow, 10, mode->height / 2 - height / 2);
 
 	GLFWimage icons[1];
-	std::string str = Resource::getInstance().DIR + "\\Assets\\Textures\\iconf.png";
+	std::string str = Resource::getInstance().DIR + "/Assets/Textures/iconf.png";
 	icons[0].pixels = SOIL_load_image(str.c_str(), &icons[0].width, &icons[0].height, 0, SOIL_LOAD_RGBA);
+
 	glfwSetWindowIcon(outputWindow, 1, icons);
 	SOIL_free_image_data(icons[0].pixels);
 
@@ -131,6 +132,7 @@ void OutputConsole::setupWindow()
 	Resource::getInstance().loadBootAssets();
 
 	glfwMakeContextCurrent(outputWindow);
+
 	OutputConsole::ready = true;
 }
 
@@ -329,6 +331,7 @@ void OutputConsole::consoleFunction()
 	while (true)
 	{
 		now = glfwGetTime();
+
 		if (now - last > 1.0 / FPS)
 		{
 			last = now;
@@ -350,7 +353,7 @@ void OutputConsole::consoleFunction()
 				messagesToLoad.clear();
 			}
 
-			render();
+			//render();
 			if (glfwWindowShouldClose(outputWindow))
 			{
 				OutputConsole::getConsole()->shutdown = true;

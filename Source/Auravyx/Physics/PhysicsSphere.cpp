@@ -1,5 +1,6 @@
 #include "Auravyx/Physics/PhysicsSphere.h"
 #include "Auravyx/Physics/Physics.h"
+#include <cmath>
 PhysicsSphere::PhysicsSphere()
 {
 	type = SPHERE;
