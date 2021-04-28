@@ -19,7 +19,6 @@ Window::~Window()
 {
 }
 bool Window::resized = true;
-HWND hwnd;
 double Window::mainScroll = 1;
 void Window::scrollCallback(GLFWwindow* window, double xoffset, double yoffset)
 {
@@ -72,7 +71,7 @@ void Window::create()
 	glfwSetWindowPos(window, (mode->width - width) / 2, (mode->height - height) / 2);
 
 	GLFWimage icons[1];
-	std::string str = Resource::getInstance().DIR + "\\Assets\\Textures\\coin.png";
+	std::string str = Resource::getInstance().DIR + "/Assets/Textures/coin.png";
 	icons[0].pixels = SOIL_load_image(str.c_str(), &icons[0].width, &icons[0].height, 0, SOIL_LOAD_RGBA);
 	glfwSetWindowIcon(window, 1, icons);
 	SOIL_free_image_data(icons[0].pixels);

@@ -1,12 +1,12 @@
 #include "MSVC/pch.h"
 #include "Auravyx/Utility/Util.h"
 #include <iostream>
-#include <ShObjIdl_core.h>
 #include <sstream>
 #include <filesystem>
 #include <fstream>
 #include <Logger/Log.h>
-static HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
+#include <algorithm>
+#include <sys/stat.h>
 
 void Util::logNNL(const int colour, const std::string& text)
 {
@@ -272,13 +272,14 @@ bool Util::startsWith(const std::string& string, const std::string& startsWith)
 
 std::string Util::createUUID()
 {
-	UUID uuid;
-	UuidCreate(&uuid);
+	//UUID uuid;
+	//UuidCreate(&uuid);
 
-	char* str;
-	UuidToStringA(&uuid, (RPC_CSTR*)& str);
+	//char* str;
+	//UuidToStringA(&uuid, (RPC_CSTR*)& str);
 	//RpcStringFreeA((RPC_CSTR*)&str);
-	return std::string(str);
+	//return std::string(str);
+	return "ow";
 }
 
 bool Util::pointAABB(const float px, const float py, const float x, const float y, const float width, const float height)
@@ -299,7 +300,7 @@ std::string Util::removeDecimal(const double x, const int precision)
 	ss << x;
 	return ss.str();
 }
-
+/*
 std::string Util::getFile(const COMDLG_FILTERSPEC& pFilter, const LPCWSTR& title, const LPCWSTR& defaultExtension, const LPCWSTR& dir)
 {
 	return getFile(pFilter, title, defaultExtension, dir, 0);
@@ -420,7 +421,7 @@ std::string Util::getFile(const COMDLG_FILTERSPEC& pFilter, const LPCWSTR& title
 
 bool Util::saveFile()
 {
-	/*LPWSTR fileName = L"D:/Music";
+	LPWSTR fileName = L"D:/Music";
 	HWND hwndOwner = WindowManager::getWindow()->getHWND();
 	OPENFILENAME ofn = { 0 };
 
@@ -432,6 +433,7 @@ bool Util::saveFile()
 	ofn.lpstrFile = fileName;
 	ofn.nFilterIndex = 1;
 	ofn.lpstrFilter = L"Text file\0*.txt\0Any file\0*.*\0";
-	ofn.lpstrDefExt = L"txt";*/
+	ofn.lpstrDefExt = L"txt";
 	return 0;// GetSaveFileName(&ofn);
 }
+*/

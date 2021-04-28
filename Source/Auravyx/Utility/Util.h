@@ -2,9 +2,7 @@
 #pragma comment(lib, "rpcrt4.lib")
 #include <string>
 #include <vector>
-#include "shtypes.h"    // for COMDLG_FILTERSPEC
 #include <string>
-#include <minwindef.h>  // for LPCWSTR
 #include <stddef.h>     // for size_t
 
 #define FOLDER 0
@@ -48,14 +46,14 @@ public:
 	static std::vector<std::string> splitString(const std::string& string, const char splitter);
 
 	static std::string createUUID();
-
+/*
 	static std::string getFolder(const LPCWSTR& title, const LPCWSTR& dir);
 
 	static std::string getFile(const COMDLG_FILTERSPEC& pFilter, const LPCWSTR& title, const LPCWSTR& defaultExtension, const LPCWSTR& dir);
 
 	static std::string getFile(const COMDLG_FILTERSPEC& pFilter, const LPCWSTR& title, const LPCWSTR& defaultExtension, const LPCWSTR& dir, const int mode);
-
-	static bool saveFile();
+*/
+	//static bool saveFile();
 
 	static std::string replaceAll(std::string& str, const std::string& a, const std::string& b);
 

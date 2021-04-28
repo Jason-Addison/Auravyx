@@ -1,6 +1,7 @@
 #include "MSVC/pch.h"
 #include "Auravyx/Utility/Math/Vec3f.h"
 #include "Auravyx/Utility/Math/M.h"
+#include <cmath>
 
 Vec3f::Vec3f(float x, float y, float z)
 {

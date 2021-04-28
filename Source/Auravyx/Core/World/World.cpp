@@ -13,6 +13,7 @@
 #include "Auravyx/Graphics/Renderer.h"
 #include "Auravyx/Graphics/GFX.h"
 #include <Logger/Log.h>
+#include <cmath>
 FBO fbo;
 std::vector<std::string> fboStrings;
 
