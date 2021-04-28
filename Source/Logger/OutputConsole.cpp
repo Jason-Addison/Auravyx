@@ -196,8 +196,8 @@ void OutputConsole::render()
 				GFX::getOverlay()->fillRect(0, height - i * 25 - 100 - scroll, width, 25, width, height, 0.14, 0.14, 0.14, 1);
 			}
 		}
-		GFX::getOverlay()->drawString(messages.at(i).time, 5, (i * 25) + 80 + scroll, 21, 1, 1, 1, 1, width, height);
 
+		GFX::getOverlay()->drawString(messages.at(i).time, 5, (i * 25) + 80 + scroll, 21, 1, 1, 1, 1, width, height);
 
 		if (width > 1000)
 		{
@@ -303,6 +303,7 @@ void OutputConsole::render()
 		glfwGetWindowSize(outputWindow, &width, &height);
 		resized = false;
 	}
+
 	int state = glfwGetKey(outputWindow, GLFW_KEY_E);
 	if (state == GLFW_PRESS)
 	{
@@ -351,7 +352,6 @@ void OutputConsole::consoleFunction()
 				messages.insert(messages.end(), messagesToLoad.begin(), messagesToLoad.end());
 				messagesToLoad.clear();
 			}
-
 			render();
 			if (glfwWindowShouldClose(outputWindow))
 			{

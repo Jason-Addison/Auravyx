@@ -4,7 +4,7 @@
 #include <sys/stat.h>
 #include "Auravyx/Utility/IO/FileIO.h"
 #include "Auravyx/Utility/StringUtil.h"
-
+#include <algorithm>
 std::vector<std::string> FileIO::listDirectory(const std::string& directory, const std::string& fileType)
 {
 	std::vector<std::string> list;

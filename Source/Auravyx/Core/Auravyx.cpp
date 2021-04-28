@@ -65,7 +65,7 @@ void loop()
 	double lastTimeFPS = -1;
 	double thisTimeFPS = 0;
 
-	std::thread updater(updater);
+	std::thread updater;//(updater);
 
 	double deltaRender = 0;
 	float lastFpsCounter = 0;
@@ -117,7 +117,7 @@ int main(int argc, char* argv[])
 	ThreadManager::getThreadManager()->registerThread(std::this_thread::get_id(), "Main");
 	std::string directory = std::string(argv[0]);
 	std::replace(directory.begin(), directory.end(), '\\', '/');
-	Resource::getInstance().DIR = directory + "/..";
+	Resource::getInstance().DIR = "/home/jason/CLionProjects/Auravyx/cmake-build-release";//directory + "/..";
 	#ifdef NDEBUG
 	#else
 	Log::out("[Debug] : [!] Auravyx is running in debug mode, expect very slow world generation!", RED);
