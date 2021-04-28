@@ -162,6 +162,7 @@ void GFX::drawStringBGC(const std::string& string, const float x, const float y,
 float GFX::stringWidth(const std::string& string, const float size)
 {
 	Font font = *Assets::getAssets()->getAssets()->getFont("font_plain");
+
 	float resized = size * (1 / (font.largestValue / size) * 2);
 
 	float totalX = 0;

@@ -91,7 +91,9 @@ void World::render(const Camera& cam, const Matrix4f& projectionMatrix)
 	double rot = (double)(getOverworldTime() % getOverworldDayCycle()) / (double)360;
 	Matrix4f t = M::createTransformationMatrix(0, 0, 0, 1, 1, 1, 70, rot, 0);
 	Renderer::getRenderer()->getShaders()->skyShader->loadTransformationMatrix(t);
+
 	Renderer::getRenderer()->getShaders()->skyShader->render();
+
 	if (Profiler::showChunkMetrics)
 	{
 		Renderer::getRenderer()->getShaders()->lineShader->start();

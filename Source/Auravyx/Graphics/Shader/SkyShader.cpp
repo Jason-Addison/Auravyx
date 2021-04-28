@@ -48,7 +48,7 @@ void SkyShader::render()
 	//glCullFace(GL_BACK);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	Model mesh = *Assets::getAssets()->getAssets()->getModel("sky");
-
+	
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, Assets::getAssets()->getAssets()->getTexture("stars")->texture);
 	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_LINEAR);

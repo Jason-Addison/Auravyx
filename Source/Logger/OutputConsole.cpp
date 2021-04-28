@@ -327,7 +327,6 @@ void OutputConsole::consoleFunction()
 	setupWindow();
 	double last = 0;
 	double now = 0;
-
 	while (true)
 	{
 		now = glfwGetTime();
@@ -353,7 +352,7 @@ void OutputConsole::consoleFunction()
 				messagesToLoad.clear();
 			}
 
-			//render();
+			render();
 			if (glfwWindowShouldClose(outputWindow))
 			{
 				OutputConsole::getConsole()->shutdown = true;

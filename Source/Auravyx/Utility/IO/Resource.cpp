@@ -492,7 +492,7 @@ void Resource::loadAllModels()
 			Log::out("         - " + fileName);
 		}
 		fileName = fileName.substr(0, fileName.length() - 4);
-
+		
 		preloadModel pm;
 		pm.vertices = verticesOut;
 		pm.normals = normalsOut;

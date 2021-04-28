@@ -242,6 +242,7 @@ void world()
 	GFX::getOverlay()->CAM.getPlayerInput();
 	Matrix4f m4;
 	int fov = GFX::getOverlay()->CAM.fov;
+
 	if (glfwGetMouseButton(Window::getWindow()->window, GLFW_MOUSE_BUTTON_4) == GLFW_PRESS)
 	{
 		fov /= 3.6666;
@@ -314,6 +315,7 @@ void GameState::render()
 			chunkMeshingInProgress = true;
 		}
 	}
+
 	for (auto &c : GameManager::world.overworld)
 	{
 		if (c->chunkUpdate)
@@ -431,6 +433,7 @@ void GameState::render()
 			c->clear(x, y - 7, z, size, size, size, 0);
 		}
 	}
+
 	/*MEMORYSTATUSEX memInfo;
 	memInfo.dwLength = sizeof(MEMORYSTATUSEX);
 	GlobalMemoryStatusEx(&memInfo);

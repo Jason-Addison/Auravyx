@@ -35,7 +35,9 @@ std::vector<std::string> FileIO::listDirectory(const std::string& directory)
 	{
 		std::ostringstream oss;
 		oss << absolute(p.path()).string();
-		items.emplace_back(oss.str());
+		std::string dir = oss.str();
+		std::replace(dir.begin(), dir.end(), '\\', '/');
+		items.emplace_back(dir);
 	}
 	return items;
 }
@@ -70,7 +72,7 @@ std::string FileIO::getFileName(const std::string& file)
 
 	int os = 0;
 #ifdef _WIN32
-		sep = '\\';
+		sep = '/';
 #endif
 
 	unsigned long long k = file.rfind(sep, file.length());

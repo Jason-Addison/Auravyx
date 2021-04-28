@@ -8,6 +8,11 @@
 #include "Auravyx/Graphics/Model/Collada/ColladaParser.h"
 #include <cmath>
 
+#ifdef _WIN32
+#include <wtypes.h>
+#endif
+#include <algorithm>
+
 GameManager Auravyx::gameManager;
 
 std::atomic_bool end = false;
@@ -60,12 +65,12 @@ void loop()
 	double lastTimeFPS = -1;
 	double thisTimeFPS = 0;
 
-	std::thread updater;//(updater);
+	std::thread updater(updater);
 
 	double deltaRender = 0;
 	float lastFpsCounter = 0;
 	double lastTimeFPSOld = 0;
-
+	
 	while ((!Window::getWindow()->closeRequested() && !OutputConsole::getConsole()->shutdown))
 	{
 		double framesPerSecond = 1.0 / GFX::getOverlay()->FPS;
@@ -77,6 +82,7 @@ void loop()
 		{
 			Window::getWindow()->update();
 			Auravyx::getManager().getCurrentState()->render();
+
 			//mod.render();
 			lastTimeFPS = thisTimeFPS;
 			GLManager::setFPS(roundf((float)(1.0 / (deltaRender))));
@@ -86,6 +92,7 @@ void loop()
 			std::this_thread::sleep_for(std::chrono::milliseconds((int)((framesPerSecond - (glfwGetTime() - lastTimeFPSOld)) * 1000)));
 		}
 	}
+
 	if (Window::getWindow()->closeRequested())
 	{
 		Log::out("Closing main window because it was requested.");
@@ -108,13 +115,14 @@ int main(int argc, char* argv[])
 {
 	Auravyx::start();
 	ThreadManager::getThreadManager()->registerThread(std::this_thread::get_id(), "Main");
-	Resource::getInstance().DIR = "/home/jason/CLionProjects/Auravyx/cmake-build-release";//std::string(argv[0]) + "/..";
+	std::string directory = std::string(argv[0]);
+	std::replace(directory.begin(), directory.end(), '\\', '/');
+	Resource::getInstance().DIR = directory + "/..";
 	#ifdef NDEBUG
 	#else
 	Log::out("[Debug] : [!] Auravyx is running in debug mode, expect very slow world generation!", RED);
 	#endif
 	GameManager::world.setup();
-
 	OutputConsole::getConsole()->start();
 
 	while (!OutputConsole::getConsole()->isReady())
@@ -143,6 +151,7 @@ int main(int argc, char* argv[])
 			last = now;
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			glClearColor(0.1, 0.1, 0.1, 1);
+
 			Resource::getInstance().renderProgress();
 			
 			Window::getWindow()->update();
@@ -159,15 +168,15 @@ int main(int argc, char* argv[])
 	//m.setMaterials(meshes.materials);
 
 	//Assets::getAssets()->addModel("Zelda", m);
-
+	
 	Resource::getInstance().clearPreloadedResources();
 	Renderer::getRenderer()->getShaders()->lineShader->init();
 
 	asyncLoader.join();
 
-	//////////Window::getWindow()->hideMouse();
+	Window::getWindow()->hideMouse();
 
-	/////////Window::getWindow()->getController()->resetMouse();
+	Window::getWindow()->getController()->resetMouse();
 
 	loop();
 
