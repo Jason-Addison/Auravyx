@@ -59,7 +59,7 @@ void FBO::create()
 	//addBuffer(4, GL_RGBA);
 	//addBuffer(5, GL_RGBA);
 	//addBuffer(6, GL_RGBA);
-	for (int i = 0; i < 16; i++)
+	for (int i = 0; i < 8; i++)
 	{
 		if (buffers[i] != 0)
 		{

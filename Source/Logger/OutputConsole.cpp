@@ -172,6 +172,7 @@ void OutputConsole::render()
 	{
 		offset = 455;
 	}
+
 	for (int i = start; i < end; i++)
 	{
 		if (messages.at(i).id % 2 == 1)
