@@ -7,6 +7,7 @@
 #include "Auravyx/Core/State/GameState.h"
 #include "Auravyx/Graphics/Model/Collada/ColladaParser.h"
 #include <cmath>
+#include <filesystem>
 
 #ifdef _WIN32
 #include <wtypes.h>
@@ -65,7 +66,7 @@ void loop()
 	double lastTimeFPS = -1;
 	double thisTimeFPS = 0;
 
-	std::thread updater;//(updater);
+	std::thread updateThread(updater);
 
 	double deltaRender = 0;
 	float lastFpsCounter = 0;
@@ -103,7 +104,7 @@ void loop()
 	}
 	end = true;
 	Auravyx::getManager().getCurrentState()->stop();
-	updater.join();
+    updateThread.join();
 }
 
 void loadAssetsAsync()
@@ -115,9 +116,8 @@ int main(int argc, char* argv[])
 {
 	Auravyx::start();
 	ThreadManager::getThreadManager()->registerThread(std::this_thread::get_id(), "Main");
-	std::string directory = std::string(argv[0]);
-	std::replace(directory.begin(), directory.end(), '\\', '/');
-	Resource::getInstance().DIR = "/home/jason/CLionProjects/Auravyx/cmake-build-release";//directory + "/..";
+	std::filesystem::path directory(argv[0]);
+	Resource::getInstance().DIR = directory.parent_path().string();
 	#ifdef NDEBUG
 	#else
 	Log::out("[Debug] : [!] Auravyx is running in debug mode, expect very slow world generation!", RED);
