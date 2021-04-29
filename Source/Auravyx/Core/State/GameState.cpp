@@ -563,6 +563,10 @@ void GameState::render()
 		GFX::getOverlay()->drawStringBGR("advanced debug off", 0, dim * (rdi++), 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3);
 	}
 	chat.render();
+	while (ALenum err = alGetError())
+	{
+		std::cout << err << "\n";
+	}
 	//Auravyx::getAuravyx()->draw();
 	std::vector<std::pair<std::function<void()>, GLContext*>>* functions = Renderer::getRenderer()->getRenderFunctions();
 
@@ -599,10 +603,10 @@ void GameState::start()
 	
 	Sound s;
 	s.play(Assets::getAssets()->getAudio("song1"));
-	s.setGain(10);
-	s.setPitch(0.9);
-	s.setTime(30);
-	s.setPosition(0, 0, 0);
+	//s.setGain(10);
+	//s.setPitch(0.9);
+	//s.setTime(30);
+	//s.setPosition(0, 0, 0);
 	hostServer = false;// Settings::getBool("host");
 	Modify::getModify()->loadAllMods();
 

@@ -1,7 +1,7 @@
 #include "Auravyx/Audio/Sound.h"
 #include "AL/efx.h"
 #include <Auravyx/Audio/SoundManager.h>
-
+#include <iostream>
 Sound::Sound()
 {
 	create();
@@ -21,7 +21,6 @@ void Sound::create()
 	alSource3f(source, AL_POSITION, 0, 0, 0);
 	alSource3f(source, AL_VELOCITY, 0, 0, 0);
 	alSourcei(source, AL_LOOPING, AL_TRUE);
-	alSourcei(source, AL_AIR_ABSORPTION_FACTOR, 100);
 
 	SoundManager::getSoundManager()->addSound(source);
 }

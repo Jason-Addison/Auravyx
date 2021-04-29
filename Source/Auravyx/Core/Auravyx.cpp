@@ -62,7 +62,7 @@ void loop()
 	GameState gs;
 	Auravyx::getManager().setCurrentState(std::make_shared<GameState>(gs));
 	Auravyx::getManager().getCurrentState()->start();
-
+	
 	double lastTimeFPS = -1;
 	double thisTimeFPS = 0;
 

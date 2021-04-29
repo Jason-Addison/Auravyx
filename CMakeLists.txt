@@ -7,14 +7,14 @@ project ("Auravyx")
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-#set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/Bin)
+#set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/Auravyx)
 
 if(MSVC)
     add_definitions(-D_CRT_SECURE_NO_WARNINGS)
 endif()
 
 file(GLOB_RECURSE AuravyxSource CONFIGURE_DEPENDS "${CMAKE_SOURCE_DIR}/Source/*.h" "${CMAKE_SOURCE_DIR}/Source/*.cpp")
-
+# "${CMAKE_SOURCE_DIR}/Source/Auravyx/UI/Icon/Auravyx.rc"
 add_executable(Auravyx ${AuravyxSource})
 
 include_directories(src ${CMAKE_SOURCE_DIR}/Source)
@@ -56,20 +56,27 @@ target_link_libraries(Auravyx glew)
 #      OpenAL       #
 #####################
 
+#set(OPENAL_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/Dependencies/Include/AL/include)
+#if(WIN32)
+#    set(OPENAL_LIBRARY ${CMAKE_SOURCE_DIR}/Dependencies/Lib/windows/OpenAL32.lib)
+#    find_package(OpenAL 1.0 REQUIRED)
+#    if(OPENAL_FOUND)
+#        include_directories(${OPENAL_INCLUDE_DIR})
+#        target_link_libraries(Auravyx ${OPENAL_LIBRARY})
+#    endif()
+#elseif(UNIX)
+#add_library(openal SHARED IMPORTED)
+#set_property(TARGET openal PROPERTY IMPORTED_LOCATION ${CMAKE_SOURCE_DIR}/Dependencies/Lib/unix/libopenal.so)
+#target_link_libraries(Auravyx openal)
+#endif()
 set(OPENAL_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/Dependencies/Include/AL/include)
-if(WIN32)
-    set(OPENAL_LIBRARY ${CMAKE_SOURCE_DIR}/Dependencies/Lib/windows/OpenAL32.lib)
-    find_package(OpenAL 1.0 REQUIRED)
-    if(OPENAL_FOUND)
-        include_directories(${OPENAL_INCLUDE_DIR})
-        target_link_libraries(Auravyx ${OPENAL_LIBRARY})
-    endif()
-elseif(UNIX)
-add_library(openal SHARED IMPORTED)
-set_property(TARGET openal PROPERTY IMPORTED_LOCATION ${CMAKE_SOURCE_DIR}/Dependencies/Lib/unix/libopenal.so)
-target_link_libraries(Auravyx openal)
-endif()
+set(OPENAL_LIBRARY ${CMAKE_SOURCE_DIR}/Dependencies/Lib/windows/OpenAL32.lib)
 
+find_package(OpenAL 1.0 REQUIRED)
+#if(OPENAL_FOUND)
+    include_directories(${OPENAL_INCLUDE_DIR})
+    target_link_libraries(Auravyx ${OPENAL_LIBRARY})
+#endif(OPENAL_FOUND)
 #####################
 #      OpenSSL      #
 #####################

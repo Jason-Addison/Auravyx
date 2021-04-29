@@ -278,6 +278,7 @@ void Resource::loadAllAsyncAssets()
 	Window::getWindow()->getController()->init();
 	Log::out("Loader", "Loading textures...", YELLOW);
 	loadAllAudio();
+
 	//Sound s;
 	//s.play(Assets::getAssets()->getAssets()->getAudio("song"));
 	//s.setPitch(1.1);
