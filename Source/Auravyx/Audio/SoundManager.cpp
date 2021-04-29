@@ -96,7 +96,7 @@ void SoundManager::start()
 	{
 		Log::out("[OpenAL] Error with device " + std::string(name));
 
-		Log::error("[OpenAL] No devices found! No audio will be available.");
+		Log::criticalError("[OpenAL] No playback devices found! No audio will be available.");
 		return;
 	}
 	context = alcCreateContext(device, NULL);
