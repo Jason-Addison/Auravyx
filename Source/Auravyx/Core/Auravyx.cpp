@@ -122,6 +122,7 @@ int main(int argc, char* argv[])
 	#else
 	Log::out("[Debug] : [!] Auravyx is running in debug mode, expect very slow world generation!", RED);
 	#endif
+
 	GameManager::world.setup();
 	OutputConsole::getConsole()->start();
 
