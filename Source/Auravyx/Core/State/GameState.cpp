@@ -563,10 +563,6 @@ void GameState::render()
 		GFX::getOverlay()->drawStringBGR("advanced debug off", 0, dim * (rdi++), 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3);
 	}
 	chat.render();
-	while (ALenum err = alGetError())
-	{
-		std::cout << err << "\n";
-	}
 	//Auravyx::getAuravyx()->draw();
 	std::vector<std::pair<std::function<void()>, GLContext*>>* functions = Renderer::getRenderer()->getRenderFunctions();
 

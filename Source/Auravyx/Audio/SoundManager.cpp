@@ -69,76 +69,55 @@ const ALCchar* list_audio_devices(const ALCchar* devices)
 
 void SoundManager::start()
 {
-	/*ALboolean enumeration;
+	ALboolean enumeration;
 	enumeration = alcIsExtensionPresent(NULL, "ALC_ENUMERATION_EXT");
 	if (enumeration == AL_FALSE)
 	{
 		Log::out("[OpenAL] No enumeration extension");
 	}
-	device = alcOpenDevice(NULL);
-	while(true)
-	{
-	}
-	if (!device)
-	{
-		Log::out("[OpenAL] Error with device [" + std::to_string(alGetError()) + "]");
-		system("pause");
-	}
-	context = alcCreateContext(device, NULL);
-	if (!alcMakeContextCurrent(context))
-	{
-		Log::out("[OpenAL] Error with context");
-	}
-	ALfloat listenerOri[] = { 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f };
 
-	//alDistanceModel(AL_INVERSE_DISTANCE_CLAMPED);
-	alListenerf(AL_GAIN, 1);
-	//alListener3f(AL_VELOCITY, 0, 0, 0);
-	//alListenerfv(AL_ORIENTATION, listenerOri);
-	//alListenerf(AL_AIR_ABSORPTION_FACTOR, 100);
-	alDopplerFactor(1);
-	alDistanceModel(AL_INVERSE_DISTANCE);
-
-	//alEffectf(AL_AIR_ABSORPTION_FACTOR, AL_EFFECT_TYPE, 100);
-	//std::cout << "Data Size : " << dataSize << "\n";
-	//std::string alVersion = alGetString(AL_VERSION);
-	//std::string alVendor = alGetString(AL_VENDOR);
-	//std::string alRenderer = alGetString(AL_RENDERER);
-	//Log::out("OpenAL", "Version: " + alVersion + ", Vendor: " + alVendor + ", Renderer: " + alRenderer, GREEN);
-	//const ALCchar* name = list_audio_devices(alcGetString(NULL, ALC_ALL_DEVICES_SPECIFIER));
-	while(true)
-	{
-	}*/
-	const ALchar* name;
-	ALCdevice* device;
-	ALCcontext* ctx;
-
-	/* Open and initialize a device */
 	device = NULL;
 	if (!device)
+	{
 		device = alcOpenDevice(NULL);
-	if (!device)
-	{
-		fprintf(stderr, "Could not open a device!\n");
-		return;
 	}
-
-	ctx = alcCreateContext(device, NULL);
-	if (ctx == NULL || alcMakeContextCurrent(ctx) == ALC_FALSE)
-	{
-		if (ctx != NULL)
-			alcDestroyContext(ctx);
-		alcCloseDevice(device);
-		fprintf(stderr, "Could not set a context!\n");
-		return;
-	}
-
+	const ALchar* name;
 	name = NULL;
 	if (alcIsExtensionPresent(device, "ALC_ENUMERATE_ALL_EXT"))
+	{
 		name = alcGetString(device, ALC_ALL_DEVICES_SPECIFIER);
+	}
 	if (!name || alcGetError(device) != AL_NO_ERROR)
+	{
 		name = alcGetString(device, ALC_DEVICE_SPECIFIER);
-	printf("Opened \"%s\"\n", name);
+	}
+	if (!device)
+	{
+		Log::out("[OpenAL] Error with device [" + std::string(name) + "]");
+		Log::error("[OpenAL] No devices found! No audio will be availible.");
+		return;
+	}
+
+	context = alcCreateContext(device, NULL);
+	if (context == NULL || alcMakeContextCurrent(context) == ALC_FALSE)
+	{
+		Log::out("[OpenAL] Error with context");
+		if (context != NULL)
+		{
+			alcDestroyContext(context);
+		}
+		alcCloseDevice(device);
+		return;
+	}
+	alListenerf(AL_GAIN, 1);
+	alDopplerFactor(1);
+	alDistanceModel(AL_INVERSE_DISTANCE);
+	//alEffectf(AL_AIR_ABSORPTION_FACTOR, AL_EFFECT_TYPE, 100);
+	std::string alVersion = alGetString(AL_VERSION);
+	std::string alVendor = alGetString(AL_VENDOR);
+	std::string alRenderer = alGetString(AL_RENDERER);
+	Log::out("OpenAL", "Version: " + alVersion + ", Vendor: " + alVendor + ", Renderer: " + alRenderer, GREEN);
+	name = list_audio_devices(alcGetString(NULL, ALC_ALL_DEVICES_SPECIFIER));
 }
 
 void SoundManager::stop()

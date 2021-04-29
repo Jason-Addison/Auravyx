@@ -5,6 +5,7 @@
 #endif
 
 #include "Logger/Log.h"
+#include <fstream>
 WAVE::WAVE(const char* path)
 {
 	load(path);
@@ -28,6 +29,8 @@ void WAVE::load(const char* path)
 
 	FILE* fp = NULL;
 	fp = (FILE*)fopen(path, "rb");
+
+	std::ifstream input("C:\\Final.gif", std::ios::binary);
 
 	char type[4] = { 0, 0, 0, 0 };
 	unsigned long size, chunkSize;
