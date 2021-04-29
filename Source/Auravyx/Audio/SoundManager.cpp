@@ -75,7 +75,6 @@ void SoundManager::start()
 	{
 		Log::out("[OpenAL] No enumeration extension");
 	}
-
 	device = NULL;
 	if (!device)
 	{
