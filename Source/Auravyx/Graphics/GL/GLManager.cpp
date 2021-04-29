@@ -168,7 +168,7 @@ void GLAPIENTRY GLManager::glCallback(GLenum source, GLenum type, GLuint id, GLe
 	}
 
 	msg = "(" + msgSource + ") (" + msgType + ")   " + std::string(message);
-
+    std::cout << msg << "\n";
 	switch (severity)
 	{
 		case(GL_DEBUG_SEVERITY_NOTIFICATION):
