@@ -6,6 +6,7 @@
 
 #include "Logger/Log.h"
 #include <fstream>
+
 WAVE::WAVE(const char* path)
 {
 	load(path);
@@ -20,7 +21,7 @@ void WAVE::destroy()
 {
 	alDeleteBuffers(1, &buffer);
 }
-
+#include "Logger/Log.h"
 void WAVE::load(const char* path)
 {
 	alGenBuffers((ALuint)1, &buffer);
@@ -29,8 +30,6 @@ void WAVE::load(const char* path)
 
 	FILE* fp = NULL;
 	fp = (FILE*)fopen(path, "rb");
-
-	std::ifstream input("C:\\Final.gif", std::ios::binary);
 
 	char type[4] = { 0, 0, 0, 0 };
 	unsigned long size, chunkSize;
@@ -44,7 +43,7 @@ void WAVE::load(const char* path)
 	{
 		printf("No RIFF\n");
 	}
-	fread(&size, sizeof(unsigned long), 1, fp);
+	fread(&size, 4, 1, fp);
 	fread(type, sizeof(char), 4, fp);
 
 	if (type[0] != 'W' || type[1] != 'A' || type[2] != 'V' || type[3] != 'E')
@@ -56,11 +55,11 @@ void WAVE::load(const char* path)
 	{
 		printf("Not fmt \n");
 	}
-	fread(&chunkSize, sizeof(unsigned long), 1, fp);
+	fread(&chunkSize, 4, 1, fp);
 	fread(&formatType, sizeof(short), 1, fp);
 	fread(&channels, sizeof(short), 1, fp);
-	fread(&sampleRate, sizeof(unsigned long), 1, fp);
-	fread(&avgBytesPerSec, sizeof(unsigned long), 1, fp);
+	fread(&sampleRate, 4, 1, fp);
+	fread(&avgBytesPerSec, 4, 1, fp);
 	fread(&bytesPerSample, sizeof(short), 1, fp);
 	fread(&bitsPerSample, sizeof(short), 1, fp);
 
@@ -70,7 +69,7 @@ void WAVE::load(const char* path)
 		Log::out("OpenAL", "Audio device missing 'data' (" + std::to_string(type[0]) + "" + std::to_string(type[1])
 			+ "" + std::to_string(type[2]) + "" + std::to_string(type[3]) + ")", RED);
 	}
-	fread(&dataSize, sizeof(unsigned long), 1, fp);
+	fread(&dataSize, 4, 1, fp);
 
 	unsigned char* buf = new unsigned char[dataSize];
 	fread(buf, sizeof(unsigned char), dataSize, fp);
@@ -98,7 +97,8 @@ void WAVE::load(const char* path)
 		}
 	}
 	frequency = sampleRate;
-	alBufferData(buffer, format, buf, dataSize, frequency);
+
+	//alBufferData(buffer, format, buf, dataSize, frequency);
 	this->buf = buf;
 
 	lengthInSamples = dataSize * 8 / (channels * bitsPerSample);

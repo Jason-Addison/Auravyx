@@ -71,6 +71,8 @@ void SoundManager::start()
 {
 	ALboolean enumeration;
 	enumeration = alcIsExtensionPresent(NULL, "ALC_ENUMERATION_EXT");
+    const char * deviceName = alcGetString(NULL, ALC_DEFAULT_DEVICE_SPECIFIER);
+    Log::out("[OpenAL] Default device: " + std::string(deviceName));
 	if (enumeration == AL_FALSE)
 	{
 		Log::out("[OpenAL] No enumeration extension");
@@ -92,11 +94,11 @@ void SoundManager::start()
 	}
 	if (!device)
 	{
-		Log::out("[OpenAL] Error with device [" + std::string(name) + "]");
-		Log::error("[OpenAL] No devices found! No audio will be availible.");
+		Log::out("[OpenAL] Error with device " + std::string(name));
+
+		Log::error("[OpenAL] No devices found! No audio will be available.");
 		return;
 	}
-
 	context = alcCreateContext(device, NULL);
 	if (context == NULL || alcMakeContextCurrent(context) == ALC_FALSE)
 	{

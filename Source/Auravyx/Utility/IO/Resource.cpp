@@ -514,17 +514,16 @@ void Resource::loadAllAudio()
 	Log::out("Loader", "Loading audio...", YELLOW);
 	for (auto& sound : sounds)
 	{
+        std::string audioName = FileIO::getFileName(sound);
+        audioName = audioName.substr(0, audioName.length() - 4);
+        if (printEachAssetLoad)
+        {
+            Log::out("         - " + audioName);
+        }
+
+        whatIsLoadingSecondary = audioName;
 		WAVE wave(sound.c_str());
-
-		std::string audioName = FileIO::getFileName(sound);
-		audioName = audioName.substr(0, audioName.length() - 4);
 		Assets::getAssets()->getAssets()->addAudio(audioName, wave);
-		if (printEachAssetLoad)
-		{
-			Log::out("         - " + audioName);
-		}
-
-		whatIsLoadingSecondary = audioName;
 	}
 }
 
