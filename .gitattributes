@@ -13,9 +13,6 @@ Auravyx/Library linguist-vendored=true
 Source/Library linguist-vendored=true
 Library linguist-vendored=true
 Dependencies/* linguist-vendored=true
-Dependencies linguist-vendored=true
-Dependencies/Include/OpenSSL/* linguist-vendored=true
-Dependencies/Include/OpenSSL/ linguist-vendored=true
 
 ###############################################################################
 # Set default behavior for command prompt diff.
