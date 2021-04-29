@@ -1,5 +1,5 @@
 git filter-branch -f --env-filter '
-WRONG_EMAIL=""
+WRONG_EMAIL="Jason-Addison"
 NEW_NAME="Jason Addison"
 NEW_EMAIL="28279470+Jason-Addison@users.noreply.github.com"
 
