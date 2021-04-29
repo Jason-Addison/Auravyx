@@ -12,6 +12,7 @@ Auravyx/Library linguist-vendored=true
 910391e6e6b90812f0030531de89e5be9b674060/Library linguist-vendored=true
 Source/Library linguist-vendored=true
 Library linguist-vendored=true
+Dependencies/*
 
 ###############################################################################
 # Set default behavior for command prompt diff.
