@@ -6,6 +6,8 @@
 #include "SOIL/SOIL.h"
 #include <Auravyx/Utility/IO/Resource.h>
 #include <Auravyx/Graphics/GFX.h>
+#include <Auravyx/Core/Command/CommandRegistry.h>
+#include <iostream>
 Chat::Chat()
 {
 }
@@ -22,6 +24,7 @@ std::vector<std::string> chatLog;
 std::vector<float> chatLogTimings;
 
 bool backspacePriority = false;
+std::atomic_bool chatChanged = false;
 
 int selectionStart = 0;
 int selectionEnd = 0;
@@ -29,6 +32,92 @@ int selectionEnd = 0;
 void noTextCallback(GLFWwindow* window, unsigned int codepoint)
 {
 
+}
+
+struct CommandSuggestion
+{
+	std::string name;
+	int index;
+};
+
+std::vector<CommandSuggestion> suggestionList;
+bool commandError = false;
+int currentSuggestionIndex = 0;
+
+void refreshSuggestions()
+{
+	currentSuggestionIndex = 1;
+	commandError = false;
+	suggestionList.clear();
+	if (currentMessage.size() > 0 && currentMessage.at(0) == '/')
+	{
+		std::vector<std::string> parse = Util::splitString(currentMessage.substr(1, currentMessage.length()), " ");
+
+		Command cmd;
+		int i = 0;
+		if (parse.size() <= 1 && currentMessage.at(currentMessage.length() - 1) != ' ')
+		{
+			std::map<std::string, Command>::iterator itr;
+			for (itr = CommandRegistry::commands.begin(); itr != CommandRegistry::commands.end(); itr++)
+			{
+				CommandSuggestion cs;
+				cs.name = itr->first;
+				cs.index = itr->second.argumentType;
+				suggestionList.emplace_back(cs);
+			}
+		}
+		else
+		{
+			while (i < parse.size())
+			{
+				if (i <= 0)
+				{
+					if (CommandRegistry::commands.find(parse.at(i)) != CommandRegistry::commands.end())
+					{
+						cmd = CommandRegistry::commands.at(parse.at(i));
+						currentSuggestionIndex += parse.at(i).size() + 1;
+					}
+				}
+				else
+				{
+					bool cmdFound = false;
+					for (int j = 0; j < cmd.subCommands.size(); j++)
+					{
+						if (cmd.subCommands.at(j).validArgument(parse.at(i)))
+						{
+							//std::cout << cmd.subCommands.at(j).argumentValue << " " << parse.at(i) << "\n";
+							cmd = cmd.subCommands.at(j);
+							cmdFound = true;
+							currentSuggestionIndex += parse.at(i).size() + 1;
+							break;
+						}
+						if (cmd.subCommands.at(j).argumentType == Command::Argument::LITERAL &&
+							cmd.subCommands.at(j).argumentValue.rfind(parse.at(i), 0) == 0 &&
+							cmd.subCommands.at(j).argumentValue.length() >= parse.at(i).length())
+						{
+							cmdFound = true;
+							break;
+						}
+					}
+					if (!cmdFound)
+					{
+						commandError = true;
+						break;
+					}
+				}
+				i++;
+			}
+			for (int i = 0; i < cmd.subCommands.size(); i++)
+			{
+				CommandSuggestion cs;
+				cs.name = cmd.subCommands.at(i).argumentValue;
+				cs.index = cmd.subCommands.at(i).argumentType;
+				std::cout << cs.name << "\n";
+				suggestionList.emplace_back(cs);
+			}
+			return;
+		}
+	}
 }
 
 void textCallback(GLFWwindow* window, unsigned int codepoint)
@@ -39,7 +128,7 @@ void textCallback(GLFWwindow* window, unsigned int codepoint)
 		char16_t c = codepoint;
 		currentMessage += (char)c;
 	}
-
+	chatChanged = true;
 }
 
 void noKeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
@@ -62,6 +151,7 @@ void chatKeyCallback(GLFWwindow* window, int key, int scancode, int action, int 
 					//bmsg = bmsg.substr(0, bmsg.length() - 1);
 					//currentMessage.str(bmsg);
 					currentMessage = currentMessage.substr(0, currentMessage.length() - 1);
+					chatChanged = true;
 				}
 			}
 			if (key == 65 && mods == 2)
@@ -186,15 +276,125 @@ void Chat::render()
 	}
 	if (isChatting)
 	{
-		GFX::getOverlay()->fillRect(5, Window::getWindow()->getHeight() - 35, Window::getWindow()->getWidth() - 10, 30, 0, 0, 0, 0.5);
+		GFX::getOverlay()->fillRect(5, Window::getWindow()->getHeight() - 35, Window::getWindow()->getWidth() - 10, 30, 0.1, 0.1, 0.1, 1);
 		std::string outmsg = "";
 		outmsg += currentMessage;
 		if (textFlashOn)
 		{
 			outmsg += "_";
 		}
-		GFX::getOverlay()->drawString(outmsg, 7, Window::getWindow()->getHeight() - 32.5, 30, 1, 1, 1, 1);
+		if (commandError)
+		{
+			GFX::getOverlay()->drawString(outmsg, 7, Window::getWindow()->getHeight() - 32.5, 30, 1, 0, 0, 1);
+		}
+		else
+		{
+			GFX::getOverlay()->drawString(outmsg, 7, Window::getWindow()->getHeight() - 32.5, 30, 1, 1, 1, 1);
+		}
 		
+		if (currentMessage.size() > 0 && currentMessage.at(0) == '/')
+		{
+			int widestArgument = 0;
+			int width = 0;
+			std::string cmd = currentMessage.substr(1, currentMessage.length());
+			int i = 0;
+			int j = currentMessage.find_last_of(' ');
+			if (j <= 0)
+			{
+				j = 1;
+			}
+			else
+			{
+				j += 1;
+			}
+			bool argumentComplete = false;
+
+			if (chatChanged)
+			{
+				refreshSuggestions();
+				chatChanged = false;
+			}
+
+			std::string currentArgument = currentMessage.substr(j, currentMessage.length());
+
+			int entries = 0;
+
+			for (i = 0; i < suggestionList.size(); i++)
+			{
+				if (suggestionList.at(i).name.rfind(currentArgument, 0) == 0)
+				{
+					entries++;
+					if (suggestionList.at(i).name.length() == currentArgument.length())
+					{
+						argumentComplete = true;
+					}
+					int w;
+					if (suggestionList.at(i).index != Command::Argument::LITERAL)
+					{
+						w = GFX::getOverlay()->stringWidth(suggestionList.at(i).name 
+							+ ": " + Command::argumentTypeStrings[suggestionList.at(i).index], 30);
+					}
+					else
+					{
+						w = GFX::getOverlay()->stringWidth(suggestionList.at(i).name, 30);
+					}
+					if (w > widestArgument)
+					{
+						widestArgument = w;
+					}
+				}
+			}
+			if (currentMessage.size() <= 1)
+			{
+				argumentComplete = false;
+			}
+			argumentComplete = false;
+			if (!argumentComplete || commandError)
+			{
+				width = GFX::getOverlay()->stringWidth(currentMessage.substr(0, currentSuggestionIndex), 30);
+				if (!commandError)
+				{
+					GFX::getOverlay()->fillRect(width + 5, Window::getWindow()->getHeight() - 35 - 1, widestArgument, -30 * entries, 0.1, 0.1, 0.1, 1);
+				}
+				i = 0;
+				int entriesIndex = 1;
+
+				for (i = suggestionList.size() - 1; i >= 0; i--)
+				{
+					if (suggestionList.at(i).name.rfind(currentArgument, 0) == 0 || commandError)
+					{
+
+						std::string currentSuggestion = suggestionList.at(i).name;
+						if (suggestionList.at(i).index != Command::Argument::LITERAL)
+						{
+							currentSuggestion = suggestionList.at(i).name
+								+ ": " + Command::argumentTypeStrings[suggestionList.at(i).index];
+						}
+
+						if (commandError)
+						{
+							currentSuggestion = " | Expected "
+								+ Command::argumentTypeStrings[suggestionList.at(i).index] + " <" + suggestionList.at(i).name + ">";
+							GFX::getOverlay()->fillRect(width + 5, Window::getWindow()->getHeight() - 35 - 1,
+								GFX::getOverlay()->stringWidth(currentSuggestion, 30), -30 * 1, 0.1, 0.1, 0.1, 1);
+							GFX::getOverlay()->drawString(currentSuggestion, 5 + width, Window::getWindow()->getHeight() - 32.5 - entriesIndex * 30 - 1, 30, 1, 0, 0, 1);
+						}
+						else
+						{
+							GFX::getOverlay()->drawString(currentSuggestion, 5 + width, Window::getWindow()->getHeight() - 32.5 - entriesIndex * 30 - 1, 30, 1, 1, 1, 1);
+						}
+						entriesIndex++;
+					}
+				}
+				if (suggestionList.size() == 0 && commandError)
+				{
+					std::string currentSuggestion = "Unexpected argument";
+					GFX::getOverlay()->fillRect(width + 5, Window::getWindow()->getHeight() - 35 - 1,
+						GFX::getOverlay()->stringWidth(currentSuggestion, 30), -30 * 1, 0.1, 0.1, 0.1, 1);
+					GFX::getOverlay()->drawString(currentSuggestion, 5 + width, Window::getWindow()->getHeight() - 32.5 - entriesIndex * 30 - 1, 30, 1, 0, 0, 1);
+				}
+			}
+		}
 	}
 	if (!f1Lock && Window::getWindow()->getController()->isKeyDown(GLFW_KEY_F1))
 	{
@@ -249,30 +449,11 @@ void Chat::message(const std::string& msg)
 void Chat::command(const std::string& cmd)
 {
 	std::vector<std::string> parse = Util::splitString(cmd, " ");
-	if (parse.size() > 1 && parse.at(0).compare("speed") == 0)
+	/*if (parse.size() > 1 && parse.at(0).compare("speed") == 0)
 	{
 		float speed = std::stof(parse.at(1));
 		Log::out("Command", "Speed set to " + std::to_string(speed), RED);
 		GFX::getOverlay()->CAM.setSpeedMultiplier(speed);
-	}
-	if (parse.size() > 1 && parse.at(0).compare("fov") == 0)
-	{
-		float fov = std::stof(parse.at(1));
-		Log::out("Command", "FOV set to " + std::to_string(fov), RED);
-		GFX::getOverlay()->CAM.setFOV(fov);
-	}
-	if (parse.size() > 1 && parse.at(0).compare("fps") == 0)
-	{
-		float fps = std::stof(parse.at(1));
-		if (fps < 5 && (int) fps != -1)
-		{
-			Log::out("Command", "FPS can not be lower than 5!", RED);
-		}
-		else
-		{
-			Log::out("Command", "FPS set to " + std::to_string(fps), RED);
-			GFX::getOverlay()->setFPS(fps);
-		}
 	}
 	if (parse.size() > 0 && parse.at(0).compare("save") == 0)
 	{
@@ -282,5 +463,16 @@ void Chat::command(const std::string& cmd)
 			ChunkIO::saveChunk(c.get(), "myworld");
 		}
 		Log::out("Command", "Save complete.", RED);
+	}*/
+
+	if (CommandRegistry::commands.find(parse.at(0)) == CommandRegistry::commands.end())
+	{
+		message("Command not found!");
 	}
+	else
+	{
+		Log::out("Command", cmd);
+		CommandRegistry::commands.at(parse.at(0)).run(parse, std::map<std::string, std::vector<std::string>>(), 0);
+	}
+
 }

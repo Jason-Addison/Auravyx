@@ -15,11 +15,11 @@ public:
 
 	void render();
 
+	static void message(const std::string& msg);
+
+	static void command(const std::string& cmd);
 
 private:
 
-	void message(const std::string& msg);
-
-	void command(const std::string& cmd);
 };
 
