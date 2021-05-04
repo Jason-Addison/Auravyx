@@ -2,10 +2,7 @@
 # Set default behavior to automatically normalize line endings.
 ###############################################################################
 * text=auto
-Dependencies/* linguist-vendored
-Dependencies linguist-vendored
-Dependencies/Include/OpenSSL/* linguist-vendored=true
-Dependencies/Include/OpenSSL/ linguist-vendored=true
+Dependencies/** linguist-vendored
 
 ###############################################################################
 # Set default behavior for command prompt diff.
