@@ -2,18 +2,8 @@
 # Set default behavior to automatically normalize line endings.
 ###############################################################################
 * text=auto
-Source/Library/* linguist-vendored=true
-Library/* linguist-vendored=true
-Library/OpenAL/alut/src/* linguist-vendored=true
-910391e6e6b90812f0030531de89e5be9b674060/Library/* linguist-vendored=true
-Auravyx/Library/* linguist-vendored=true
-
-Auravyx/Library linguist-vendored=true
-910391e6e6b90812f0030531de89e5be9b674060/Library linguist-vendored=true
-Source/Library linguist-vendored=true
-Library linguist-vendored=true
-Dependencies/* linguist-vendored=true
-Dependencies linguist-vendored=true
+Dependencies/* linguist-vendored
+Dependencies linguist-vendored
 Dependencies/Include/OpenSSL/* linguist-vendored=true
 Dependencies/Include/OpenSSL/ linguist-vendored=true
 
