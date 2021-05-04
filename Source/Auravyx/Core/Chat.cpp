@@ -77,6 +77,10 @@ void refreshSuggestions()
 						cmd = CommandRegistry::commands.at(parse.at(i));
 						currentSuggestionIndex += parse.at(i).size() + 1;
 					}
+					else
+					{
+						commandError = true;
+					}
 				}
 				else
 				{
@@ -85,10 +89,34 @@ void refreshSuggestions()
 					{
 						if (cmd.subCommands.at(j).validArgument(parse.at(i)))
 						{
-							//std::cout << cmd.subCommands.at(j).argumentValue << " " << parse.at(i) << "\n";
-							cmd = cmd.subCommands.at(j);
-							cmdFound = true;
-							currentSuggestionIndex += parse.at(i).size() + 1;
+							bool suggestionFound = false;
+							if (cmd.subCommands.at(j).suggestions)
+							{
+								for (int k = 0; k < cmd.subCommands.at(j).suggestions->size(); k++)
+								{
+									if (cmd.subCommands.at(j).suggestions->at(k).rfind(parse.at(i), 0) == 0 && currentMessage.at(currentMessage.length() - 1) != ' ')
+									{
+										CommandSuggestion cs;
+										cs.name = cmd.subCommands.at(j).suggestions->at(k);
+										cs.index = Command::Argument::SUGGESTION;
+										suggestionList.emplace_back(cs);
+										suggestionFound = true;
+									}
+								}
+							}
+							if (i < parse.size() - 1 || currentMessage.at(currentMessage.length() - 1) == ' ')
+							{
+								cmd = cmd.subCommands.at(j);
+								cmdFound = true;
+								if (!suggestionFound)
+								{
+									currentSuggestionIndex += parse.at(i).size() + 1;
+								}
+							}
+							else
+							{
+								cmdFound = true;
+							}
 							break;
 						}
 						if (cmd.subCommands.at(j).argumentType == Command::Argument::LITERAL &&
@@ -107,13 +135,26 @@ void refreshSuggestions()
 				}
 				i++;
 			}
+			
 			for (int i = 0; i < cmd.subCommands.size(); i++)
 			{
 				CommandSuggestion cs;
 				cs.name = cmd.subCommands.at(i).argumentValue;
 				cs.index = cmd.subCommands.at(i).argumentType;
-				std::cout << cs.name << "\n";
 				suggestionList.emplace_back(cs);
+				if (currentMessage.at(currentMessage.length() - 1) == ' ')
+				{
+					if (cmd.subCommands.at(i).suggestions)
+					{
+						for (int j = 0; j < cmd.subCommands.at(i).suggestions->size(); j++)
+						{
+							CommandSuggestion css;
+							css.name = cmd.subCommands.at(i).suggestions->at(j);
+							css.index = Command::Argument::SUGGESTION;
+							suggestionList.emplace_back(css);
+						}
+					}
+				}
 			}
 			return;
 		}
@@ -274,9 +315,27 @@ void Chat::render()
 		lastTime = thisTime;
 		textFlashOn = !textFlashOn;
 	}
+	int toRemove = 0;
+	float thisTime = glfwGetTime();
+	for (int i = (int)chatLog.size() - 1; i >= 0; i--)
+	{
+		GFX::getOverlay()->drawStringBG(chatLog.at(i), 5, Window::getWindow()->getHeight() - 65 - (chatLog.size() - i) * 30, 30, 1, 1, 1, 1, 0, -2, 0, 0, 0, 0, 0, 0.3);
+	}
+	for (int i = 0; i < chatLogTimings.size(); i++)
+	{
+		if (chatLogTimings.at(i) + 10 < thisTime)
+		{
+			toRemove++;
+		}
+	}
+	for (int i = 0; i < toRemove; i++)
+	{
+		chatLog.erase(chatLog.begin());
+		chatLogTimings.erase(chatLogTimings.begin());
+	}
 	if (isChatting)
 	{
-		GFX::getOverlay()->fillRect(5, Window::getWindow()->getHeight() - 35, Window::getWindow()->getWidth() - 10, 30, 0.1, 0.1, 0.1, 1);
+		GFX::getOverlay()->fillRect(5, Window::getWindow()->getHeight() - 35, Window::getWindow()->getWidth() - 10, 30, 0, 0, 0, 0.8);
 		std::string outmsg = "";
 		outmsg += currentMessage;
 		if (textFlashOn)
@@ -318,10 +377,14 @@ void Chat::render()
 			std::string currentArgument = currentMessage.substr(j, currentMessage.length());
 
 			int entries = 0;
+			bool midArgument = (currentArgument.length() != 0);
 
 			for (i = 0; i < suggestionList.size(); i++)
 			{
-				if (suggestionList.at(i).name.rfind(currentArgument, 0) == 0)
+				if (suggestionList.at(i).name.rfind(currentArgument, 0) == 0 ||
+					(midArgument && suggestionList.at(i).index != Command::Argument::SUGGESTION
+						&& suggestionList.at(i).index != Command::Argument::LITERAL &&
+						Command::validArgument(currentArgument, suggestionList.at(i).index)))
 				{
 					entries++;
 					if (suggestionList.at(i).name.length() == currentArgument.length())
@@ -329,14 +392,18 @@ void Chat::render()
 						argumentComplete = true;
 					}
 					int w;
-					if (suggestionList.at(i).index != Command::Argument::LITERAL)
+					if (suggestionList.at(i).index == Command::Argument::LITERAL)
 					{
-						w = GFX::getOverlay()->stringWidth(suggestionList.at(i).name 
-							+ ": " + Command::argumentTypeStrings[suggestionList.at(i).index], 30);
+						w = GFX::getOverlay()->stringWidth(suggestionList.at(i).name, 30);
+					}
+					else if (suggestionList.at(i).index == Command::Argument::SUGGESTION)
+					{
+						w = GFX::getOverlay()->stringWidth(suggestionList.at(i).name, 30);
 					}
 					else
 					{
-						w = GFX::getOverlay()->stringWidth(suggestionList.at(i).name, 30);
+						w = GFX::getOverlay()->stringWidth(suggestionList.at(i).name
+							+ ": " + Command::argumentTypeStrings[suggestionList.at(i).index], 30);
 					}
 					if (w > widestArgument)
 					{
@@ -354,44 +421,84 @@ void Chat::render()
 				width = GFX::getOverlay()->stringWidth(currentMessage.substr(0, currentSuggestionIndex), 30);
 				if (!commandError)
 				{
-					GFX::getOverlay()->fillRect(width + 5, Window::getWindow()->getHeight() - 35 - 1, widestArgument, -30 * entries, 0.1, 0.1, 0.1, 1);
+					GFX::getOverlay()->fillRect(width + 5, Window::getWindow()->getHeight() - 35 - 1, widestArgument, -30 * entries, 0, 0, 0, 0.8);
 				}
 				i = 0;
 				int entriesIndex = 1;
-
+				std::string currentSuggestion;
+				std::vector<std::string> expectedValues;
 				for (i = suggestionList.size() - 1; i >= 0; i--)
 				{
-					if (suggestionList.at(i).name.rfind(currentArgument, 0) == 0 || commandError)
+					if (suggestionList.at(i).name.rfind(currentArgument, 0) == 0 || commandError ||
+						(midArgument && suggestionList.at(i).index != Command::Argument::SUGGESTION
+							&& suggestionList.at(i).index != Command::Argument::LITERAL &&
+							Command::validArgument(currentArgument, suggestionList.at(i).index)))
 					{
-
-						std::string currentSuggestion = suggestionList.at(i).name;
-						if (suggestionList.at(i).index != Command::Argument::LITERAL)
+						currentSuggestion = suggestionList.at(i).name;
+						if (suggestionList.at(i).index == Command::Argument::SUGGESTION)
+						{
+							if (!commandError)
+							{
+								currentSuggestion = suggestionList.at(i).name;
+								GFX::getOverlay()->drawString(currentSuggestion, 5 + width, Window::getWindow()->getHeight() - 32.5 - entriesIndex * 30 - 1, 30, 0.7, 0.7, 0.7, 1);
+							}
+						}
+						else if (suggestionList.at(i).index != Command::Argument::LITERAL)
 						{
 							currentSuggestion = suggestionList.at(i).name
 								+ ": " + Command::argumentTypeStrings[suggestionList.at(i).index];
 						}
+						if (suggestionList.at(i).index != Command::Argument::SUGGESTION)
+						{
+							if (commandError)
+							{
+								currentSuggestion = Command::argumentTypeStrings[suggestionList.at(i).index] + " <" + suggestionList.at(i).name + ">";
+								expectedValues.emplace_back(currentSuggestion);
+							}
+							else
+							{
+								GFX::getOverlay()->drawString(currentSuggestion, 5 + width, Window::getWindow()->getHeight() - 32.5 - entriesIndex * 30 - 1, 30, 1, 1, 1, 1);
+							}
+						}
 
-						if (commandError)
-						{
-							currentSuggestion = " | Expected "
-								+ Command::argumentTypeStrings[suggestionList.at(i).index] + " <" + suggestionList.at(i).name + ">";
-							GFX::getOverlay()->fillRect(width + 5, Window::getWindow()->getHeight() - 35 - 1,
-								GFX::getOverlay()->stringWidth(currentSuggestion, 30), -30 * 1, 0.1, 0.1, 0.1, 1);
-							GFX::getOverlay()->drawString(currentSuggestion, 5 + width, Window::getWindow()->getHeight() - 32.5 - entriesIndex * 30 - 1, 30, 1, 0, 0, 1);
-						}
-						else
-						{
-							GFX::getOverlay()->drawString(currentSuggestion, 5 + width, Window::getWindow()->getHeight() - 32.5 - entriesIndex * 30 - 1, 30, 1, 1, 1, 1);
-						}
 						entriesIndex++;
 					}
 				}
-				if (suggestionList.size() == 0 && commandError)
+				if (expectedValues.size() > 0)
+				{
+					std::string error = "Expected ";
+					for (int i = expectedValues.size() - 1; i >= 0; i--)
+					{
+						if (i == 1)
+						{
+							error += expectedValues.at(i) + " or ";
+						}
+						else if (i == 0)
+						{
+							error += expectedValues.at(i);
+						}
+						else
+						{
+							error += expectedValues.at(i) + ", ";
+						}
+					}
+					GFX::getOverlay()->fillRect(width + 5, Window::getWindow()->getHeight() - 35 - 1,
+						GFX::getOverlay()->stringWidth(error, 30), -30 * 1, 0, 0, 0, 0.8);
+					GFX::getOverlay()->drawString(error, 5 + width, Window::getWindow()->getHeight() - 32.5 - 1 * 30 - 1, 30, 1, 0, 0, 1);
+				}
+				if (suggestionList.size() == 0 && commandError && currentSuggestionIndex <= 2)
+				{
+					std::string currentSuggestion = "Unknown command";
+					GFX::getOverlay()->fillRect(width + 5, Window::getWindow()->getHeight() - 35 - 1,
+						GFX::getOverlay()->stringWidth(currentSuggestion, 30), -30 * 1, 0, 0, 0, 0.8);
+					GFX::getOverlay()->drawString(currentSuggestion, 5 + width, Window::getWindow()->getHeight() - 32.5 - 30 - 1, 30, 1, 0, 0, 1);
+				}
+				else if (suggestionList.size() == 0 && commandError)
 				{
 					std::string currentSuggestion = "Unexpected argument";
 					GFX::getOverlay()->fillRect(width + 5, Window::getWindow()->getHeight() - 35 - 1,
-						GFX::getOverlay()->stringWidth(currentSuggestion, 30), -30 * 1, 0.1, 0.1, 0.1, 1);
-					GFX::getOverlay()->drawString(currentSuggestion, 5 + width, Window::getWindow()->getHeight() - 32.5 - entriesIndex * 30 - 1, 30, 1, 0, 0, 1);
+						GFX::getOverlay()->stringWidth(currentSuggestion, 30), -30 * 1, 0, 0, 0, 0.8);
+					GFX::getOverlay()->drawString(currentSuggestion, 5 + width, Window::getWindow()->getHeight() - 32.5 - 30 - 1, 30, 1, 0, 0, 1);
 				}
 			}
 		}
@@ -417,25 +524,6 @@ void Chat::render()
 	else if (!Window::getWindow()->getController()->isKeyDown(GLFW_KEY_F1))
 	{
 		f1Lock = false;
-	}
-	
-	int toRemove = 0;
-	float thisTime = glfwGetTime();
-	for (int i = (int) chatLog.size() - 1; i >= 0; i--)
-	{
-		GFX::getOverlay()->drawStringBG(chatLog.at(i), 5, Window::getWindow()->getHeight() - 65 - (chatLog.size() - i) * 30, 30, 1, 1, 1, 1, 0, -2, 0, 0, 0, 0, 0, 0.3);
-	}
-	for (int i = 0; i < chatLogTimings.size(); i++)
-	{
-		if (chatLogTimings.at(i) + 10 < thisTime)
-		{
-			toRemove++;
-		}
-	}
-	for (int i = 0; i < toRemove; i++)
-	{
-		chatLog.erase(chatLog.begin());
-		chatLogTimings.erase(chatLogTimings.begin());
 	}
 }
 
