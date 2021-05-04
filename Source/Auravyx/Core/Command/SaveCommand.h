@@ -1,10 +1,6 @@
 #pragma once
 #include "Auravyx/Core/Command/Command.h"
-class TeleportCommand : public Command
+class SaveCommand : public Command
 {
-public:
-
-	TeleportCommand();
-
 	virtual void load();
 };

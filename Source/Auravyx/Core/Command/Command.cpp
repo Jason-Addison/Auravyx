@@ -3,7 +3,7 @@
 #include <algorithm>
 #include <iostream>
 
-const std::string Command::argumentTypeStrings[] = { "literal", "string", "integer", "float", "double" };
+const std::string Command::argumentTypeStrings[] = { "literal", "string", "integer", "float", "double", "option" };
 
 Command::Command()
 {
@@ -27,11 +27,18 @@ Command Command::literal(std::string s)
 	cmd.argumentValue = s;
 	return cmd;
 }
-Command Command::string(std::string s)
+Command Command::string()
 {
 	Command cmd;
 	cmd.argumentType = Argument::STRING;
-	cmd.argumentValue = s;
+	//cmd.argumentValue = s;
+	return cmd;
+}
+Command Command::selectedString()
+{
+	Command cmd;
+	cmd.argumentType = Argument::STRING_OPTION;
+	//cmd.argumentValue = s;
 	return cmd;
 }
 Command Command::integer()
@@ -45,6 +52,17 @@ Command Command::argument(std::string argName, Command subCmd)
 {
 	subCmd.argumentValue = argName;
 	return subCmd;
+}
+Command& Command::limits(std::shared_ptr<std::vector<std::string>>  suggestions)
+{
+	this->suggestions = suggestions;
+	this->limitToSuggestions = true;
+	return *this;
+}
+Command& Command::suggests(std::shared_ptr<std::vector<std::string>>  suggestions)
+{
+	this->suggestions = suggestions;
+	return *this;
 }
 
 Command Command::doubleArgument()
@@ -65,6 +83,11 @@ double Command::getDouble(std::string argName, std::map<std::string, std::vector
 	return result;
 }
 
+void Command::load()
+{
+}
+
+
 int Command::getInteger(std::string argName, std::map<std::string, std::vector<std::string>>& args)
 {
 	return std::stoi(args.at(argName).at(0));
@@ -77,6 +100,24 @@ Command& Command::set(std::string commandName)
 	return *this;
 }
 
+bool Command::validArgument(std::string s, int arg)
+{
+	if (arg == Argument::INTEGER)
+	{
+		return (!s.empty() && std::all_of(s.begin(), s.end(), ::isdigit));
+	}
+	else if (arg == Argument::DOUBLE)
+	{
+		char* end;
+		double result = strtod(s.c_str(), &end);
+		if (end == s.c_str() || *end != '\0')
+		{
+			return false;
+		}
+		return true;
+	}
+	return false;
+}
 bool Command::validArgument(std::string s)
 {
 	if (argumentType == Argument::LITERAL)
@@ -93,6 +134,17 @@ bool Command::validArgument(std::string s)
 	}
 	else if (argumentType == Argument::STRING)
 	{
+		if (limitToSuggestions)
+		{
+			for (int i = 0; i < suggestions->size(); i++)
+			{
+				if (suggestions->at(i).rfind(s, 0) == 0)
+				{
+					return true;
+				}
+			}
+			return false;
+		}
 		return true;
 	}
 	else if (argumentType == Argument::DOUBLE)
@@ -104,6 +156,10 @@ bool Command::validArgument(std::string s)
 			return false;
 		}
 		return true;
+	}
+	else if (argumentType == Argument::STRING_OPTION)
+	{
+		return false;
 	}
 	return false;
 }
@@ -134,11 +190,20 @@ bool Command::run(std::vector<std::string> arguments, std::map<std::string, std:
 			}
 			if (otherwiseFunction != nullptr)
 			{
-				if (argumentType != Argument::LITERAL)
+				if (i != 0)
 				{
 					std::vector<std::string> vec;
 					vec.emplace_back(arguments.at(i));
 					argumentMap.emplace(argumentValue, vec);
+				}
+				if (arguments.size() > 1)
+				{
+					for (int j = 1; j < arguments.size(); j++)
+					{
+						std::vector<std::string> vec;
+						vec.emplace_back(arguments.at(j));
+						argumentMap.emplace(argumentValue, vec);
+					}
 				}
 				otherwiseFunction(argumentMap);
 				return true;
