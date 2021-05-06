@@ -3,5 +3,6 @@
 
 class HelpCommand : public Command
 {
+public:
 	virtual void load();
 };
