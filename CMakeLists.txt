@@ -15,7 +15,7 @@ endif()
 
 file(GLOB_RECURSE AuravyxSource CONFIGURE_DEPENDS "${CMAKE_SOURCE_DIR}/Source/*.h" "${CMAKE_SOURCE_DIR}/Source/*.cpp")
 # "${CMAKE_SOURCE_DIR}/Source/Auravyx/UI/Icon/Auravyx.rc"
-add_executable(Auravyx ${AuravyxSource})
+add_executable(Auravyx "${CMAKE_SOURCE_DIR}/Source/Auravyx/UI/Icon/Auravyx.rc" ${AuravyxSource})
 
 include_directories(src ${CMAKE_SOURCE_DIR}/Source)
 include_directories(src ${CMAKE_SOURCE_DIR}/Dependencies/Include)#################
