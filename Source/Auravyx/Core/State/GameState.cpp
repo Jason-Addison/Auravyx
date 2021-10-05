@@ -97,12 +97,12 @@ void chunkLoading(const int xC, const int yC, const int zC)
 					cX = z;
 					cZ = -(z - x);
 				}
-				//std::shared_ptr<ChunkHeight> ch = w.getChunkHeightmap(cX, cZ);
-				//if (ch == nullptr)
-				{
-					//ch = std::shared_ptr<ChunkHeight>(new ChunkHeight());
-					//ch->generate(cX, cZ);
-				}
+				//std::shared_ptr<ChunkHeight> ch = GameManager::world.getChunkHeightmap(cX, cZ);
+			    //if (ch == nullptr)
+				//{
+				//	ch = std::shared_ptr<ChunkHeight>(new ChunkHeight());
+				//	ch->generate(cX, cZ);
+				//}
 				for (int y = -1; y < 7; y++)
 				{
 					if (cleanup)
@@ -124,13 +124,13 @@ void chunkLoading(const int xC, const int yC, const int zC)
 						if (!origin && !GameManager::world.isLoaded(cX, cY, cZ))
 						{
 							nextChunk = ChunkIO::readChunk(cX, cY, cZ, "myworld");// new Chunk(cX, cY, cZ);
+
+
+
 							//std::shared_ptr<Chunk> c (new Chunk(cX, cY, cZ));
 							//c->generateTerrain(ch);
 
 							//nextChunk = c;
-
-							//std::shared_ptr<Chunk> c (new Chunk(cX, cY, cZ));
-							//c->generateTerrain(ch)
 
 							if (nextChunk)
 							{
@@ -379,58 +379,122 @@ void GameState::render()
 	}
 	if (Window::getWindow()->getController()->isMouseDown(GLFW_MOUSE_BUTTON_1))
 	{
-		Chunk* c = GameManager::world.getChunk(GFX::getOverlay()->CAM.cX, GFX::getOverlay()->CAM.cY, GFX::getOverlay()->CAM.cZ);
-		if (c)
+		int size = Window::getWindow()->mainScroll;
+		if (size < 1)
 		{
-			int x = ((int) floor(GFX::getOverlay()->CAM.xPos)) % 64;
-			int y = ((int) floor(GFX::getOverlay()->CAM.yPos)) % 64;
-			int z = ((int) floor(GFX::getOverlay()->CAM.zPos)) % 64;
-			if (x < 0)
+			size = 1;
+		}
+
+		double posAx = (GFX::getOverlay()->crosshairX - ceil((size) / 2));
+		double posAy = (GFX::getOverlay()->crosshairY - ceil((size) / 2));
+		double posAz = (GFX::getOverlay()->crosshairZ - ceil((size) / 2));
+
+		double posBx = (GFX::getOverlay()->crosshairX + ceil((size) / 2));
+		double posBy = (GFX::getOverlay()->crosshairY + ceil((size) / 2));
+		double posBz = (GFX::getOverlay()->crosshairZ + ceil((size) / 2));
+		int xC1 = floor((posAx) / Chunk::CHUNK_SIZE);
+		int yC1 = floor((posAy) / Chunk::CHUNK_SIZE);
+		int zC1 = floor((posAz) / Chunk::CHUNK_SIZE);
+
+		int xC2 = floor((posBx) / Chunk::CHUNK_SIZE);
+		int yC2 = floor((posBy) / Chunk::CHUNK_SIZE);
+		int zC2 = floor((posBz) / Chunk::CHUNK_SIZE);
+
+		for (int xC = std::min(xC1, xC2); xC <= std::max(xC1, xC2); xC++)
+		{
+			for (int yC = std::min(yC1, yC2); yC <= std::max(yC1, yC2); yC++)
 			{
-				x = Chunk::CHUNK_SIZE + x;
+				for (int zC = std::min(zC1, zC2); zC <= std::max(zC1, zC2); zC++)
+				{
+					Chunk* c = GameManager::world.getChunk(xC, yC, zC);
+					if (c)
+					{
+						c->chunkUpdate = true;
+						c->priorityLoad = true;
+						c->loaded = false;
+						for (int x = std::max(0, std::min((int)floor(posAx), (int)floor(posBx)) - xC * Chunk::CHUNK_SIZE);
+							x <= std::min(Chunk::CHUNK_SIZE - 1, std::max((int)floor(posAx), (int)floor(posBx)) - xC * Chunk::CHUNK_SIZE); x++)
+						{
+							for (int y = std::max(0, std::min((int)floor(posAy), (int)floor(posBy)) - yC * Chunk::CHUNK_SIZE);
+								y <= std::min(Chunk::CHUNK_SIZE - 1, std::max((int)floor(posAy), (int)floor(posBy)) - yC * Chunk::CHUNK_SIZE); y++)
+							{
+								for (int z = std::max(0, std::min((int)floor(posAz), (int)floor(posBz)) - zC * Chunk::CHUNK_SIZE);
+									z <= std::min(Chunk::CHUNK_SIZE - 1, std::max((int)floor(posAz), (int)floor(posBz)) - zC * Chunk::CHUNK_SIZE); z++)
+								{
+									c->setVoxel(x, y, z, id, 255);
+								}
+							}
+						}
+					}
+				}
 			}
-			if (y < 0)
-			{
-				y = Chunk::CHUNK_SIZE + y;
-			}
-			if (z < 0)
-			{
-				z = Chunk::CHUNK_SIZE + z;
-			}
-			int size = Window::getWindow()->mainScroll;
-			if (size < 1)
-			{
-				size = 1;
-			}
-			c->fill(x, y - 7, z, size, size, size, id, 255);
 		}
 	}
 	if (Window::getWindow()->getController()->isMouseDown(GLFW_MOUSE_BUTTON_2))
 	{
-		Chunk* c = GameManager::world.getChunk(GFX::getOverlay()->CAM.cX, GFX::getOverlay()->CAM.cY, GFX::getOverlay()->CAM.cZ);
-		if (c)
+		int size = Window::getWindow()->mainScroll;
+		if (size < 1)
 		{
-			int x = ((int)floor(GFX::getOverlay()->CAM.xPos)) % 64;
-			int y = ((int)floor(GFX::getOverlay()->CAM.yPos)) % 64;
-			int z = ((int)floor(GFX::getOverlay()->CAM.zPos)) % 64;
-			if (x < 0)
+			size = 1;
+		}
+
+		double posAx = (GFX::getOverlay()->crosshairX - ceil((size) / 2));
+		double posAy = (GFX::getOverlay()->crosshairY - ceil((size) / 2));
+		double posAz = (GFX::getOverlay()->crosshairZ - ceil((size) / 2));
+
+		double posBx = (GFX::getOverlay()->crosshairX + ceil((size) / 2));
+		double posBy = (GFX::getOverlay()->crosshairY + ceil((size) / 2));
+		double posBz = (GFX::getOverlay()->crosshairZ + ceil((size) / 2));
+		int xC1 = floor((posAx) / Chunk::CHUNK_SIZE);
+		int yC1 = floor((posAy) / Chunk::CHUNK_SIZE);
+		int zC1 = floor((posAz) / Chunk::CHUNK_SIZE);
+
+		int xC2 = floor((posBx) / Chunk::CHUNK_SIZE);
+		int yC2 = floor((posBy) / Chunk::CHUNK_SIZE);
+		int zC2 = floor((posBz) / Chunk::CHUNK_SIZE);
+
+		for (int xC = std::min(xC1, xC2); xC <= std::max(xC1, xC2); xC++)
+		{
+			for (int yC = std::min(yC1, yC2); yC <= std::max(yC1, yC2); yC++)
 			{
-				x = Chunk::CHUNK_SIZE + x;
+				for (int zC = std::min(zC1, zC2); zC <= std::max(zC1, zC2); zC++)
+				{
+					Chunk* c = GameManager::world.getChunk(xC, yC, zC);
+					if (c)
+					{
+						c->chunkUpdate = true;
+						c->priorityLoad = true;
+						c->loaded = false;
+						int density = 0;
+						for (int x = std::max(0, std::min((int)floor(posAx), (int)floor(posBx)) - xC * Chunk::CHUNK_SIZE);
+							x <= std::min(Chunk::CHUNK_SIZE - 1, std::max((int)floor(posAx), (int)floor(posBx)) - xC * Chunk::CHUNK_SIZE); x++)
+						{
+							for (int y = std::max(0, std::min((int)floor(posAy), (int)floor(posBy)) - yC * Chunk::CHUNK_SIZE);
+								y <= std::min(Chunk::CHUNK_SIZE - 1, std::max((int)floor(posAy), (int)floor(posBy)) - yC * Chunk::CHUNK_SIZE); y++)
+							{
+								for (int z = std::max(0, std::min((int)floor(posAz), (int)floor(posBz)) - zC * Chunk::CHUNK_SIZE);
+									z <= std::min(Chunk::CHUNK_SIZE - 1, std::max((int)floor(posAz), (int)floor(posBz)) - zC * Chunk::CHUNK_SIZE); z++)
+								{
+									if (c->getRelativeVoxelID(x, y + 1, z + 1) == 0 || c->getRelativeVoxelID(x + 2, y + 1, z + 1) == 0 ||
+										c->getRelativeVoxelID(x + 1, y, z + 1) == 0 || c->getRelativeVoxelID(x + 1, y + 2, z + 1) == 0 ||
+										c->getRelativeVoxelID(x + 1, y + 1, z) == 0 || c->getRelativeVoxelID(x + 1, y + 1, z + 2) == 0)
+									{
+										density = c->getDensity(x, y, z) - 30;
+										if (density <= 0)
+										{
+											c->setVoxel(x, y, z, 0, 0);
+										}
+										else
+										{
+											c->setVoxel(x, y, z, c->getVoxelID(x, y, z), density);
+										}
+									}
+								}
+							}
+						}
+					}
+				}
 			}
-			if (y < 0)
-			{
-				y = Chunk::CHUNK_SIZE + y;
-			}
-			if (z < 0)
-			{
-				z = Chunk::CHUNK_SIZE + z;
-			}
-			int size = Window::getWindow()->mainScroll;
-			if (size < 1)
-			{
-				size = 1;
-			}
-			c->clear(x, y - 7, z, size, size, size, 0);
 		}
 	}
 
@@ -497,13 +561,15 @@ void GameState::render()
 			renderableChunk++;
 		}
 	}
+	GFX::getOverlay()->fillRect(Window::getWindow()->getWidth() / 2 - 1, Window::getWindow()->getHeight() / 2 - 1, 3, 3, 0, 0, 0, 1);
+
 	GFX::getOverlay()->drawStringBG("render: " + std::to_string(renderableChunk) + " / " +
 		std::to_string(GameManager::world.overworld.size()), 0, dim * (di++), 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3);
 
 	GFX::getOverlay()->drawStringBG("time: " +
-		std::to_string(((GameManager::world.getOverworldTime() + 60000) % GameManager::world.getOverworldDayCycle()) / 10000) + ":" +
-		std::to_string((int)((GameManager::world.getOverworldTime() % GameManager::world.getOverworldDayCycle() / (3600)) % 60)) + ":" +
-		std::to_string((int)((GameManager::world.getOverworldTime() % 10000 / 60 % 60))) + " (" +
+		std::to_string(((GameManager::world.getOverworldTime()) / (3600 * 60)) % 24) + ":" +
+		std::to_string((int)((GameManager::world.getOverworldTime() / (3600)) % 60)) + ":" +
+		std::to_string((int)((GameManager::world.getOverworldTime() / 60) % 60)) + " (" +
 		std::to_string((int)(((GameManager::world.getOverworldTime()) + 60000) / GameManager::world.getOverworldDayCycle())) + ")",
 		0, dim * (di++), 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3);
 	GFX::getOverlay()->drawStringBG("tick: " + std::to_string((int)(GameManager::world.getOverworldTime())),
@@ -533,6 +599,19 @@ void GameState::render()
 
 	if (Profiler::showAdvancedDebugInfo)
 	{
+		if (GFX::getOverlay()->crosshairFound)
+		{
+			GFX::getOverlay()->drawStringBG("crossh x: " + Util::removeDecimal(GFX::getOverlay()->crosshairX, 3), 0, dim * (di++), 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3f);
+			GFX::getOverlay()->drawStringBG("crossh y: " + Util::removeDecimal(GFX::getOverlay()->crosshairY, 3), 0, dim * (di++), 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3f);
+			GFX::getOverlay()->drawStringBG("crossh z: " + Util::removeDecimal(GFX::getOverlay()->crosshairZ, 3), 0, dim * (di++), 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3f);
+		}
+		else
+		{
+			GFX::getOverlay()->drawStringBG("crossh x: -", 0, dim * (di++), 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3f);
+			GFX::getOverlay()->drawStringBG("crossh y: -", 0, dim * (di++), 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3f);
+			GFX::getOverlay()->drawStringBG("crossh z: -", 0, dim * (di++), 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3f);
+		}
+
 		GFX::getOverlay()->drawStringBG("rot x: " + Util::removeDecimal(GFX::getOverlay()->CAM.xRot, 3), 0, dim* (di++), 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3f);
 		GFX::getOverlay()->drawStringBG("rot y: " + Util::removeDecimal(GFX::getOverlay()->CAM.yRot, 3), 0, dim* (di++), 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3f);
 		GFX::getOverlay()->drawStringBG("rot z: " + Util::removeDecimal(GFX::getOverlay()->CAM.zRot, 3), 0, dim* (di++), 30, 1, 1, 1, 1, 0, 0, 0, -5, 0, 0, 0, 0.3f);
@@ -572,6 +651,7 @@ void GameState::render()
 		functions->at(i).first();
 	}
 	SoundManager::getSoundManager()->setListener(GFX::getOverlay()->CAM);
+	double anim = glfwGetTime() * 6;
 }
 void startChunkLoader()
 {
@@ -594,14 +674,9 @@ void physicsCallback(std::string s)
 }
 void GameState::start()
 {
-	ChunkIO::saveArea();
+	//ChunkIO::saveArea();
 	Physics::addCallback(physicsCallback);
 	
-	Sound s;
-	s.play(Assets::getAssets()->getAudio("song1"));
-	//s.setGain(10);
-	//s.setPitch(0.9);
-	//s.setTime(30);
 	//s.setPosition(0, 0, 0);
 	hostServer = false;// Settings::getBool("host");
 	Modify::getModify()->loadAllMods();
@@ -614,6 +689,7 @@ void GameState::start()
 
 		}
 	}
+	
 	chunkLoader = std::thread(startChunkLoader);
 	chunkMeshGenerator = std::thread(chunkMeshGeneration);
 	GameManager::world.create();
