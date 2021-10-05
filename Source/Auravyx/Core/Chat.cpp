@@ -41,14 +41,31 @@ struct CommandSuggestion
 };
 
 std::vector<CommandSuggestion> suggestionList;
+int suggestionIndex = 0;
 bool commandError = false;
 int currentSuggestionIndex = 0;
+int currentRealSuggestionIndex = 0;
+std::vector<CommandSuggestion> autofillList;
 
 void refreshSuggestions()
 {
 	currentSuggestionIndex = 1;
 	commandError = false;
 	suggestionList.clear();
+
+	int j = currentMessage.find_last_of(' ');
+	if (j <= 0)
+	{
+		j = 1;
+	}
+	else
+	{
+		j += 1;
+	}
+	std::string currentArgument = currentMessage.substr(j, currentMessage.length());
+
+	int entries = 0;
+	bool midArgument = (currentArgument.length() != 0);
 	if (currentMessage.size() > 0 && currentMessage.at(0) == '/')
 	{
 		std::vector<std::string> parse = Util::splitString(currentMessage.substr(1, currentMessage.length()), " ");
@@ -156,7 +173,19 @@ void refreshSuggestions()
 					}
 				}
 			}
-			return;
+		}
+	}
+	autofillList = std::vector<CommandSuggestion>();
+	for (int i = suggestionList.size() - 1; i >= 0; i--)
+	{
+		if (suggestionList.at(i).name.rfind(currentArgument, 0) == 0 ||
+			(midArgument &&
+				Command::validArgument(currentArgument, suggestionList.at(i).index)))
+		{
+			if (!commandError)
+			{
+				autofillList.emplace_back(suggestionList.at(i));
+			}
 		}
 	}
 }
@@ -176,13 +205,67 @@ void noKeyCallback(GLFWwindow* window, int key, int scancode, int action, int mo
 {
 }
 
-
+int autofillIndex = -1;
+std::string currentAutofill;
+std::string currentSuggestionMsg;
 void chatKeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
 	if (Chat::isChatting)
 	{
 		if (action)
 		{
+			if (key == GLFW_KEY_TAB)
+			{
+				int newIndex = suggestionIndex;
+				while (autofillList.at(newIndex).index != Command::Argument::LITERAL &&
+					autofillList.at(newIndex).index != Command::Argument::SUGGESTION)
+				{
+					newIndex++;
+					if (newIndex == autofillList.size())
+					{
+						newIndex = 0;
+						break;
+					}
+				}
+				suggestionIndex = newIndex;
+				if (autofillIndex == suggestionIndex)
+				{
+					suggestionIndex++;
+					if (suggestionIndex >= autofillList.size())
+					{
+						suggestionIndex = 0;
+					}
+					currentAutofill = autofillList.at(suggestionIndex).name;
+				}
+				currentAutofill = autofillList.at(suggestionIndex).name;
+				autofillIndex = suggestionIndex;
+				
+			}
+			else if (key == GLFW_KEY_UP)
+			{
+				suggestionIndex--;
+				if (suggestionIndex < 0)
+				{
+					suggestionIndex = autofillList.size() - 1;
+				}
+				currentSuggestionMsg = autofillList.at(suggestionIndex).name;
+			}
+			else if (key == GLFW_KEY_DOWN)
+			{
+				suggestionIndex++;
+				if (suggestionIndex >= autofillList.size())
+				{
+					suggestionIndex = 0;
+				}
+				currentSuggestionMsg = autofillList.at(suggestionIndex).name;
+			}
+			else
+			{
+				currentMessage += currentAutofill;
+				currentAutofill = "";
+				suggestionIndex = 0;
+				autofillIndex = -1;
+			}
 			if (key == GLFW_KEY_BACKSPACE)
 			{
 				backspacePriority = true;
@@ -192,7 +275,6 @@ void chatKeyCallback(GLFWwindow* window, int key, int scancode, int action, int 
 					//bmsg = bmsg.substr(0, bmsg.length() - 1);
 					//currentMessage.str(bmsg);
 					currentMessage = currentMessage.substr(0, currentMessage.length() - 1);
-					chatChanged = true;
 				}
 			}
 			if (key == 65 && mods == 2)
@@ -234,6 +316,7 @@ void chatKeyCallback(GLFWwindow* window, int key, int scancode, int action, int 
 					Log::out(e.what());
 				}*/
 			}
+			chatChanged = true;
 		}
 			// paste
 			//std::string paste_text;
@@ -379,6 +462,7 @@ void Chat::render()
 			int entries = 0;
 			bool midArgument = (currentArgument.length() != 0);
 
+			std::vector<CommandSuggestion> suggestions;
 			for (i = 0; i < suggestionList.size(); i++)
 			{
 				if (suggestionList.at(i).name.rfind(currentArgument, 0) == 0 ||
@@ -440,7 +524,14 @@ void Chat::render()
 							if (!commandError)
 							{
 								currentSuggestion = suggestionList.at(i).name;
-								GFX::getOverlay()->drawString(currentSuggestion, 5 + width, Window::getWindow()->getHeight() - 32.5 - entriesIndex * 30 - 1, 30, 0.7, 0.7, 0.7, 1);
+								if (autofillIndex == i)
+								{
+									GFX::getOverlay()->drawString(currentSuggestion, 5 + width, Window::getWindow()->getHeight() - 32.5 - entriesIndex * 30 - 1, 30, 0.7, 0.7, 0.0, 1);
+								}
+								else
+								{
+									GFX::getOverlay()->drawString(currentSuggestion, 5 + width, Window::getWindow()->getHeight() - 32.5 - entriesIndex * 30 - 1, 30, 0.7, 0.7, 0.7, 1);
+								}
 							}
 						}
 						else if (suggestionList.at(i).index != Command::Argument::LITERAL)
@@ -457,8 +548,22 @@ void Chat::render()
 							}
 							else
 							{
-								GFX::getOverlay()->drawString(currentSuggestion, 5 + width, Window::getWindow()->getHeight() - 32.5 - entriesIndex * 30 - 1, 30, 1, 1, 1, 1);
+								if (autofillIndex == i)
+								{
+									GFX::getOverlay()->drawString(currentSuggestion, 5 + width, Window::getWindow()->getHeight() - 32.5 - entriesIndex * 30 - 1, 30, 1, 1, 0, 1);
+								}
+								else
+								{
+									GFX::getOverlay()->drawString(currentSuggestion, 5 + width, Window::getWindow()->getHeight() - 32.5 - entriesIndex * 30 - 1, 30, 1, 1, 1, 1);
+								}
 							}
+						}
+						if (!commandError && (suggestionList.at(i).index == Command::Argument::SUGGESTION
+							|| suggestionList.at(i).index == Command::Argument::LITERAL))
+						{
+							
+							GFX::getOverlay()->drawString(
+								currentSuggestionMsg, width - 5, Window::getWindow()->getHeight() - 32.5, 30, 1, 0, 1, 0.5);
 						}
 
 						entriesIndex++;

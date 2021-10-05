@@ -19,6 +19,7 @@
 #include "Auravyx/Graphics/GFX.h"
 #include <Auravyx/Modify/Modify.h>
 #include <cmath>
+#include <Auravyx/Core/Command/CommandRegistry.h>
 
 Resource::Resource()
 {
@@ -207,6 +208,8 @@ bool Resource::loadAllResources()
 	}
 	else if(doneAssetLoading)
 	{
+		CommandRegistry::loadBaseCommands();
+		CommandRegistry::loadAllStrings();
 		return true;
 	}
 

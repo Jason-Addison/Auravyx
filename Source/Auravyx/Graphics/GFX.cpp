@@ -76,22 +76,6 @@ void GFX::drawString(const std::string& string, const float x, const float y, co
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	Renderer::getRenderer()->getShaders()->fontShader->start();
-	if (Window::getWindow()->getController()->isKeyDown(GLFW_KEY_Y))
-	{
-		u += 0.0003;
-	}
-	if (Window::getWindow()->getController()->isKeyDown(GLFW_KEY_U))
-	{
-		u -= 0.0003;
-	}
-	if (Window::getWindow()->getController()->isKeyDown(GLFW_KEY_H))
-	{
-		i += 0.0003;
-	}
-	if (Window::getWindow()->getController()->isKeyDown(GLFW_KEY_J))
-	{
-		i -= 0.0003;
-	}
 	Renderer::getRenderer()->getShaders()->fontShader->loadThickness(u, 0.5 / (0.5 * resized) * i);
 	Renderer::getRenderer()->getShaders()->fontShader->loadColour(r, g, b, a);
 	glActiveTexture(GL_TEXTURE0);

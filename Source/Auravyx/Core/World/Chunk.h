@@ -189,6 +189,8 @@ public:
 	*/
 	void sphere(float x, float y, float z, float radius, int id);
 
+	int getRelativeVoxelID(int x, int y, int z);
+
 private:
 
 	char BORDER_WITH_UNLOADED_CHUNK = -1;
@@ -202,7 +204,6 @@ private:
 
 	int relativeDensity(int x, int y, int z);
 
-	int getRelativeVoxelID(int x, int y, int z);
 
 	void updateRelativeVoxel(int x, int y, int z);
 

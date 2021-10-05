@@ -50,7 +50,7 @@ void FBO::create()
 	addBuffer(1, GL_RGB);
 	addBuffer(2, GL_RGB);
 	addBuffer(3, GL_RGB);
-	addBuffer(4, GL_RGBA32F);
+	addBuffer(4, GL_RGB32F);
 	addBuffer(5, GL_RGB);
 
 	//addBuffer(8, GL_RGB);

@@ -36,7 +36,7 @@ void World::generate()
 
 void World::update()
 {
-	float speed = 500000;
+	float speed = 2000000;
 	if (Window::getWindow()->getController()->isKeyDown(GLFW_KEY_EQUAL))
 	{
 		overworldTime += Clock::get(speed);
@@ -61,7 +61,7 @@ void World::render(const Camera& cam, const Matrix4f& projectionMatrix)
 
 	static float m = -40;
 	
-	m = fmod((double)(getOverworldTime() % getOverworldDayCycle()) * 0.0015, 360);
+	m = fmod((double)((getOverworldTime() - getOverworldDayCycle() / 4) % getOverworldDayCycle()) / (10 * 60*24), 360);
 	shadowMap.bind();
 	glDisable(GL_BLEND);
 	glClearColor(1, 1, 1, 1);
@@ -81,14 +81,12 @@ void World::render(const Camera& cam, const Matrix4f& projectionMatrix)
 	Renderer::getRenderer()->getShaders()->skyShader->loadProjectionMatrix(projectionMatrix);
 	Camera altCam = cam;
 	altCam.x = 0; altCam.y = 0; altCam.z = 0;
-
 	double p = 0.0174532925;
-
 	Renderer::getRenderer()->getShaders()->skyShader->loadCamera(altCam.getViewMatrix());
 	Renderer::getRenderer()->getShaders()->skyShader->loadSun(-cos(m * p), sin(m * p), 0);
-	Renderer::getRenderer()->getShaders()->skyShader->loadTime((double)((getOverworldTime() + 60000) % getOverworldDayCycle()) / (double) getOverworldDayCycle());
+	Renderer::getRenderer()->getShaders()->skyShader->loadTime((double)((getOverworldTime()) % getOverworldDayCycle()) / (double) getOverworldDayCycle());
 	Renderer::getRenderer()->getShaders()->skyShader->loadScreenResolution(Window::getWindow()->getWidth(), Window::getWindow()->getHeight());
-	double rot = (double)(getOverworldTime() % getOverworldDayCycle()) / (double)360;
+	double rot = (double)(getOverworldTime() % getOverworldDayCycle()) / (double)36000;
 	Matrix4f t = M::createTransformationMatrix(0, 0, 0, 1, 1, 1, 70, rot, 0);
 	Renderer::getRenderer()->getShaders()->skyShader->loadTransformationMatrix(t);
 
@@ -222,7 +220,7 @@ void World::render(const Camera& cam, const Matrix4f& projectionMatrix)
 	}
 	//s1.setPosition(GFX::getOverlay()->CAM.x, GFX::getOverlay()->CAM.y - 5, GFX::getOverlay()->CAM.z);*/
 	
-	GFX::getOverlay()->renderModel(s1->getX(), s1->getY(), s1->getZ(), 1, 1, 1, 0, 0, 0, *Assets::getAssets()->getAssets()->getModel("test").get(),
+	GFX::getOverlay()->renderModel(0, 0, 0, 1, 1, 1, 0, 0, 0, *Assets::getAssets()->getAssets()->getModel("test").get(),
 		(GFX::getOverlay()->CAM), projectionMatrix, *Assets::getAssets()->getAssets()->getTexture("light_blue").get());
 	//if (s1->checkCollision(*s2.get()))
 	{
@@ -232,6 +230,22 @@ void World::render(const Camera& cam, const Matrix4f& projectionMatrix)
 	{
 		//GFX::getOverlay()->renderModel(0, 0, 0, 1, 1, 1, 0, 0, 0, Assets::getAssets()->getAssets()->getModel("sky").get(), &GFX::getOverlay()->CAM, projectionMatrix, Assets::getAssets()->getAssets()->getTexture("light_blue").get());
 	}
+	float pixels[4] = { 1, 0, 0, 0 };
+	glReadBuffer(GL_COLOR_ATTACHMENT4);
+	glReadPixels(Window::getWindow()->getWidth() / 2, Window::getWindow()->getHeight() / 2, 1, 1, GL_RGB, GL_FLOAT, pixels);
+	if (pixels[0] >= 1 && pixels[1] >= 1 && pixels[2] >= 1)
+	{
+		GFX::getOverlay()->crosshairFound = false;
+	}
+	else
+	{
+		GFX::getOverlay()->crosshairFound = true;
+	}
+	//color = vec4(((positionPass - cameraPosition) / farPlane + 1) / 2, 1.0);
+
+	GFX::getOverlay()->crosshairX = (((pixels[0] * 2) - 1) * (GFX::getOverlay()->viewDistance * 64)) + cam.xPos;
+	GFX::getOverlay()->crosshairY = (((pixels[1] * 2) - 1) * (GFX::getOverlay()->viewDistance * 64)) + cam.yPos;
+	GFX::getOverlay()->crosshairZ = (((pixels[2] * 2) - 1) * (GFX::getOverlay()->viewDistance * 64)) + cam.zPos;
 
 	fbo.unbind();
 	glDisable(GL_CULL_FACE);
@@ -246,8 +260,8 @@ void World::render(const Camera& cam, const Matrix4f& projectionMatrix)
 	Renderer::getRenderer()->getShaders()->deferredShader->loadCamera(cam.xPos, cam.yPos, cam.zPos, GFX::getOverlay()->viewDistance * 64, cam.getViewMatrix());
 	double lightFactor = (1 - 1) * 0.9 + 0.1;
 	   
-	double step = (double)(getOverworldTime() % getOverworldDayCycle()) / (double)getOverworldDayCycle();
-	double brightness = sin((double)(getOverworldTime() % getOverworldDayCycle()) / (double)getOverworldDayCycle() * 3.14 * 6);
+	double step = (double)((getOverworldTime() - getOverworldDayCycle() / 4) % getOverworldDayCycle()) / (double)getOverworldDayCycle();
+	double brightness = sin((double)((getOverworldTime() - getOverworldDayCycle() / 4) % getOverworldDayCycle()) / (double)getOverworldDayCycle() * 3.14 * 6);
 	if (step > (1.0 / 12.0) && step < 5.0 / 12.0)
 	{
 		brightness = 1;
@@ -259,6 +273,7 @@ void World::render(const Camera& cam, const Matrix4f& projectionMatrix)
 	Renderer::getRenderer()->getShaders()->deferredShader->loadAmbientLight((brightness + 1 + GFX::getOverlay()->brightness) / (2 + GFX::getOverlay()->brightness), 1, 1, 1);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, fbo.buffers[0]);
+
 	glActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_2D, fbo.buffers[1]);
 	glActiveTexture(GL_TEXTURE2);
