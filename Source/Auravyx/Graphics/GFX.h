@@ -14,6 +14,10 @@ public:
 
 	double FPS = 144;
 
+	double crosshairX = 0;
+	double crosshairY = 0;
+	double crosshairZ = 0;
+	bool crosshairFound = true;
 
 	Camera CAM = Camera();
 
@@ -36,6 +40,14 @@ public:
 	GLuint materials;
 
 	GLuint terrainMaterials = -1;
+
+	int pos1x = 0;
+	int pos1y = 0;
+	int pos1z = 0;
+
+	int pos2x = 0;
+	int pos2y = 0;
+	int pos2z = 0;
 
 	void fillRect(const float x, const float y, const float width, const float height, const float xScale, const float yScale, const float r, const float g, const float b, const float a);
 
