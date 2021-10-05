@@ -5,6 +5,7 @@
 #include "Auravyx/Utility/Math/RandomNoise.h"
 #include <Logger/Log.h>
 #include "Auravyx/Core/Clock.h"
+#include <Auravyx/Core/World/Voxel.h>
 Chunk::Chunk()
 {
 	zeroNeighbours();

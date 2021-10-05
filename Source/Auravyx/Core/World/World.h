@@ -119,11 +119,11 @@ private:
 	/**
 	 * @brief Full day cycle for the world in ticks.
 	*/
-	long long int overworldDayCycle = 240000;
+	long long int overworldDayCycle = 5184000;
 
 	/**
 	 * @brief The current time in ticks of the world.
 	*/
-	long long int overworldTime = (long long int) (240000.0 * 10.32);
+	long long int overworldTime = (long long int) (5184000.0 * 10.32);
 };
 
