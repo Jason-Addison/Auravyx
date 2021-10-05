@@ -125,21 +125,7 @@ Controls can be changed from `controls.txt`
 
 #### Loading screen
 
-The loading screen displays important system information on loading. It is split into three important areas:
-
-##### Primary loading label
-
-Displays which part of the game is being loading, for example: audio, textures and mods.
-
-##### Secondary loading label
-
-Displays specific thing that is being loaded, such as asset texture or audio file.
-
-##### Error log
-
-Displays any critical error messages, such as invalid GLSL file
-
-If the loading square animation freezes, note the primary and secondary labels to see what may have went wrong.
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
 
 ---
 
