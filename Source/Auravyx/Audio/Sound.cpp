@@ -4,9 +4,8 @@
 #include <iostream>
 Sound::Sound()
 {
-	create();
+	//create();
 }
-
 
 Sound::~Sound()
 {
