@@ -1,8 +1,8 @@
-# <img src="Auravyx.png" width="50"> Auravyx (C++ Voxel Game)
+# <img src="Demo/Images/Auravyx.png" width="50"> Auravyx (C++ Voxel Game)
 ---
 
 
-![Alt Text](banner.gif)
+![Alt Text](Demo/Images/banner.gif)
 
 ---
 
